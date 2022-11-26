@@ -1,2 +1,4 @@
-package pl.smarthome.Controllers;public class UserController {
+package pl.smarthome.Controllers;
+
+public class UserController {
 }

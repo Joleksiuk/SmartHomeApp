@@ -1,2 +1,4 @@
-package pl.smarthome.Authorization;public class AuthController {
+package pl.smarthome.Authorization;
+
+public class AuthController {
 }
