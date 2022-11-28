@@ -28,6 +28,7 @@ class AuthService {
     let msg = {
       'username':username,
       'email':email,
+      'role': ["ROLE_USER"],
       'password':password
     }
     JSON.stringify(msg)

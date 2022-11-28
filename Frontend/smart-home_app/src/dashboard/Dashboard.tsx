@@ -22,6 +22,7 @@ import Orders from './Orders';
 import ComponentsGrid from '../components/ComponentsGrid';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {Link} from "react-router-dom";
+import authService from "./../authorization/AuthService";
 
 
 const drawerWidth: number = 240;
@@ -117,11 +118,15 @@ function DashboardContent() {
             >
               Dashboard
             </Typography>
-            <Link to='/signUp'>
-                <IconButton color="inherit">
-                    <AccountCircleIcon/>
-                </IconButton>
-            </Link>
+            {authService.isUserLoggedIn()
+            ? <p>DUPA</p>
+            :  <Link to='/signUp'>
+                  <IconButton color="inherit">
+                  <AccountCircleIcon/>
+                  </IconButton>
+                </Link>
+            }
+           
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
