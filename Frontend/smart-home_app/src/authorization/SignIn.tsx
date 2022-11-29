@@ -40,14 +40,16 @@ export default function SignIn() {
     if(username!==null && username!==undefined && password!=null && password!==undefined){
       authService.login(username,password)
       .then(() =>setLoginSuccessful(true))
-      .then(() => navigate("/"))
+      .then(() => console.log(authService.getLoggedUser()))
       .catch(error => {
         setShowError(true);
         setErrorMessage("Wrong login credentials!");
       });  
     }
+    
   };
   const goSignUp=()=>{
+    navigate('/')
     navigate('signUp')
   }
 

@@ -23,6 +23,8 @@ import ComponentsGrid from '../components/ComponentsGrid';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {Link} from "react-router-dom";
 import authService from "./../authorization/AuthService";
+import ShellyController from '../ShellyController';
+import { Button } from '@mui/material';
 
 
 const drawerWidth: number = 240;
@@ -75,6 +77,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+const toggle=()=>{
+  ShellyController.toggleLight()
+}
+
 const mdTheme = createTheme();
 
 function DashboardContent() {
@@ -84,7 +90,7 @@ function DashboardContent() {
   };
 
   const authAction=()=>{
-    console.log("dupa")
+    console.log("authAction")
   }
 
   return (
@@ -116,16 +122,17 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Smart Home
             </Typography>
             {authService.isUserLoggedIn()
-            ? <p>DUPA</p>
+            ? <p>User is logged in</p>
             :  <Link to='/signUp'>
                   <IconButton color="inherit">
                   <AccountCircleIcon/>
                   </IconButton>
                 </Link>
             }
+            <Button onClick = {toggle}>Toggle Light</Button>
            
           </Toolbar>
         </AppBar>
@@ -164,7 +171,7 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
+              {/*
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
                   sx={{
@@ -177,7 +184,6 @@ function DashboardContent() {
                   <Chart />
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
                 <Paper
                   sx={{
@@ -189,13 +195,13 @@ function DashboardContent() {
                 >
                   <Deposits />
                 </Paper>
-              </Grid>
-              {/* Recent Orders */}
+              </Grid>}
+              {/* Recent Orders 
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <Orders />
                 </Paper>
-              </Grid>
+              </Grid>*/}
               <Grid item xs={12} md={8} lg={25}>
                 <Paper
                   sx={{
