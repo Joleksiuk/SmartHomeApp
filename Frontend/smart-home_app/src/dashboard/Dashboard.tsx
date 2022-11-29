@@ -82,7 +82,7 @@ const toggle=()=>{
   ShellyController.toggleLight()
 }
 const testTuya=()=>{
-  TuyaService.testTuyaConnection
+  TuyaService.testTuyaConnection()
 }
 
 const mdTheme = createTheme();
