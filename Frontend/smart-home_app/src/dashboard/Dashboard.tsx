@@ -26,6 +26,7 @@ import authService from "./../authorization/AuthService";
 import { Button } from '@mui/material';
 import TuyaService from '../connectors/TuyaService';
 import ShellyController from '../connectors/ShellyController';
+import TestComponent from '../components/TestComponent';
 
 
 const drawerWidth: number = 240;
@@ -217,7 +218,9 @@ function DashboardContent() {
                   <Orders />
                 </Paper>
               </Grid>*/}
+             
               <Grid item xs={12} md={8} lg={25}>
+                
                 <Paper
                   sx={{
                     p: 2,
@@ -225,6 +228,7 @@ function DashboardContent() {
                     flexDirection: 'column',
                   }}
                 >
+                   <TestComponent></TestComponent>
                   <ComponentsGrid/>
                 </Paper>
               </Grid>
