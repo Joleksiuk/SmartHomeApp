@@ -1,41 +1,51 @@
-import { TuyaContext } from "@tuya/tuya-connector-nodejs";
-import axios from "axios";
-
-const context = new TuyaContext({
-    baseUrl: 'https://openapi.tuyaeu.com',
-    accessKey: 'cnqer8dptauykycwa8p4',
-    secretKey: 'b29b29c9b29a4f008d04b9f18e5283c1'
-  })
-  
-const device_id = "bf2b8148e20535ca2eaik5";
-
-class TuyaService {
-  
-    
-    testTuyaConnection=async ()=>{
-     
-        const devicedetail  = await context.device.detail({
-            device_id: device_id,
-        });
-        if(!devicedetail.success) {
-            new Error();
-        }
-        console.log("Device details:",devicedetail);
-
-        
-        const commands = await context.request({
-            path: `/v1.0/iot-03/devices/${device_id}/commands`,
-            method: 'POST',
-            body: {
-            "commands":[{"code":"switch_led","value":true}]
-            }
-        });
-        if(!commands.success) {
-            new Error();
-        }
-        console.log("Execution result:",commands);
-    };
-
-
+import { tuyaApi } from 'tuya-cloud-api';
+ 
+const apiClientId = '7u5g78ek3yp4v7pfd735';
+const apiClientSecret = '8e7be48e8b4146089929474d30d0488f';
+const deviceIde = 'bf2b8148e20535ca2eaik5';
+const code = 'switch_led';
+ 
+export async function toggleDevice(deviceId: string, state = false) {
+  await tuyaApi.authorize({
+    apiClientId,
+    apiClientSecret,
+    serverLocation: 'eu',
+  });
+ 
+  const deviceStatus = await tuyaApi.getDeviceStatus({
+    deviceId: deviceIde,
+  });
+  const switchStatus = deviceStatus.find((item) => item.code === code);
+ 
+  if (!switchStatus) {
+    throw new Error(`Can not find status for command: ${code}`);
+  }
+ 
+  if (switchStatus.value === state) {
+    return;
+  }
+ 
+  await tuyaApi.sendCommand({
+    deviceId,
+    commands: [
+      {
+        code,
+        value: state,
+      },
+    ],
+  });
 }
-export default new TuyaService();
+ 
+{
+  (async () => {
+    try {
+      await toggleDevice(deviceIde, true);
+ 
+      console.log('Successfully toggled the device on!');
+      process.exit(0);
+    } catch (error) {
+      console.error('Error toggling device on', error);
+      process.exit(1);
+    }
+  })();
+}

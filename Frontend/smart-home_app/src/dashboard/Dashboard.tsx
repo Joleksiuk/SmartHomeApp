@@ -24,7 +24,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {Link} from "react-router-dom";
 import authService from "./../authorization/AuthService";
 import { Button } from '@mui/material';
-import TuyaService from '../connectors/TuyaService';
 import ShellyController from '../connectors/ShellyController';
 import TestComponent from '../components/TestComponent';
 
@@ -82,9 +81,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const toggle=()=>{
   ShellyController.toggleLight()
 }
-const testTuya=()=>{
-  TuyaService.testTuyaConnection()
-}
 
 const mdTheme = createTheme();
 
@@ -138,18 +134,7 @@ function DashboardContent() {
                 </Link>
             }
             <Button onClick = {toggle}>Toggle Light</Button>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={testTuya}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
               <MenuIcon />
-            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
