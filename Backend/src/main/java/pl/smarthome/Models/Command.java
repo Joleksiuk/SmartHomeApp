@@ -13,16 +13,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Component {
+public class Command {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     String name;
-    String imagePath;
-
-    public Component(String name, String image) {
-        this.name=name;
-        this.imagePath =image;
-    }
+    String category;
+    String params;
+    String requestMethod;
 }

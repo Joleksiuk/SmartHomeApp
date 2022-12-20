@@ -1,7 +1,11 @@
 package pl.smarthome.Controllers;
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import pl.smarthome.Controllers.tuya.CodeValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,6 +38,15 @@ class CodeValueTest {
     void setValue() {
         codeValue.setValue(false);
         assertSame(false, codeValue.getValue());
+    }
+
+    @Test
+    void testParamsToList(){
+      String params="a,b,c,d";
+      String[] paramList=params.split(",");
+      for(String s : paramList){
+          System.out.println(s);
+      }
     }
 
 }
