@@ -16,12 +16,4 @@ CREATE TABLE IF NOT EXISTS public.roles
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.components
-(
-    id bigint NOT NULL,
-    name character varying[] NOT NULL,
-    imagePath character varying[],
-    PRIMARY KEY (id)
-);
-
 END;

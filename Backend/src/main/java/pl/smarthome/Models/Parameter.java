@@ -8,18 +8,17 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "commands", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
+@Table(name = "parameters", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Command {
+public class Parameter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     String name;
-    String category;
-    String params;
-    String requestMethod;
+    String type ;
+    String description;
 }
