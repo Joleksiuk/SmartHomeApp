@@ -20,9 +20,11 @@ public class Component {
     Integer id;
     String name;
     String imagePath;
+    String brand;
 
-    public Component(String name, String image) {
+    public Component(String name, String image,String brand) {
         this.name=name;
         this.imagePath =image;
+        this.brand=brand;
     }
 }

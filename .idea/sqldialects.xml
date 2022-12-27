@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources/db/migration/V000_databaseInit.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources/db/migration/V001_addingTuya.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources/db/migration/V002_loadingDeviceControlCommands.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources/db/migration/V003_loadingDeviceManagementCommands.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources/db/migration/V004_createComponents.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources/db/migration/V005_addingParams.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources/db/migration/V006_initializingParams.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources/db/migration/V007_initializingBody.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/Backend/src/main/resources/db/migration/V008_users.sql" dialect="PostgreSQL" />
+  </component>
+</project>

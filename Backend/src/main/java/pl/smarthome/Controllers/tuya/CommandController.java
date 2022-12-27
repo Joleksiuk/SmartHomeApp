@@ -1,4 +1,4 @@
-package pl.smarthome.Controllers;
+package pl.smarthome.Controllers.tuya;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

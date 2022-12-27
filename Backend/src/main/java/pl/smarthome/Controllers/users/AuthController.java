@@ -1,4 +1,4 @@
-package pl.smarthome.Controllers;
+package pl.smarthome.Controllers.users;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,10 +20,9 @@ import pl.smarthome.Authorization.jwt.JwtResponse;
 import pl.smarthome.Authorization.jwt.JwtUtils;
 import pl.smarthome.Authorization.jwt.MessageResponse;
 import pl.smarthome.Authorization.services.UserDetailsImpl;
-import pl.smarthome.Models.Component;
 import pl.smarthome.Models.ERole;
 import pl.smarthome.Models.Role;
-import pl.smarthome.Models.User;
+import pl.smarthome.Models.users.User;
 import pl.smarthome.Payload.LoginRequest;
 import pl.smarthome.Payload.SignupRequest;
 import pl.smarthome.Repositories.RoleRepository;
@@ -50,7 +49,7 @@ public class AuthController {
 
     @GetMapping("/test/findRole")
     public Optional<Role> findRoleById() {
-        return roleRepository.findByName(ERole.ROLE_USER);
+        return roleRepository.findByName(ERole.ROLE_ADMIN);
     }
 
 
@@ -102,26 +101,25 @@ public class AuthController {
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
         } else {
-//            strRoles.forEach(role -> {
-//                switch (role) {
-//                    case "ROLE_ADMIN":
-//                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(adminRole);
-//
-//                        break;
-//                    case "ROLE_MODERATOR":
-//                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(modRole);
-//
-//                        break;
-//                    default:
-//                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(userRole);
-//                }
-//            });
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "ROLE_ADMIN" -> {
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
+                    }
+                    case "ROLE_MODERATOR" -> {
+                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(modRole);
+                    }
+                    default -> {
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                    }
+                }
+            });
         }
 
         user.setRoles(roles);

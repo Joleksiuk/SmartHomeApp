@@ -1,4 +1,4 @@
-package pl.smarthome.Controllers;
+package pl.smarthome.Controllers.users;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
