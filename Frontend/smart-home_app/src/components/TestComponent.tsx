@@ -2,23 +2,15 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Button, CardActionArea, Grid, Paper } from '@mui/material';
 import ShellyController from '../connectors/ShellyController';
-//import {main} from '../connectors/TuyaService4'
+
 export default function TestComponent() {
 
    const toggleLight =()=>{
       ShellyController.toggleLight()
    }
-
-   const test1=async ()=>{
-      // main();
-   }
+   const test1=()=>{
+  }
    const test2=()=>{
-    const crypto = require('crypto');  
-    const secret = 'abcdefg';  
-    const hash = crypto.createHmac('sha256', secret)  
-                       .update('Welcome to JavaTpoint')  
-                       .digest('hex');  
-    console.log(hash);  
    }
 
     return (
