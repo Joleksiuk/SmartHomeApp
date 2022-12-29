@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import SignIn from './authorization/SignIn';
 import SignUp from './authorization/SignUp';
+import ConfigureAccounts from './components/ConfigureAccounts';
 import Dashboard from './dashboard/Dashboard';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Dashboard/>} />
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
+          <Route path="/configAccounts" element ={<ConfigureAccounts/>}/>
         </Routes>     
         </div>
       </header>

@@ -21,11 +21,14 @@ import Deposits from './Deposits';
 import Orders from './Orders';
 import ComponentsGrid from '../components/ComponentsGrid';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import {Link} from "react-router-dom";
+import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
 import authService from "./../authorization/AuthService";
 import { Button } from '@mui/material';
 import ShellyController from '../connectors/ShellyController';
 import TestComponent from '../components/TestComponent';
+import SignIn from '../authorization/SignIn';
+import SignUp from '../authorization/SignUp';
+import ConfigureAccounts from '../components/ConfigureAccounts';
 
 
 const drawerWidth: number = 240;
@@ -90,20 +93,13 @@ function DashboardContent() {
     setOpen(!open);
   };
 
-  const authAction=()=>{
-    console.log("authAction")
-  }
 
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
+          <Toolbar sx={{pr: '24px'}}>
             <IconButton
               edge="start"
               color="inherit"
@@ -116,25 +112,16 @@ function DashboardContent() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
+            <Typography component="h1" variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
               Smart Home
             </Typography>
             {authService.isUserLoggedIn()
             ? <p>User is logged in</p>
             :  <Link to='/signUp'>
-                  <IconButton color="inherit">
-                  <AccountCircleIcon/>
-                  </IconButton>
+                  <AccountCircleIcon sx={{color: "#FFFF"}}/>
                 </Link>
             }
-            <Button onClick = {toggle}>Toggle Light</Button>
-              <MenuIcon />
+          
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -172,38 +159,6 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/*
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Chart />
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>}
-              {/* Recent Orders 
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>*/}
-             
               <Grid item xs={12} md={8} lg={25}>
                 
                 <Paper
@@ -213,7 +168,7 @@ function DashboardContent() {
                     flexDirection: 'column',
                   }}
                 >
-                   <TestComponent></TestComponent>
+                   <TestComponent></TestComponent>           
                   <ComponentsGrid/>
                 </Paper>
               </Grid>

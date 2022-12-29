@@ -108,9 +108,16 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item>
-                <Button onClick={goSignUp}>
-                  {"Don't have an account? Sign Up"}
-                </Button>
+                <Link to="/signUp"> 
+                  <Button>
+                    Don't have an account? Sign Up
+                  </Button>
+                </Link>
+                <Link to="/"> 
+                  <Button>
+                    Back to Dashboard
+                  </Button>
+                </Link>     
               </Grid>
             </Grid>
           </Box>
