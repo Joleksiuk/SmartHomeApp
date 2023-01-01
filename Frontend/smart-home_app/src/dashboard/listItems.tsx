@@ -2,42 +2,29 @@ import * as React from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import LayersIcon from '@mui/icons-material/Layers';
 import SettingsIcon from '@mui/icons-material/Settings';
-import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Link } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import AppShortcutIcon from '@mui/icons-material/AppShortcut';
 
 export const mainListItems = (
   <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Overview" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Devices" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Analytics" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Rules" />
-    </ListItemButton>
+     <Link to="/"> 
+      <ListItemButton>
+        <ListItemIcon>
+          <HomeIcon />
+        </ListItemIcon>
+        <ListItemText primary="HomePage" />
+      </ListItemButton>
+    </Link>
+    <Link to="/devices"> 
+      <ListItemButton>
+        <ListItemIcon>
+          <AppShortcutIcon />
+        </ListItemIcon>
+        <ListItemText primary="Devices" />
+      </ListItemButton>
+    </Link>
     <Link to="/configAccounts"> 
     <ListItemButton>
       <ListItemIcon>
@@ -46,12 +33,6 @@ export const mainListItems = (
       <ListItemText primary="Configure accounts" />
     </ListItemButton>
     </Link>
-    <ListItemButton>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Settings" />
-    </ListItemButton>
   </React.Fragment>
 );
 

@@ -6,7 +6,7 @@ export default function component() {
 
     return (
       <Grid>
-        
+        <h1>dddfdsS</h1>
       </Grid>
       );
 }
