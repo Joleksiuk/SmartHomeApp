@@ -1,8 +1,8 @@
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import SignIn from './authorization/SignIn';
 import SignUp from './authorization/SignUp';
-import ConfigureAccounts from './components/ConfigureAccounts';
+import ConfigureAccounts from './components/accounts/ConfigureAccounts';
 import * as React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -24,6 +24,8 @@ import { mainListItems, secondaryListItems } from './dashboard/listItems';
 import Dashboard from './dashboard/Dashboard';
 import ComponentsGrid from './components/ComponentsGrid';
 import AuthService from './authorization/AuthService';
+import { Button } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth: number = 240;
 
@@ -87,6 +89,11 @@ function App() {
     setOpen(!open);
   };
 
+  const onLogoutClick =() =>{
+    AuthService.logout()
+    window.location.reload()
+  }
+
   return (
     <BrowserRouter>
     <ThemeProvider theme={mdTheme}>
@@ -106,16 +113,30 @@ function App() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
-            Smart Home
-          </Typography>
           {AuthService.isUserLoggedIn()
-          ? <p>User is logged in</p>
-          :  <Link to='/signUp'>
-                <AccountCircleIcon sx={{color: "#FFFF"}}/>
+          ? <Grid container direction="row" justifyContent="flex-end">
+              <Typography component="h1" variant="h6" color="inherit" sx={{ flexGrow: 1 }} noWrap>
+                Smart Home
+              </Typography>
+              <Typography component="h1" variant="h6" color="inherit" sx={{ flexGrow: 1 }} noWrap>
+                You are logged in as {AuthService.getLoggedUser().username}
+              </Typography>
+              <Link to='/signIn'>
+                <IconButton color="inherit" onClick={onLogoutClick} >                 
+                    <LogoutIcon/>
+                </IconButton>
               </Link>
+            </Grid>
+          :<Grid container direction="row" justifyContent="flex-end">         
+            <Typography component="h1" variant="h6" color="inherit" sx={{ flexGrow: 1 }} noWrap>
+              Smart Home
+            </Typography>
+            <Link to='/signIn'>
+              <AccountCircleIcon sx={{color: "#FFFF"}}/>
+            </Link>
+            </Grid>
           }
-        
+  
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

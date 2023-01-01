@@ -13,7 +13,7 @@ class AuthService {
         password: password
       })
       .then(response => {
-        if (response.data.accessToken) {
+        if (response.data) {
           localStorage.setItem("user", JSON.stringify(response.data));
         }
         return response.data;
@@ -28,7 +28,7 @@ class AuthService {
     let msg = {
       'username':username,
       'email':email,
-      'role': ["ROLE_USER"],
+      'role': [],
       'password':password
     }
     JSON.stringify(msg)

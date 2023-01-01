@@ -9,54 +9,53 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import authService from "./AuthService";
 import { useEffect, useState } from 'react';
 import { Alert, Stack } from '@mui/material';
 import { Link,useNavigate } from 'react-router-dom';
+import ShellyService from '../../Services/ShellyService';
+import AuthService from '../../authorization/AuthService';
 
 const theme = createTheme();
 
 export default function SignIn() {
   const [showError, setShowError] = useState<Boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [loginSuccessful, setLoginSuccessful]=useState<Boolean>(false);
-  const navigate = useNavigate();
+  const [submitSuccessful, setSubmitSuccessful]=useState<Boolean>(false);
+  const [accountConfigured, setAccountConfigured]=useState<Boolean>(false);
   
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    let username= data.get('username')?.toString();
-    let password = data.get('password')?.toString();
-    if(username===""){
+    let server= data.get('server')?.toString();
+    let authKey = data.get('authKey')?.toString();
+    if(server===""){
       setShowError(true);
-      setErrorMessage("Username can't be empty!");
+      setErrorMessage("Server link can't be empty!");
       return;
     } 
-    if(password===""){
+    if(authKey===""){
       setShowError(true);
-      setErrorMessage("Password can't be empty!");
+      setErrorMessage("Authentication key can't be empty!");
       return;
     }
-    if(username!==null && username!==undefined && password!=null && password!==undefined){
-      authService.login(username,password)
-      .then(() =>{
-        setLoginSuccessful(true)
-        navigate('/')  
-        window.location.reload();
-      })
-      .then(() => console.log(authService.getLoggedUser()))
-      .catch(error => {
-        setShowError(true);
-        setErrorMessage("Wrong login credentials!");
-      });
-      
+    if(authKey!==null && authKey!==undefined && server!=null && server!==undefined){
+       ShellyService.createShellyUser(server,authKey)
+       .then(() =>setSubmitSuccessful(true))
+       .catch(error => {
+         setShowError(true);
+         setErrorMessage("Wrong login credentials!");
+       });  
     }
     
   };
-  const goSignUp=()=>{
-    navigate('/')
-    navigate('signUp')
-  }
+
+  useEffect(() => {
+    if(AuthService.getLoggedUser()!==null){
+      var userId = AuthService.getLoggedUser().id;
+      
+    }
+   
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -69,12 +68,8 @@ export default function SignIn() {
             flexDirection: 'column',
             alignItems: 'center',
           }}>
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+          <img width="200" height="100"  src='https://i.postimg.cc/4dJPTCr0/shelly-logo.png'/>
+
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           {showError &&
               <Grid item xs={12}>
@@ -87,21 +82,21 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="usernam"
-              label="Username"
-              name="username"
-              autoComplete="username"
+              id="server"
+              label="server link"
+              name="server"
+              autoComplete="server"
               autoFocus
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
+              name="authKey"
+              label="Authentication key"
+              type="authKey"
+              id="authKey"
+              autoComplete="Authentication key"
             />          
             <Button
               type="submit"
@@ -109,22 +104,8 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Submit
             </Button>
-            <Grid container>
-              <Grid item>
-                <Link to="/signUp"> 
-                  <Button>
-                    Don't have an account? Sign Up
-                  </Button>
-                </Link>
-                <Link to="/"> 
-                  <Button>
-                    Back to Dashboard
-                  </Button>
-                </Link>     
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
