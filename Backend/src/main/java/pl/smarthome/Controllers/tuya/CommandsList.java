@@ -13,10 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 public class CommandsList {
 
-    private List<CodeValue> commands=new LinkedList<>();
+    private List<CodeValueBoolean> commands=new LinkedList<>();
 
-    public void addCommand(CodeValue codeValue) {
-        commands.add(codeValue);
+    public void addCommand(CodeValueBoolean codeValueBoolean) {
+        commands.add(codeValueBoolean);
     }
 
     public String toJson() {

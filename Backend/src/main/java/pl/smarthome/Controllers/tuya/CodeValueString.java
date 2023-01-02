@@ -1,9 +1,7 @@
 package pl.smarthome.Controllers.tuya;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,12 +9,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CodeValue {
+public class CodeValueString {
 
     private String code;
-    private Boolean value;
+    private String value;
 
-    public CodeValue( @JsonProperty("code") String code, @JsonProperty("value") Boolean value) {
+    public CodeValueString(@JsonProperty("code") String code, @JsonProperty("value") String value) {
         this.code=code;
         this.value=value;
     }

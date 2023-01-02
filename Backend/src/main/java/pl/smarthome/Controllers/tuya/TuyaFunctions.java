@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
-public class TuyaController {
+public class TuyaFunctions {
 
     private static String accessId = "7u5g78ek3yp4v7pfd735";
     private static String accessKey = "8e7be48e8b4146089929474d30d0488f";
@@ -37,7 +37,7 @@ public class TuyaController {
     public static void main(String[] args) {
 
         String getTokenPath = "/v1.0/token?grant_type=1";
-        Object result = TuyaController.execute(getTokenPath, "GET", "", new HashMap<>());
+        Object result = TuyaFunctions.execute(getTokenPath, "GET", "", new HashMap<>());
         System.out.println(gson.toJson(result));
         testFunction();
     }
@@ -54,7 +54,7 @@ public class TuyaController {
      * Used to obtain tokens, refresh tokens: no token request
      */
     public static Object execute(String path, String method, String body, Map<String, String> customHeaders) {
-        return TuyaController.execute("", path, method, body, customHeaders);
+        return TuyaFunctions.execute("", path, method, body, customHeaders);
     }
 
     public static Object execute(String accessToken, String path, String method, String body, Map<String, String> customHeaders) {
@@ -93,10 +93,10 @@ public class TuyaController {
 
     public static void testFunction(){
         String getTokenPath = "/v1.0/token?grant_type=1";
-        Object result = TuyaController.execute(getTokenPath, "GET", "", new HashMap<>());
+        Object result = TuyaFunctions.execute(getTokenPath, "GET", "", new HashMap<>());
         System.out.println(gson.toJson(result));
         String path = "/v1.0/devices/bf2b8148e20535ca2eaik5/commands";
-        String body1 = SampleCommands.getSampleCommands();
+        String body1 = TuyaService.getSampleCommands();
         Object result2 = execute("9c61d0f1b784854ccddbba2d513745c0",path,"POST", body1,new HashMap<>() );
         System.out.println(gson.toJson(result2));
     }
@@ -187,9 +187,14 @@ public class TuyaController {
         return newHeaders;
     }
 
-    /**
-     * Calculate sign
-     */
+    public static String getAccessToken(){
+        Gson gson=new Gson();
+        String getTokenPath = "/v1.0/token?grant_type=1";
+        Object result = TuyaFunctions.execute(getTokenPath, "GET", "", new HashMap<>());
+        TuyaResponse response = gson.fromJson(gson.toJson(result), TuyaResponse.class);
+        return response.result.access_token;
+    }
+
     private static String sign(String accessId, String secret, String t, String accessToken, String nonce, String stringToSign) {
         StringBuilder sb = new StringBuilder();
         sb.append(accessId);
@@ -208,9 +213,6 @@ public class TuyaController {
         return sign(accessId, secret, t, NONE_STRING, nonce, stringToSign);
     }
 
-    /**
-     * Handle get request
-     */
     public static Request.Builder getRequest(String url) {
         Request.Builder request;
         try {
@@ -223,9 +225,6 @@ public class TuyaController {
         return request;
     }
 
-    /**
-     * Handle post request
-     */
     public static Request.Builder postRequest(String url, String body) {
         Request.Builder request;
         try {
@@ -239,9 +238,6 @@ public class TuyaController {
         return request;
     }
 
-    /**
-     * Handle put request
-     */
     public static Request.Builder putRequest(String url, String body) {
         Request.Builder request;
         try {
@@ -255,9 +251,6 @@ public class TuyaController {
     }
 
 
-    /**
-     * Handle delete request
-     */
     public static Request.Builder deleteRequest(String url, String body) {
         Request.Builder request;
         try {
@@ -270,9 +263,6 @@ public class TuyaController {
         return request;
     }
 
-    /**
-     * Execute request
-     */
     public static Response doRequest(Request request) {
         Response response;
         try {

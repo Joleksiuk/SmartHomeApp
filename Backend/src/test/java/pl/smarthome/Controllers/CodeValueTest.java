@@ -1,43 +1,39 @@
 package pl.smarthome.Controllers;
 
-import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
-import pl.smarthome.Controllers.tuya.CodeValue;
-
-import java.util.ArrayList;
-import java.util.List;
+import pl.smarthome.Controllers.tuya.CodeValueBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CodeValueTest {
 
-    CodeValue codeValue=new CodeValue("Switch_led",true);
+    CodeValueBoolean codeValueBoolean =new CodeValueBoolean("Switch_led",true);
     @Test
     void ToJson() {
-        System.out.println(codeValue.toJson());
+        System.out.println(codeValueBoolean.toJson());
         assertTrue(true);
     }
 
     @Test
     void getCode() {
-        assertEquals("Switch_led", codeValue.getCode());
+        assertEquals("Switch_led", codeValueBoolean.getCode());
     }
 
     @Test
     void getValue() {
-        assertEquals(true, codeValue.getValue());
+        assertEquals(true, codeValueBoolean.getValue());
     }
 
     @Test
     void setCode() {
-        codeValue.setCode("a");
-        assertEquals("a", codeValue.getCode());
+        codeValueBoolean.setCode("a");
+        assertEquals("a", codeValueBoolean.getCode());
     }
 
     @Test
     void setValue() {
-        codeValue.setValue(false);
-        assertSame(false, codeValue.getValue());
+        codeValueBoolean.setValue(false);
+        assertSame(false, codeValueBoolean.getValue());
     }
 
     @Test
