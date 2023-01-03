@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class ShellyUser {
     @Id
-    private Long id;
+    private Integer id;
     private String server;
     private String auth_key;
 }

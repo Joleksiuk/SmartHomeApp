@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class TuyaUser {
     @Id
-    private Long id;
+    private Integer id;
     private String server;
     private String accessId;
     private String secretKey;
