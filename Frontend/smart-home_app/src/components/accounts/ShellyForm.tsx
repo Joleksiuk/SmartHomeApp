@@ -46,6 +46,7 @@ export default function SignIn() {
          setErrorMessage("Wrong login credentials!");
        });  
     }
+    window.location.reload()
     
   };
 

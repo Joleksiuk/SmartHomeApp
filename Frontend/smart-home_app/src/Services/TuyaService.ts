@@ -3,6 +3,14 @@ import AuthService from "../authorization/AuthService";
 
 const Tuya_URL = "http://localhost:8080/tuya_users";
 
+
+export interface TuyaUser{
+  id:number,
+  server:string,
+  accessId:string,
+  secretKey:string
+}
+
 class TuyaService {
   
     createTuyaUser(accessId: string, server: string, secretKey:string) {
@@ -10,6 +18,7 @@ class TuyaService {
     return axios
     
       .post(Tuya_URL, {
+        id:AuthService.getLoggedUser().id,
         accessId: accessId,
         server: server,
         secretKey: secretKey
@@ -26,12 +35,20 @@ class TuyaService {
     return false;
   }
 
-  getTuyaUserById(id:number){
+  getTuyaUser(){
 
-    return axios.get(Tuya_URL+'/'+id.toString(), {})
+    if(AuthService.getLoggedUser() !== null){
+      
+      axios.get(Tuya_URL+'/'+AuthService.getLoggedUser().id.toString(), {})
+      .then(response => { 
+        if (response.data) { 
+          return response.data as TuyaUser}})
       .catch(error => {
         console.log(error)
+        return null; 
       });
+    }
+    return null;   
   }
 }
 export default new TuyaService();

@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Alert, Stack } from '@mui/material';
 import { useState } from 'react';
+import TuyaService from '../../Services/TuyaService';
 
 const theme = createTheme();
 
@@ -42,14 +43,13 @@ export default function SignIn() {
     }
 
     if(server!==null && server!==undefined && accessId!=null && accessId!==undefined && authKey!==null && authKey!==undefined ){
-    //   authService.login(username,password)
-    //   .then(() =>setSubmitSuccessful(true))
-    //   .then(() => console.log(authService.getLoggedUser()))
-    //   .catch(error => {
-    //     setShowError(true);
-    //     setErrorMessage("Wrong login credentials!");
-    //   });  
+      TuyaService.createTuyaUser(accessId,server,authKey)
+      .then(() =>setSubmitSuccessful(true))
+      .catch(error => {
+        setShowError(true);
+      });  
     }
+    window.location.reload()
 
   };
 

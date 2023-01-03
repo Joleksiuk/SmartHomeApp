@@ -1,4 +1,6 @@
 import axios from "axios";
+import { inherits } from "util";
+import ShellyService from "../Services/ShellyService";
 
 const API_URL = "http://localhost:8080/api/auth/";
 
@@ -13,7 +15,7 @@ class AuthService {
         password: password
       })
       .then(response => {
-        if (response.data) {
+        if (response.data) {        
           localStorage.setItem("user", JSON.stringify(response.data));
         }
         return response.data;
