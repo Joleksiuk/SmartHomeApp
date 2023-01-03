@@ -26,6 +26,10 @@ import ComponentsGrid from './components/ComponentsGrid';
 import AuthService from './authorization/AuthService';
 import { Button } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import TestComponent from './components/TestComponent';
+import ShellyDuo from './components/shelly/ShellyDuo';
+import TuyaLED from './components/tuya/TuyaLED';
+import TuyaPlug from './components/tuya/TuyaPlug';
 
 const drawerWidth: number = 240;
 
@@ -193,6 +197,10 @@ function App() {
                         <Route path="/signUp" element={<SignUp />} />
                         <Route path="/devices" element={<ComponentsGrid />} />
                         <Route path="/configAccounts" element ={<ConfigureAccounts/>}/>
+                        <Route path="/test" element={<TestComponent/>}/>
+                        <Route path="/shellyDuo" element={<ShellyDuo/>}/>
+                        <Route path="/tuyaLED" element={<TuyaLED/>}/>
+                        <Route path="/tuyaPlug" element={<TuyaPlug/>}/>
                       </Routes>     
                       </div>
                     </header>

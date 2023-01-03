@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ComponentRepository  extends CrudRepository<Component, Integer>  {
     Optional<Component> findById(Integer id);
+    Optional<Component> findByName(String name);
 }

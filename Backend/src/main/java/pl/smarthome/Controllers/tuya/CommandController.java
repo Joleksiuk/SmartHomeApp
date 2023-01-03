@@ -3,9 +3,11 @@ package pl.smarthome.Controllers.tuya;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.Command;
+import pl.smarthome.Models.Component;
 import pl.smarthome.Services.CommandService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("commands")

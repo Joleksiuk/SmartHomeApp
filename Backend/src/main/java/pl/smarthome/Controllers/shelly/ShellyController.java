@@ -1,5 +1,9 @@
 package pl.smarthome.Controllers.shelly;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -18,41 +22,54 @@ public class ShellyController {
 
     //e8db84d500b1
     @GetMapping("device={id}/switch={state}")
-    public void switchBulb(@PathVariable String id, @PathVariable String state){
+    public String switchBulb(@PathVariable String id, @PathVariable String state){
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("id",id);
         map.add("turn",state);
-        shellyService.makeShellyRequest(map,"/device/light/control");
+        return shellyService.makeShellyRequest(map,"/device/light/control");
     }
     @GetMapping("device={id}/{command}={value}")
-    public void executeCommand(@PathVariable String id, @PathVariable String command, @PathVariable String value){
+    public String executeCommand(@PathVariable String id, @PathVariable String command, @PathVariable String value){
 
-        shellyService.executeShellyCommand(command,value,id,path);
+        return shellyService.executeShellyCommand(command,value,id,path);
     }
 
     @GetMapping("device={id}/brightness={value}")
-    public void changeBrightness(@PathVariable String id, @PathVariable String value){
+    public String changeBrightness(@PathVariable String id, @PathVariable String value){
 
-        shellyService.executeShellyCommand("brightness",value,id,path);
+        return shellyService.executeShellyCommand("brightness",value,id,path);
     }
 
     @GetMapping("device={id}/white={value}")
-    public void changeWhite(@PathVariable String id, @PathVariable String value){
+    public String changeWhite(@PathVariable String id, @PathVariable String value){
 
-        shellyService.executeShellyCommand("white",value,id,path);
+        return shellyService.executeShellyCommand("white",value,id,path);
     }
 
     @GetMapping("device={id}/temp={value}")
-    public void changeTemperature(@PathVariable String id, @PathVariable String value){
+    public String changeTemperature(@PathVariable String id, @PathVariable String value){
 
-        shellyService.executeShellyCommand("temp",value,id,path);
+        return shellyService.executeShellyCommand("temp",value,id,path);
     }
 
     @GetMapping("device={id}/transition={value}")
-    public void changeTransition(@PathVariable String id, @PathVariable String value){
+    public String changeTransition(@PathVariable String id, @PathVariable String value){
 
-        shellyService.executeShellyCommand("transition",value,id,path);
+        return shellyService.executeShellyCommand("transition",value,id,path);
+    }
+
+    @GetMapping("{id}")
+    public String checkState(@PathVariable String id){
+
+        return shellyService.executeShellyCommand("","",id,"/device/status");
+    }
+
+    @GetMapping("device={id}/settings")
+    public String getSettings(@PathVariable String id){
+
+        String response = shellyService.executeShellyCommand("","",id,"/device/settings");
+        return response;
     }
 
 }

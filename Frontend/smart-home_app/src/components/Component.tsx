@@ -4,15 +4,11 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea } from '@mui/material';
-import ShellyController from '../connectors/ShellyController';
 
 export default function component() {
 
-   const toggleLight =()=>{
-      ShellyController.toggleLight()
-   }
     return (
-      <Button onClick = {toggleLight}>
+      <Button>
         <Card sx={{ maxWidth: 345 }}>
           <CardActionArea>
             <CardMedia

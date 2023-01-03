@@ -6,6 +6,7 @@ import pl.smarthome.Models.Component;
 import pl.smarthome.Services.ComponentService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("component")
@@ -29,13 +30,19 @@ public class ComponentController {
         componentService.updateComponent(component);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("id={id}")
     public Component findComponentById(@PathVariable Integer id) {
         return componentService.findComponentById(id).orElse(null);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Component> getComponents(){
         return componentService.getAllComponents();
+    }
+
+    @GetMapping("name={name}")
+    public Optional<Component> getComponentByName(@PathVariable String name)
+    {
+        return componentService.findByName(name);
     }
 }

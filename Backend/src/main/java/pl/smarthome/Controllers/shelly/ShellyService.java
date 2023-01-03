@@ -1,13 +1,10 @@
 package pl.smarthome.Controllers.shelly;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -27,14 +24,15 @@ public class ShellyService {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map,headers);
         ResponseEntity<Object> response = restTemplate.exchange(baseUrl+path, HttpMethod.POST, entity, Object.class);
-        return response.toString();
+        return response.getBody().toString();
     }
 
-    public void executeShellyCommand(String command, String value, String deviceId, String path){
+    public String executeShellyCommand(String command, String value, String deviceId, String path){
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("id",deviceId);
         map.add(command,value);
-        makeShellyRequest(map,path);
+        return makeShellyRequest(map,path);
     }
+
 }

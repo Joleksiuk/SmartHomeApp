@@ -25,6 +25,7 @@ public class TuyaLED {
     @GetMapping("device={id}/color={hex}")
     public String changeColor (@PathVariable String hex, @PathVariable String id) {
         String path = "/v1.0/devices/"+id+"/commands";
+        hex="#"+hex;
         String body = TuyaService.changeColor(hex);
         Object result2 = TuyaFunctions.execute(TuyaFunctions.getAccessToken(),path,"POST", body,new HashMap<>() );
         return result2.toString();

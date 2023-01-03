@@ -23,6 +23,9 @@ public class ComponentService {
         componentRepository.save(component);
     }
 
+    public Optional<Component> findByName(String name){
+        return componentRepository.findByName(name);
+    }
     public Optional<Component> findComponentById(Integer id) {
         return componentRepository.findById(id);
     }
