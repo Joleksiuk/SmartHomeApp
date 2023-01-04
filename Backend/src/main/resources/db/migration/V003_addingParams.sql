@@ -1,4 +1,12 @@
 BEGIN;
+CREATE TABLE IF NOT EXISTS public.parameters
+(
+    id bigint NOT NULL,
+    name text NOT NULL,
+    type text NOT NULL,
+    description text,
+    PRIMARY KEY (id)
+);
 
 INSERT INTO parameters (id, name, type, description) VALUES (1,'device_id','String','The device ID.');
 INSERT INTO parameters (id, name, type, description) VALUES (2,'device_ids','List<String>','The list of device IDs, separated with commas (,).');
