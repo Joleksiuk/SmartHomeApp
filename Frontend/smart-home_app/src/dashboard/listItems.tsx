@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import AppShortcutIcon from '@mui/icons-material/AppShortcut';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import AddHomeIcon from '@mui/icons-material/AddHome';
+import Home from '@mui/icons-material/Home';
 
 export const mainListItems = (
   <React.Fragment>
@@ -34,36 +36,12 @@ export const mainListItems = (
       <ListItemText primary="Configure accounts" />
     </ListItemButton>
     </Link>
-    <Link to="/shellyDuo"> 
+    <Link to="/manageHomes"> 
     <ListItemButton>
       <ListItemIcon>
-        <LightbulbIcon />
+        <HomeIcon />
       </ListItemIcon>
-      <ListItemText primary="Shelly duo" />
-    </ListItemButton>
-    </Link>
-    <Link to="/tuyaPlug"> 
-    <ListItemButton>
-      <ListItemIcon>
-        <LightbulbIcon />
-      </ListItemIcon>
-      <ListItemText primary="Tuya plug" />
-    </ListItemButton>
-    </Link>
-    <Link to="/tuyaLED"> 
-    <ListItemButton>
-      <ListItemIcon>
-        <LightbulbIcon />
-      </ListItemIcon>
-      <ListItemText primary="Tuya LED" />
-    </ListItemButton>
-    </Link>
-    <Link to="/test"> 
-    <ListItemButton>
-      <ListItemIcon>
-        <SettingsIcon />
-      </ListItemIcon>
-      <ListItemText primary="Test Component" />
+      <ListItemText primary="Homes" />
     </ListItemButton>
     </Link>
   </React.Fragment>

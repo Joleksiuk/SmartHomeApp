@@ -14,12 +14,6 @@ CREATE TABLE IF NOT EXISTS public.scene_command
     command_id bigint REFERENCES tuyaCommands(id)
 );
 
-CREATE TABLE IF NOT EXISTS public.device_house
-(
-    device_id bigint REFERENCES devices(id),
-    house_id bigint REFERENCES houses(id)
-);
-
 CREATE TABLE IF NOT EXISTS public.command_device
 (
     device_id bigint REFERENCES devices(id),

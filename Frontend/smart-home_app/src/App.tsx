@@ -30,6 +30,8 @@ import TestComponent from './components/TestComponent';
 import ShellyDuo from './components/shelly/ShellyDuo';
 import TuyaLED from './components/tuya/TuyaLED';
 import TuyaPlug from './components/tuya/TuyaPlug';
+import ManageHouses from './components/ManageHouses';
+import Home from './components/Home';
 
 const drawerWidth: number = 240;
 
@@ -198,9 +200,11 @@ function App() {
                         <Route path="/devices" element={<ComponentsGrid />} />
                         <Route path="/configAccounts" element ={<ConfigureAccounts/>}/>
                         <Route path="/test" element={<TestComponent/>}/>
-                        <Route path="/shellyDuo" element={<ShellyDuo/>}/>
-                        <Route path="/tuyaLED" element={<TuyaLED/>}/>
-                        <Route path="/tuyaPlug" element={<TuyaPlug/>}/>
+                        <Route path="/ShellyDuo/:deviceId" element={<ShellyDuo/>}/>
+                        <Route path="/TuyaSmartLED/:deviceId" element={<TuyaLED/>}/>
+                        <Route path="/TuyaSmartPlug/:deviceId" element={<TuyaPlug/>}/>
+                        <Route path="/manageHomes" element={<ManageHouses/>}/>
+                        <Route path="/home/:id" element={<Home/>}/>
                       </Routes>     
                       </div>
                     </header>
