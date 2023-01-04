@@ -1,13 +1,32 @@
-import { Button, Grid, Paper, Slider, Switch } from '@mui/material';
+import { Button, Grid, Paper, Switch, Typography } from '@mui/material';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Device } from '../../interfaces';
 import { Component } from '../../Services/ComponentService';
 import TuyaPlugService from '../../Services/TuyaPlugService';
+import { device_url } from '../../urls';
 
 export default function ShellyDuo() {
 
-  const deviceId = 'bf23844d1e909d1f8bah2r'
+  const { deviceId } = useParams();
   const [component, setComponent]=useState<Component>()
+  const [device,setDevice]=useState<Device>()
+  
+  useEffect(() => {
+     getDeviceById()
+  }, []);
+
+  const getDeviceById=()=>{
+    axios.get(device_url+'/'+deviceId , {})
+    .then((response) => response.data)
+    .then((data) => {
+        setDevice(data)
+    })
+    .catch(error => {
+      console.log(error)
+    });
+  }
 
    const getComponent=()=>{
 
@@ -22,7 +41,8 @@ export default function ShellyDuo() {
 
    const handleSwitchChange =()=>{
       setChecked(!checked)
-      TuyaPlugService.switchPlug(deviceId, checked)
+      if(device!==undefined)
+        TuyaPlugService.switchPlug(device.specificId, checked)
    }
 
   const label = { inputProps: { 'aria-label': 'Size switch demo' } };
@@ -37,6 +57,9 @@ export default function ShellyDuo() {
       }}>
           <Grid container spacing={3}>
 
+              <Grid justifyContent="center" container item xs={12}>
+                    <Typography  variant="h4" >Device name: {device?.name} </Typography>
+              </Grid>
               <Grid item xs={12} md={8} lg={25}>
               <img src={component?.imagePath}/>
               <Button onClick = {getComponent}>Get component</Button>

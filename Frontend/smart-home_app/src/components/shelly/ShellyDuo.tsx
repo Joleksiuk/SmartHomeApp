@@ -1,8 +1,11 @@
-import { Button, Grid, Paper, Slider, Switch } from '@mui/material';
+import { Button, Grid, Paper, Slider, Switch, Typography } from '@mui/material';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Device } from '../../interfaces';
 import ComponentService, { Component } from '../../Services/ComponentService';
 import ShellyDuoService, { State } from '../../Services/ShellyDuoService';
+import { device_url } from '../../urls';
 
 export interface ShellyDetails{
     state:State,
@@ -13,19 +16,40 @@ export interface ShellyDetails{
 
 export default function ShellyDuo() {
 
-  const deviceId = 'e8db84d500b1'
+  const { deviceId } = useParams();
+  const [device,setDevice]=useState<Device>()
+  
+  useEffect(() => {
+     getDeviceById()
+  }, []);
+
+  const getDeviceById=()=>{
+    axios.get(device_url+'/'+deviceId , {})
+    .then((response) => response.data)
+    .then((data) => {
+        setDevice(data)
+    })
+    .catch(error => {
+      console.log(error)
+    });
+  }
+
   const [component, setComponent]=useState<Component>()
    const getDeviceStatus=()=>{
-    console.log(ShellyDuoService.getDeviceStatus(deviceId))
+    if(device!==undefined)
+    console.log(ShellyDuoService.getDeviceStatus(device?.specificId))
   }
    const changeBrightness=()=>{
-      ShellyDuoService.changeBrightness(deviceId,brigthnessValue.toString())
+    if(device!==undefined)
+      ShellyDuoService.changeBrightness(device?.specificId,brigthnessValue.toString())
    }
    const changeTemp=()=>{
-      ShellyDuoService.changeTemperature(deviceId,tempValue.toString())
+    if(device!==undefined)
+      ShellyDuoService.changeTemperature(device?.specificId,tempValue.toString())
    }
    const changeWhite=()=>{
-    ShellyDuoService.changeWhiteness(deviceId,whiteValue.toString())
+    if(device!==undefined)
+    ShellyDuoService.changeWhiteness(device?.specificId,whiteValue.toString())
    }
 
    const getComponent=()=>{
@@ -45,6 +69,7 @@ export default function ShellyDuo() {
       if(checked){
         state = State.On;
       }
+      if(deviceId!==undefined)
       ShellyDuoService.switchBulb(deviceId, state)
    }
 
@@ -76,6 +101,9 @@ export default function ShellyDuo() {
         display: 'flex',
         flexDirection: 'column', 
       }}>
+          <Grid justifyContent="center" container item xs={12}>
+                <Typography  variant="h4" >Device name: {device?.name} </Typography>
+          </Grid>
           <Grid container spacing={3}>
 
               <Grid item xs={12} md={8} lg={25}>
