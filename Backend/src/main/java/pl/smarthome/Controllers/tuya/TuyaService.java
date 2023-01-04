@@ -2,7 +2,10 @@ package pl.smarthome.Controllers.tuya;
 
 import com.google.gson.Gson;
 import pl.smarthome.Controllers.tuya.details.DeviceDetails;
-import pl.smarthome.Controllers.tuya.details.Status;
+import pl.smarthome.Controllers.tuya.models.CodeValueBoolean;
+import pl.smarthome.Controllers.tuya.models.CodeValueString;
+import pl.smarthome.Controllers.tuya.models.CommandsList;
+import pl.smarthome.Controllers.tuya.models.HSVColor;
 
 import java.util.*;
 

@@ -2,7 +2,7 @@ package pl.smarthome.Services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.smarthome.Models.Parameter;
+import pl.smarthome.Models.tuya.Parameter;
 import pl.smarthome.Repositories.ParameterRepository;
 
 import java.util.LinkedList;

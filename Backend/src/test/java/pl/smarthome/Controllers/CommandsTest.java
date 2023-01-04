@@ -1,8 +1,8 @@
 package pl.smarthome.Controllers;
 
 import org.junit.jupiter.api.Test;
-import pl.smarthome.Controllers.tuya.CodeValueBoolean;
-import pl.smarthome.Controllers.tuya.CommandsList;
+import pl.smarthome.Controllers.tuya.models.CodeValueBoolean;
+import pl.smarthome.Controllers.tuya.models.CommandsList;
 
 class CommandsTest {
 

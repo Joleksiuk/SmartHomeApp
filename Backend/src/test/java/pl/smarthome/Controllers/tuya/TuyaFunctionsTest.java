@@ -1,13 +1,10 @@
 package pl.smarthome.Controllers.tuya;
 
 import com.google.gson.Gson;
-import lombok.ToString;
 import org.junit.jupiter.api.Test;
+import pl.smarthome.Controllers.tuya.models.HSVColor;
 
-import java.awt.*;
 import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class TuyaFunctionsTest {
 

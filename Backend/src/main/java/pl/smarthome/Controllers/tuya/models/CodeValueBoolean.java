@@ -1,4 +1,4 @@
-package pl.smarthome.Controllers.tuya;
+package pl.smarthome.Controllers.tuya.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;

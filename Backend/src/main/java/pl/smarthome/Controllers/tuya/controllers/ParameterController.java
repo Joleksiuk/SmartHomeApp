@@ -1,8 +1,8 @@
-package pl.smarthome.Controllers.tuya;
+package pl.smarthome.Controllers.tuya.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.smarthome.Models.Parameter;
+import pl.smarthome.Models.tuya.Parameter;
 import pl.smarthome.Services.ParameterService;
 
 import java.util.List;

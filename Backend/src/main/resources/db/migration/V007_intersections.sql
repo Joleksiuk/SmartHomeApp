@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS public.device_permission
 CREATE TABLE IF NOT EXISTS public.scene_command
 (
     deviceId bigint REFERENCES devices(id),
-    commandId bigint REFERENCES commands(id)
+    commandId bigint REFERENCES tuyaCommands(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.device_house
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS public.device_house
 CREATE TABLE IF NOT EXISTS public.command_device
 (
     deviceId bigint REFERENCES devices(id),
-    commandId bigint REFERENCES commands(id)
+    commandId bigint REFERENCES tuyaCommands(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.house_user

@@ -34,14 +34,6 @@ public class TuyaFunctions {
         Constant.CONTAINER.put(Constant.ACCESS_KEY, accessKey);
     }
 
-    public static void main(String[] args) {
-
-        String getTokenPath = "/v1.0/token?grant_type=1";
-        Object result = TuyaFunctions.execute(getTokenPath, "GET", "", new HashMap<>());
-        System.out.println(gson.toJson(result));
-        testFunction();
-    }
-
     private static final MediaType CONTENT_TYPE = MediaType.parse("application/json");
     private static final String EMPTY_HASH = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
     private static final String SING_HEADER_NAME = "Signature-Headers";
@@ -50,9 +42,6 @@ public class TuyaFunctions {
     private static final Gson gson = new Gson().newBuilder().create();
 
 
-    /**
-     * Used to obtain tokens, refresh tokens: no token request
-     */
     public static Object execute(String path, String method, String body, Map<String, String> customHeaders) {
         return TuyaFunctions.execute("", path, method, body, customHeaders);
     }

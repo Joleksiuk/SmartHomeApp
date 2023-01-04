@@ -1,4 +1,4 @@
-package pl.smarthome.Controllers.tuya;
+package pl.smarthome.Controllers.tuya.models;
 
 import com.google.gson.Gson;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import java.awt.*;
 @Setter
 @Getter
 public class HSVColor {
-    double h;
-    double s;
-    double v;
+    private double h;
+    private double s;
+    private double v;
 
     public static HSVColor fromHex(String hex) {
         Color color = Color.decode(hex);

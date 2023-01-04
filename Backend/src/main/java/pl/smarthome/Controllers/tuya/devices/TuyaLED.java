@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Controllers.tuya.*;
 import pl.smarthome.Controllers.tuya.details.DeviceDetails;
 import pl.smarthome.Controllers.tuya.details.Status;
+import pl.smarthome.Controllers.tuya.models.HSVColor;
 
 import java.util.Arrays;
 import java.util.HashMap;

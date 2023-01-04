@@ -1,4 +1,4 @@
-package pl.smarthome.Models;
+package pl.smarthome.Models.users;
 
 import javax.persistence.*;
 

@@ -1,4 +1,4 @@
-package pl.smarthome.Models;
+package pl.smarthome.Models.tuya;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Command {
+public class TuyaCommand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

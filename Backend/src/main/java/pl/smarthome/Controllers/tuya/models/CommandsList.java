@@ -1,7 +1,8 @@
-package pl.smarthome.Controllers.tuya;
+package pl.smarthome.Controllers.tuya.models;
 
 import com.google.gson.Gson;
 import lombok.*;
+import pl.smarthome.Controllers.tuya.models.CodeValueBoolean;
 
 import java.util.LinkedList;
 import java.util.List;

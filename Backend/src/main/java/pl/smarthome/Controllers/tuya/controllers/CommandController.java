@@ -1,13 +1,11 @@
-package pl.smarthome.Controllers.tuya;
+package pl.smarthome.Controllers.tuya.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.smarthome.Models.Command;
-import pl.smarthome.Models.Component;
+import pl.smarthome.Models.tuya.TuyaCommand;
 import pl.smarthome.Services.CommandService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("commands")
@@ -21,22 +19,22 @@ public class CommandController {
     }
 
     @PostMapping
-    public void createCommand(@RequestBody Command command) {
-        commandService.createCommand(command);
+    public void createCommand(@RequestBody TuyaCommand tuyaCommand) {
+        commandService.createCommand(tuyaCommand);
     }
 
     @PutMapping
-    public void updateCommand(@RequestBody Command command) {
-        commandService.updateCommand(command);
+    public void updateCommand(@RequestBody TuyaCommand tuyaCommand) {
+        commandService.updateCommand(tuyaCommand);
     }
 
     @GetMapping("{id}")
-    public Command findCommandById(@PathVariable Integer id) {
+    public TuyaCommand findCommandById(@PathVariable Integer id) {
         return commandService.findCommandById(id).orElse(null);
     }
 
     @GetMapping
-    public List<Command> getCommands(){
+    public List<TuyaCommand> getCommands(){
         return commandService.getAllCommands();
     }
 }

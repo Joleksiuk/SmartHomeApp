@@ -1,7 +1,7 @@
 package pl.smarthome.Controllers;
 
 import org.junit.jupiter.api.Test;
-import pl.smarthome.Controllers.tuya.CodeValueBoolean;
+import pl.smarthome.Controllers.tuya.models.CodeValueBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 

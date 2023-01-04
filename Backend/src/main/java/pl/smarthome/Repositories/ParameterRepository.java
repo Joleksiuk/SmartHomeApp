@@ -1,7 +1,7 @@
 package pl.smarthome.Repositories;
 
 import org.springframework.data.repository.CrudRepository;
-import pl.smarthome.Models.Parameter;
+import pl.smarthome.Models.tuya.Parameter;
 
 import java.util.Optional;
 

@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.devices
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.commands
+CREATE TABLE IF NOT EXISTS public.tuyaCommands
 (
     id bigint NOT NULL,
     componentId bigint REFERENCES components(id),
