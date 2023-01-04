@@ -8,24 +8,22 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "commands")
+@Table(name = "houses")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-
-public class Scene {
-
+public class House {
     @Id
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long houseId;
     private Long ownerId;
     private String name;
 
-    Scene(Long houseId,Long ownerId,String name){
-        this.houseId=houseId;
+    House(Long ownerId, String name){
         this.ownerId=ownerId;
         this.name=name;
     }
+
 }

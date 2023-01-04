@@ -13,19 +13,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Setter
-
-public class Scene {
+public class Command {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long houseId;
-    private Long ownerId;
-    private String name;
-
-    Scene(Long houseId,Long ownerId,String name){
-        this.houseId=houseId;
-        this.ownerId=ownerId;
-        this.name=name;
-    }
+    private Long componentId;
+    private String endpoint;
 }
