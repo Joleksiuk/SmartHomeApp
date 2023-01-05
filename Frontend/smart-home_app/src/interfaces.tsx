@@ -19,3 +19,18 @@ export interface Device{
     name:string
 }
 
+export interface Scene{
+    id:number,
+    houseId:number,
+    ownerId:number,
+    name:string
+}
+
+export interface Command{
+    id:number,
+    componentId:number,
+    endpoint:string,
+    deviceId:number
+    sceneId:number
+}
+

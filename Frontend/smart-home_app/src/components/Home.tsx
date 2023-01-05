@@ -6,7 +6,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Alert, Box, Button, CardActionArea, Grid, Stack, TextField } from '@mui/material'; 
 import axios from 'axios';
-import { Component, Device, House } from '../interfaces';
+import { Component, Device, House, Scene } from '../interfaces';
 import { component_url, device_url, house_url } from '../urls';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -21,6 +21,7 @@ export default function Home() {
     const [showForm,setShowForm]=useState<Boolean>(false); 
     const [showError, setShowError] = useState<Boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [scenes, setScenes] =  useState<Scene>();
 
     useEffect(() => {
         getCurrentHome()
