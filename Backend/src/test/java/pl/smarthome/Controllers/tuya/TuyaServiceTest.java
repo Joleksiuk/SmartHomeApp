@@ -4,12 +4,10 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import pl.smarthome.Controllers.tuya.details.DeviceDetails;
 import pl.smarthome.Controllers.tuya.details.Status;
+import pl.smarthome.Controllers.tuya.models.CodeValueString;
 import pl.smarthome.Controllers.tuya.models.HSVColor;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 class TuyaServiceTest {
 
@@ -33,5 +31,30 @@ class TuyaServiceTest {
             }
         }
 
+    }
+
+    @Test
+    void testMultiRequestBody(){
+
+        String id="1";
+        List<CodeValueString> codeValueList=new LinkedList<>();
+
+        codeValueList.add(new CodeValueString("switch_led","true"));
+        codeValueList.add(new CodeValueString("switch_led","false"));
+        Gson gson=new Gson();
+
+        for(CodeValueString cv: codeValueList){
+            switch (cv.getCode()) {
+                case "switch_led" -> cv.setValue(TuyaService.createSwitchBody(Boolean.parseBoolean(cv.getValue())));
+                case "colour_data" -> cv.setValue(TuyaService.createColorBody("#" + cv.getValue()));
+                case "intensity" -> {
+                    HSVColor currentHSV = TuyaService.getCurrentLEDColor(id);
+                    String body = TuyaService.createIntensityBody(Integer.parseInt(cv.getValue()), currentHSV);
+                    cv.setValue(body);
+                }
+                case "switch_1" -> cv.setValue(TuyaService.createplugSwitchBody(Boolean.parseBoolean(cv.getValue())));
+            }
+        }
+        System.out.println(gson.toJson(codeValueList));
     }
 }

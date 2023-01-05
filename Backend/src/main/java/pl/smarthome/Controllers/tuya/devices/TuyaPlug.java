@@ -14,9 +14,9 @@ import java.util.HashMap;
 public class TuyaPlug {
 
     @GetMapping("device={id}/switch={state}")
-    public String switchLed (@PathVariable Boolean state, @PathVariable String id) {
+    public String switchLed (@PathVariable String state, @PathVariable String id) {
         String path = "/v1.0/devices/"+id+"/commands";
-        String body = TuyaService.plugSwitch(state);
+        String body = TuyaService.createplugSwitchBody(Boolean.parseBoolean(state));
         Object result2 = TuyaFunctions.execute(TuyaFunctions.getAccessToken(),path,"POST", body,new HashMap<>() );
         return result2.toString();
     }

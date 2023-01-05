@@ -18,11 +18,11 @@ CREATE TABLE IF NOT EXISTS public.devices
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.commands
+CREATE TABLE IF NOT EXISTS public.instructions
 (
     id bigint NOT NULL,
-    component_id bigint REFERENCES components(id),
     device_id bigint REFERENCES devices(id),
+    scene_id bigint REFERENCES scenes(id),
     endpoint text NOT NULL,
     PRIMARY KEY (id)
 );

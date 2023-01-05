@@ -4,7 +4,6 @@ package pl.smarthome.Services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.smarthome.Models.House;
-import pl.smarthome.Models.users.TuyaUser;
 import pl.smarthome.Repositories.HouseRepository;
 
 import java.util.List;

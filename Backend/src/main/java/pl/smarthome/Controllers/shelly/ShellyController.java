@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import pl.smarthome.Controllers.tuya.models.CodeValueString;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("shelly")
@@ -68,8 +71,13 @@ public class ShellyController {
     @GetMapping("device={id}/settings")
     public String getSettings(@PathVariable String id){
 
-        String response = shellyService.executeShellyCommand("","",id,"/device/settings");
-        return response;
+        return shellyService.executeShellyCommand("","",id,"/device/settings");
     }
+
+    @PostMapping("multi/{id}")
+    public String makeMultiRequest(@RequestBody List<CodeValueString> codeValues, @PathVariable String id){
+        return shellyService.multiControl(codeValues,id,path);
+    }
+
 
 }

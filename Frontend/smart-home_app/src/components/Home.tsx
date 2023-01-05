@@ -7,8 +7,9 @@ import Typography from '@mui/material/Typography';
 import { Alert, Box, Button, CardActionArea, Grid, Stack, TextField } from '@mui/material'; 
 import axios from 'axios';
 import { Component, Device, House, Scene } from '../interfaces';
-import { component_url, device_url, house_url } from '../urls';
+import { component_url, device_url, house_url, scene_url } from '../urls';
 import { useNavigate, useParams } from 'react-router-dom';
+import AuthService from '../authorization/AuthService';
 
 export default function Home() {
 
@@ -21,7 +22,8 @@ export default function Home() {
     const [showForm,setShowForm]=useState<Boolean>(false); 
     const [showError, setShowError] = useState<Boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
-    const [scenes, setScenes] =  useState<Scene>();
+    const [scenes, setScenes] =  useState<Array<Scene>>();
+    const [sceneName, setSceneName] = useState<string>();
 
     useEffect(() => {
         getCurrentHome()
@@ -34,6 +36,7 @@ export default function Home() {
 
     useEffect(() => {
         getCurrentDevices()
+        getHomeScenes()
     }, [home]);
 
     const getAllComponents=()=>{  
@@ -41,6 +44,18 @@ export default function Home() {
         .then((response) => response.data)
         .then((data) => {
             setComponents(data)
+        }
+            )
+        .catch(error => {
+          console.log(error)
+        });
+    }
+
+    const getHomeScenes=()=>{
+        axios.get(scene_url+'/houseId='+home?.id , {})
+        .then((response) => response.data)
+        .then((data) => {
+            setScenes(data)
         }
             )
         .catch(error => {
@@ -131,6 +146,22 @@ export default function Home() {
         });
     }
 
+    const handleSceneClicked=(scene:Scene)=>{
+
+    }
+
+    const onTextChange = (e: any) => setSceneName(e.target.value);
+
+    const handleCreateNewScene=()=>{
+        let msg = {
+            'houseId': home?.id,
+            'ownerId':AuthService.getLoggedUser().id.toString(),        
+            'name': sceneName
+            }
+        JSON.stringify(msg)
+        axios.post(scene_url ,msg);   
+        getHomeScenes()
+    }
 
     return (
         <Grid container spacing={3}>
@@ -231,6 +262,42 @@ export default function Home() {
             }
             </Grid>
 
+            <Grid justifyContent="center" container item xs={12}>
+                <Typography  variant="h6" >Your current scenes</Typography>
+            </Grid>
+            <Grid justifyContent="center" container item xs={12}>
+                <Grid container justifyContent="center" spacing={3}>
+                {scenes?.map((scene)=>
+                    <Button onClick={()=>handleSceneClicked(scene)}>
+                        <Grid item>
+                            <Card>
+                                <CardActionArea>
+                                    <CardMedia
+                                    src="https://img.freepik.com/free-photo/d-rendering-black-background-product-podium-stand-studio_1258-112104.jpg?w=1380&t=st=1672922145~exp=1672922745~hmac=32195b1a4b538e84d8775ad1251285b1f0905f48b66f8875b93b5358166fa7dc"
+                                    component="img"
+                                    height="150"
+                                    />
+                                    <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {scene.name } 
+                                    </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        </Grid>
+                    </Button>
+                )}
+                </Grid>
+            </Grid> 
+
+            <Grid justifyContent="center" container item xs={12}>
+                <Typography  variant="h6" >Add new scene</Typography>
+            </Grid>
+            <Grid justifyContent="center" container item xs={12}>
+
+                <TextField  onChange={onTextChange} value={sceneName} label={"home name"}/>
+                <Button variant="contained" onClick={()=>handleCreateNewScene()}>Add new House</Button>           
+            </Grid>
 
         </Grid>
         

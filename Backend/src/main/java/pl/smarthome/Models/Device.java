@@ -16,7 +16,6 @@ import javax.persistence.*;
 public class Device {
 
     @Id
-    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long componentId;
@@ -24,5 +23,11 @@ public class Device {
     private String specificId;
     private String name;
 
+    Device(Long componentId, Long houseId, String specificId, String name){
+        this.componentId=componentId;
+        this.houseId=houseId;
+        this.specificId=specificId;
+        this.name=name;
+    }
 
 }
