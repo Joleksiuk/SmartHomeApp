@@ -26,6 +26,11 @@ public class DeviceService {
         deviceRepository.deleteById(id);
     }
 
+    public void addDeviceToHouse(Long houseId, Long deviceId){
+        Optional <Device> device =  deviceRepository.findById(deviceId);
+        device.ifPresent(value -> value.setHouseId(houseId));
+    }
+
     public Optional<Device> findById(Long id) {return deviceRepository.findById(id); }
     public List<Device> getDevicesByHouseId(Long houseId) {
         return deviceRepository.getAllByHouseId(houseId);

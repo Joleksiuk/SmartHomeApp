@@ -43,4 +43,9 @@ public class DeviceController {
         return deviceService.getDevicesByHouseId(id);
     }
 
+    @PostMapping("houseId={houseId}/deviceId={deviceId}")
+    public void addDeviceToHouse(@PathVariable Long houseId,@PathVariable Long deviceId) {
+        deviceService.addDeviceToHouse(houseId,deviceId);
+    }
+
 }
