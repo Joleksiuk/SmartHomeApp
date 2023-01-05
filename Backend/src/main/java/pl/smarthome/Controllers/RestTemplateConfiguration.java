@@ -1,4 +1,4 @@
-package pl.smarthome.Controllers.shelly;
+package pl.smarthome.Controllers;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

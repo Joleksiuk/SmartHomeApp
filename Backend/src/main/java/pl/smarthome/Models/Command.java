@@ -19,5 +19,7 @@ public class Command {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long componentId;
+    private Long deviceId;
+    private Long sceneId;
     private String endpoint;
 }

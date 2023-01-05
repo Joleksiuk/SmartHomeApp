@@ -18,10 +18,11 @@ CREATE TABLE IF NOT EXISTS public.devices
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.tuyaCommands
+CREATE TABLE IF NOT EXISTS public.commands
 (
     id bigint NOT NULL,
     component_id bigint REFERENCES components(id),
+    device_id bigint REFERENCES devices(id),
     endpoint text NOT NULL,
     PRIMARY KEY (id)
 );

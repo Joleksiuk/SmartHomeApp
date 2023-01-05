@@ -3,38 +3,38 @@ package pl.smarthome.Controllers.tuya.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.tuya.TuyaCommand;
-import pl.smarthome.Services.CommandService;
+import pl.smarthome.Services.TuyaCommandService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("commands")
-public class CommandController {
+@RequestMapping("tuya_commands")
+public class TuyaCommandController {
 
-    private final CommandService commandService;
+    private final TuyaCommandService tuyaCommandService;
 
     @Autowired
-    public CommandController(CommandService commandService) {
-        this.commandService = commandService;
+    public TuyaCommandController(TuyaCommandService tuyaCommandService) {
+        this.tuyaCommandService = tuyaCommandService;
     }
 
     @PostMapping
     public void createCommand(@RequestBody TuyaCommand tuyaCommand) {
-        commandService.createCommand(tuyaCommand);
+        tuyaCommandService.createCommand(tuyaCommand);
     }
 
     @PutMapping
     public void updateCommand(@RequestBody TuyaCommand tuyaCommand) {
-        commandService.updateCommand(tuyaCommand);
+        tuyaCommandService.updateCommand(tuyaCommand);
     }
 
     @GetMapping("{id}")
     public TuyaCommand findCommandById(@PathVariable Integer id) {
-        return commandService.findCommandById(id).orElse(null);
+        return tuyaCommandService.findCommandById(id).orElse(null);
     }
 
     @GetMapping
     public List<TuyaCommand> getCommands(){
-        return commandService.getAllCommands();
+        return tuyaCommandService.getAllCommands();
     }
 }
