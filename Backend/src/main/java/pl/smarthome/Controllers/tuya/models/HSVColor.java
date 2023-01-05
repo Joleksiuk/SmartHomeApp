@@ -35,4 +35,9 @@ public class HSVColor {
         Gson gson = new Gson();
         return gson.fromJson(json,HSVColor.class);
     }
+
+    public String toJson(){
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
 }

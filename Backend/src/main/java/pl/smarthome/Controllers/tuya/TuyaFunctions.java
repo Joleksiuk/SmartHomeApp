@@ -80,16 +80,6 @@ public class TuyaFunctions {
         }
     }
 
-    public static void testFunction(){
-        String getTokenPath = "/v1.0/token?grant_type=1";
-        Object result = TuyaFunctions.execute(getTokenPath, "GET", "", new HashMap<>());
-        System.out.println(gson.toJson(result));
-        String path = "/v1.0/devices/bf2b8148e20535ca2eaik5/commands";
-        String body1 = TuyaService.getSampleCommands();
-        Object result2 = execute("9c61d0f1b784854ccddbba2d513745c0",path,"POST", body1,new HashMap<>() );
-        System.out.println(gson.toJson(result2));
-    }
-
     public static Headers getHeader(String accessToken, Request request, String body, Map<String, String> headerMap) throws Exception {
         Headers.Builder hb = new Headers.Builder();
 

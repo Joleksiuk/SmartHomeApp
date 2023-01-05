@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Controllers.tuya.models.CodeValueString;
 
 import java.util.List;
@@ -38,10 +39,10 @@ public class ShellyService {
         return makeShellyRequest(map,path);
     }
 
-    public String multiControl(List<CodeValueString> codeValueList, String deviceId, String path){
+    public String multiControl(List<CodeValue> codeValueList, String deviceId, String path){
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("id",deviceId);
-        codeValueList.forEach(cv -> map.add(cv.getCode(), cv.getValue()));
+        codeValueList.forEach(cv -> map.add(cv.getCode(), cv.getValue().toString()));
         return makeShellyRequest(map,path);
     }
 
