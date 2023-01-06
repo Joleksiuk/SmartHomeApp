@@ -1,4 +1,6 @@
 import axios from "axios";
+import { json } from "stream/consumers";
+import AuthService from "../authorization/AuthService";
 import { CodeValue } from "../interfaces";
 
 
@@ -12,9 +14,12 @@ const Shelly_URL = "http://localhost:8080/shelly";
 class ShellyDuoService {
 
     makeShellyRequest=(deviceId: string, command:string, value: string)=>{
-        let url = Shelly_URL+'/device='+deviceId+'/'+command+'='+value.toString()     
+        let url = Shelly_URL+'/device='+deviceId+'/'+command+'='+value.toString() 
+        let msg={
+            "userId":AuthService.getLoggedUser().id
+        }   
         return axios       
-        .post(url, {})
+        .post(url, JSON.stringify(msg))
         .catch(error => {
             console.log(error)
         });  
@@ -41,7 +46,7 @@ class ShellyDuoService {
     }
 
     makeMultiRequest(deviceId: string, values: Array<CodeValue>){
-        let url = Shelly_URL+'/multi/'+deviceId  
+        let url = Shelly_URL+'/multi/'+deviceId +'/'+ AuthService.getLoggedUser().id
         let body = JSON.stringify(values)
         return axios       
         .post(url, body)
@@ -52,9 +57,11 @@ class ShellyDuoService {
 
     getDeviceStatus(deviceId: string){
         let url = Shelly_URL+'/'+deviceId
-
+        let msg={
+            "userId":AuthService.getLoggedUser().id
+        }  
         return axios
-        .get(url, {})
+        .post(url, JSON.stringify(msg))
         .then(response => {
            console.log(response)
         })

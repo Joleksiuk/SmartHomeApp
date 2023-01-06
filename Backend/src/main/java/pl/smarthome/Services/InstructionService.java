@@ -24,7 +24,8 @@ public class InstructionService {
     }
 
     public List<Instruction> getAllInstructionsBySceneId(Long sceneId){
-        return new LinkedList<>(instructionRepository.getAllBySceneId(sceneId));
+        return new LinkedList<>();
+        //return new LinkedList<>(instructionRepository.getAllBySceneId(sceneId));
     }
 
     public List<Instruction> getAllInstructionsById(InstructionId id){

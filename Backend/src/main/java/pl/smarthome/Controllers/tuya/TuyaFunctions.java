@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.squareup.okhttp.*;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import pl.smarthome.AES.AES;
+import pl.smarthome.Models.users.TuyaUser;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -24,15 +26,15 @@ import java.util.stream.Collectors;
 
 public class TuyaFunctions {
 
-    private static String accessId = "7u5g78ek3yp4v7pfd735";
-    private static String accessKey = "8e7be48e8b4146089929474d30d0488f";
-    private static String endpoint = "https://openapi.tuyaeu.com";
-
-    static {
-        Constant.CONTAINER.put(Constant.ENDPOINT, endpoint);
-        Constant.CONTAINER.put(Constant.ACCESS_ID, accessId);
-        Constant.CONTAINER.put(Constant.ACCESS_KEY, accessKey);
-    }
+//    private static String accessId = "7u5g78ek3yp4v7pfd735";
+//    private static String accessKey = "8e7be48e8b4146089929474d30d0488f";
+//    private static String endpoint = "https://openapi.tuyaeu.com";
+//
+//    static {
+//        Constant.CONTAINER.put(Constant.ENDPOINT, endpoint);
+//        Constant.CONTAINER.put(Constant.ACCESS_ID, accessId);
+//        Constant.CONTAINER.put(Constant.ACCESS_KEY, accessKey);
+//    }
 
     private static final MediaType CONTENT_TYPE = MediaType.parse("application/json");
     private static final String EMPTY_HASH = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
@@ -41,19 +43,14 @@ public class TuyaFunctions {
 
     private static final Gson gson = new Gson().newBuilder().create();
 
-
-    public static Object execute(String path, String method, String body, Map<String, String> customHeaders) {
-        return TuyaFunctions.execute("", path, method, body, customHeaders);
-    }
-
-    public static Object execute(String accessToken, String path, String method, String body, Map<String, String> customHeaders) {
+    public static Object execute(String accessToken, String path, String method, String body, Map<String, String> customHeaders, TuyaUser user ) {
         try {
-            // Verify developer information
-            if (MapUtils.isEmpty(Constant.CONTAINER)) {
+            if (user==null) {
                 throw new TuyaCloudSDKException("Developer information is not initialized!");
             }
 
-            String url = Constant.CONTAINER.get(Constant.ENDPOINT) + path;
+            String endpoint=AES.decrypt(user.getServer());
+            String url = endpoint+ path;
 
             Request.Builder request;
             if ("GET".equals(method)) {
@@ -70,9 +67,9 @@ public class TuyaFunctions {
             if (customHeaders.isEmpty()) {
                 customHeaders = new HashMap<>();
             }
-            Headers headers = getHeader(accessToken, request.build(), body, customHeaders);
+            Headers headers = getHeader(accessToken, request.build(), body, customHeaders, user);
             request.headers(headers);
-            request.url(Constant.CONTAINER.get(Constant.ENDPOINT) + getPathAndSortParam(new URL(url)));
+            request.url(AES.decrypt(user.getServer() + getPathAndSortParam(new URL(url))));
             Response response = doRequest(request.build());
             return gson.fromJson(response.body().string(), Object.class);
         } catch (Exception e) {
@@ -80,7 +77,7 @@ public class TuyaFunctions {
         }
     }
 
-    public static Headers getHeader(String accessToken, Request request, String body, Map<String, String> headerMap) throws Exception {
+    public static Headers getHeader(String accessToken, Request request, String body, Map<String, String> headerMap, TuyaUser user) throws Exception {
         Headers.Builder hb = new Headers.Builder();
 
         Map<String, String> flattenHeaders = flattenHeaders(headerMap);
@@ -89,7 +86,10 @@ public class TuyaFunctions {
             t = System.currentTimeMillis() + "";
         }
 
-        hb.add("client_id", Constant.CONTAINER.get(Constant.ACCESS_ID));
+        String accessId = AES.decrypt(user.getAccessId());
+        String accessKey = AES.decrypt(user.getSecretKey());
+
+        hb.add("client_id", accessId);
         hb.add("t", t);
         hb.add("sign_method", "HMAC-SHA256");
         hb.add("lang", "zh");
@@ -99,9 +99,9 @@ public class TuyaFunctions {
         String stringToSign = stringToSign(request, body, flattenHeaders);
         if (StringUtils.isNotBlank(accessToken)) {
             hb.add("access_token", accessToken);
-            hb.add("sign", sign(Constant.CONTAINER.get(Constant.ACCESS_ID), Constant.CONTAINER.get(Constant.ACCESS_KEY), t, accessToken, nonceStr, stringToSign));
+            hb.add("sign", sign(accessId, accessKey, t, accessToken, nonceStr, stringToSign));
         } else {
-            hb.add("sign", sign(Constant.CONTAINER.get(Constant.ACCESS_ID), Constant.CONTAINER.get(Constant.ACCESS_KEY), t, nonceStr, stringToSign));
+            hb.add("sign", sign(accessId, accessKey, t, nonceStr, stringToSign));
         }
         return hb.build();
     }
@@ -166,10 +166,14 @@ public class TuyaFunctions {
         return newHeaders;
     }
 
-    public static String getAccessToken(){
+    public static Object execute(String path, String method, String body, Map<String, String> customHeaders, TuyaUser user) {
+        return TuyaFunctions.execute("", path, method, body, customHeaders,user);
+    }
+
+    public static String getAccessToken(TuyaUser user){
         Gson gson=new Gson();
         String getTokenPath = "/v1.0/token?grant_type=1";
-        Object result = TuyaFunctions.execute(getTokenPath, "GET", "", new HashMap<>());
+        Object result = TuyaFunctions.execute(getTokenPath, "GET", "", new HashMap<>(),user );
         TuyaResponse response = gson.fromJson(gson.toJson(result), TuyaResponse.class);
         return response.result.access_token;
     }
@@ -203,7 +207,6 @@ public class TuyaFunctions {
         }
         return request;
     }
-
     public static Request.Builder postRequest(String url, String body) {
         Request.Builder request;
         try {
@@ -216,7 +219,6 @@ public class TuyaFunctions {
 
         return request;
     }
-
     public static Request.Builder putRequest(String url, String body) {
         Request.Builder request;
         try {
@@ -228,8 +230,6 @@ public class TuyaFunctions {
         }
         return request;
     }
-
-
     public static Request.Builder deleteRequest(String url, String body) {
         Request.Builder request;
         try {
@@ -241,7 +241,6 @@ public class TuyaFunctions {
         }
         return request;
     }
-
     public static Response doRequest(Request request) {
         Response response;
         try {
@@ -252,22 +251,11 @@ public class TuyaFunctions {
         return response;
     }
 
-    // Read timeout time (seconds)
-    private static final int readTimeout = 30;
-    // Write timeout time (seconds)
-    private static final int writeTimeout = 30;
-    //Connection timeout (seconds)
-    private static final int connTimeout = 30;
-    // Number of retries
-    private static final int maxRetry = 3;
-
-    // Get http client
     private static OkHttpClient getHttpClient() {
         OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(connTimeout, TimeUnit.SECONDS);
-        client.setReadTimeout(readTimeout, TimeUnit.SECONDS);
-        client.setWriteTimeout(writeTimeout, TimeUnit.SECONDS);
-
+        client.setConnectTimeout(30, TimeUnit.SECONDS);
+        client.setReadTimeout(30, TimeUnit.SECONDS);
+        client.setWriteTimeout(30, TimeUnit.SECONDS);
         return client;
     }
 
@@ -324,7 +312,6 @@ public class TuyaFunctions {
             return new HexBinaryAdapter().marshal(digest).toUpperCase();
         }
     }
-
 
     static class TuyaCloudSDKException extends RuntimeException {
 

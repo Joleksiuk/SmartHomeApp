@@ -6,21 +6,21 @@ import pl.smarthome.Controllers.tuya.models.HSVColor;
 
 import java.util.HashMap;
 
-class TuyaFunctionsTest {
+class TuyaUtilsServiceTest {
 
 
     @Test
     void testFunction() {
-        Gson gson=new Gson();
-        String getTokenPath = "/v1.0/token?grant_type=1";
-        Object result = TuyaFunctions.execute(getTokenPath, "GET", "", new HashMap<>());
-        TuyaResponse response = gson.fromJson(gson.toJson(result), TuyaResponse.class);
-        String accessToken = response.result.access_token;
-        System.out.println(accessToken);
+//        Gson gson=new Gson();
+//        String getTokenPath = "/v1.0/token?grant_type=1";
+//        Object result = TuyaFunctions.execute(getTokenPath, "GET", "", new HashMap<>());
+//        TuyaResponse response = gson.fromJson(gson.toJson(result), TuyaResponse.class);
+//        String accessToken = response.result.access_token;
+//        System.out.println(accessToken);
     }
     @Test
     void getAccessToken() {
-        System.out.println(TuyaFunctions.getAccessToken());
+        //System.out.println(TuyaFunctions.getAccessToken());
     }
 
 

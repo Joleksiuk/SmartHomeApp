@@ -8,6 +8,6 @@ import java.util.List;
 
 
 public interface InstructionRepository extends JpaRepository<Instruction, Long> {
-    List<Instruction> getAllBySceneId(Long sceneId);
+    //List<Instruction> getAllBySceneId(Long sceneId);
     List<Instruction> getAllById(InstructionId instructionId);
 }

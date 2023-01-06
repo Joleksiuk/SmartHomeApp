@@ -44,7 +44,8 @@ public class SceneService {
         return sceneRepository.getAllByHouseId(houseId);
     }
     public List<Optional<Device>> getDevicesBySceneId(Long sceneId){
-        List<Instruction> instructions = instructionRepository.getAllBySceneId(sceneId);
+        List<Instruction> instructions =new LinkedList<>();
+       // List<Instruction> instructions = instructionRepository.getAllBySceneId(sceneId);
         List<Long> uniqueDeviceIds = instructions.stream()
                 .map(instruction -> instruction.getId().deviceId).distinct().collect(Collectors.toList());
 

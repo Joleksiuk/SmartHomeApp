@@ -1,9 +1,6 @@
 package pl.smarthome.Models.users;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,9 +12,10 @@ import javax.persistence.Table;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class TuyaUser {
     @Id
-    private Integer id;
+    private Long id;
     private String server;
     private String accessId;
     private String secretKey;

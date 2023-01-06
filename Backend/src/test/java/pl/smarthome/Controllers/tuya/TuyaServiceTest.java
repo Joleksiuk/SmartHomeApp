@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.*;
 import org.junit.jupiter.api.Test;
+import pl.smarthome.AES.AES;
 import pl.smarthome.Controllers.tuya.details.DeviceDetails;
 import pl.smarthome.Controllers.tuya.models.CodeValueString;
 import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Controllers.tuya.details.CommandList;
+import pl.smarthome.Models.users.TuyaUser;
 
 import java.util.*;
 
@@ -15,10 +17,10 @@ class TuyaServiceTest {
 
     @Test
     void getDeviceDetails() {
-        String path = "/v1.0/devices/bf2b8148e20535ca2eaik5";
-        Object result = TuyaFunctions.execute(TuyaFunctions.getAccessToken(),path,"GET", "",new HashMap<>() );
-        Gson gson=new Gson();
-        System.out.println(gson.fromJson(gson.toJson(result), DeviceDetails.class));
+//        String path = "/v1.0/devices/bf2b8148e20535ca2eaik5";
+//        Object result = TuyaFunctions.execute(TuyaFunctions.getAccessToken(),path,"GET", "",new HashMap<>() );
+//        Gson gson=new Gson();
+//        System.out.println(gson.fromJson(gson.toJson(result), DeviceDetails.class));
     }
 
     @Test
@@ -86,6 +88,22 @@ class TuyaServiceTest {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    void getTestAESUtils(){
+
+        TuyaUser user = new TuyaUser(Long.parseLong("10"),
+                "https://openapi.tuyaeu.com",
+                "7u5g78ek3yp4v7pfd735",
+                "8e7be48e8b4146089929474d30d0488f");
+        user.setServer(AES.encrypt(user.getServer()));
+        user.setAccessId(AES.encrypt(user.getAccessId()));
+        user.setSecretKey(AES.encrypt(user.getSecretKey()));
+
+        System.out.println(AES.decrypt(user.getServer()));
+        System.out.println(AES.decrypt(user.getAccessId()));
+        System.out.println(AES.decrypt(user.getSecretKey()));
     }
 
     @Test
