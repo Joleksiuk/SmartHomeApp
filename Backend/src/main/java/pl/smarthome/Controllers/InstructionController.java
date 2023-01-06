@@ -3,6 +3,7 @@ package pl.smarthome.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.Instruction;
+import pl.smarthome.Models.InstructionId;
 import pl.smarthome.Services.InstructionService;
 
 import java.util.List;
@@ -28,19 +29,15 @@ public class InstructionController {
         instructionService.updateInstruction(instruction);
     }
 
-    @GetMapping("{id}")
-    public Instruction findInstructionById(@PathVariable Long id) {
-        return instructionService.findInstructionbyId(id).orElse(null);
-    }
-
     @GetMapping("sceneId={id}")
-    public List<Instruction> getCommandsBySceneId(@PathVariable Long id){
+    public List<Instruction> getInstructionsBySceneId(@PathVariable Long id){
         return instructionService.getAllInstructionsBySceneId(id);
     }
 
-    @PostMapping("executeScene/{id}")
-    public void executeSceneById(@PathVariable Long id) {
-        instructionService.executeScene(id);
+    @GetMapping()
+    public List<Instruction> getInstructionsBySceneId(@RequestBody InstructionId id){
+        return instructionService.getAllInstructionsById(id);
     }
+
 
 }

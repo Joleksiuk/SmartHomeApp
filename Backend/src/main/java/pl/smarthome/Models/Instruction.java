@@ -16,14 +16,8 @@ import javax.persistence.*;
 public class Instruction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private Long deviceId;
-    private Long sceneId;
-    private String endpoint;
+    InstructionId id;
+    public String code;
+    public String value;
 
-    Instruction(Long deviceId, String endpoint){
-        this.deviceId=deviceId;
-        this.endpoint=endpoint;
-    }
 }

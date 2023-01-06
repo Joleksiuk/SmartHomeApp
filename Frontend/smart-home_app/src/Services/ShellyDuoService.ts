@@ -1,4 +1,5 @@
 import axios from "axios";
+import { CodeValue } from "../interfaces";
 
 
 export enum State {
@@ -13,7 +14,7 @@ class ShellyDuoService {
     makeShellyRequest=(deviceId: string, command:string, value: string)=>{
         let url = Shelly_URL+'/device='+deviceId+'/'+command+'='+value.toString()     
         return axios       
-        .get(url, {})
+        .post(url, {})
         .catch(error => {
             console.log(error)
         });  
@@ -37,6 +38,16 @@ class ShellyDuoService {
     changeWhiteness(deviceId: string, value: string) {
 
         this.makeShellyRequest(deviceId,"white",value); 
+    }
+
+    makeMultiRequest(deviceId: string, values: Array<CodeValue>){
+        let url = Shelly_URL+'/multi/'+deviceId  
+        let body = JSON.stringify(values)
+        return axios       
+        .post(url, body)
+        .catch(error => {
+            console.log(error)
+        }); 
     }
 
     getDeviceStatus(deviceId: string){

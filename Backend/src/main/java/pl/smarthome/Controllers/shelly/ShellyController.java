@@ -25,7 +25,7 @@ public class ShellyController {
     }
 
     //e8db84d500b1
-    @GetMapping("device={id}/switch={state}")
+    @PostMapping("device={id}/switch={state}")
     public String switchBulb(@PathVariable String id, @PathVariable String state){
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -33,31 +33,31 @@ public class ShellyController {
         map.add("turn",state);
         return shellyService.makeShellyRequest(map,"/device/light/control");
     }
-    @GetMapping("device={id}/{command}={value}")
+    @PostMapping("device={id}/{command}={value}")
     public String executeCommand(@PathVariable String id, @PathVariable String command, @PathVariable String value){
 
         return shellyService.executeShellyCommand(command,value,id,path);
     }
 
-    @GetMapping("device={id}/brightness={value}")
+    @PostMapping("device={id}/brightness={value}")
     public String changeBrightness(@PathVariable String id, @PathVariable String value){
 
         return shellyService.executeShellyCommand("brightness",value,id,path);
     }
 
-    @GetMapping("device={id}/white={value}")
+    @PostMapping("device={id}/white={value}")
     public String changeWhite(@PathVariable String id, @PathVariable String value){
 
         return shellyService.executeShellyCommand("white",value,id,path);
     }
 
-    @GetMapping("device={id}/temp={value}")
+    @PostMapping("device={id}/temp={value}")
     public String changeTemperature(@PathVariable String id, @PathVariable String value){
 
         return shellyService.executeShellyCommand("temp",value,id,path);
     }
 
-    @GetMapping("device={id}/transition={value}")
+    @PostMapping("device={id}/transition={value}")
     public String changeTransition(@PathVariable String id, @PathVariable String value){
 
         return shellyService.executeShellyCommand("transition",value,id,path);

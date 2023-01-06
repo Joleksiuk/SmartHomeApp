@@ -1,4 +1,5 @@
 import axios from "axios";
+import { CodeValue } from "../interfaces";
 
 
 const tuya_url = "http://localhost:8080/tuya_led";
@@ -31,7 +32,6 @@ class TuyaLEDService {
         this.makeTuyaRequest(deviceId,'intensity',value); 
     }
 
-
     getDeviceDetails(deviceId: string){
         let url = tuya_url+'/device='+deviceId
 
@@ -40,6 +40,16 @@ class TuyaLEDService {
         .then(response => {
            console.log(response)
         })
+        .catch(error => {
+            console.log(error)
+        }); 
+    }
+
+    makeMultiRequest(values:Array<CodeValue>,deviceId: string){
+        let url = tuya_url+'/multi/'+deviceId  
+        let body = JSON.stringify(values)
+        return axios       
+        .post(url, body)
         .catch(error => {
             console.log(error)
         }); 

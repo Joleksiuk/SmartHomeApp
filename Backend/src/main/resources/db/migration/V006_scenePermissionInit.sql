@@ -20,11 +20,10 @@ CREATE TABLE IF NOT EXISTS public.devices
 
 CREATE TABLE IF NOT EXISTS public.instructions
 (
-    id bigint NOT NULL,
+    code text NOT NULL,
+    value text NOT NULL,
     device_id bigint REFERENCES devices(id),
-    scene_id bigint REFERENCES scenes(id),
-    endpoint text NOT NULL,
-    PRIMARY KEY (id)
+    scene_id bigint REFERENCES scenes(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.scenes

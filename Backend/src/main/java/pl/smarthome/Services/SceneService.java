@@ -2,18 +2,24 @@ package pl.smarthome.Services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.smarthome.Models.Device;
 import pl.smarthome.Models.House;
+import pl.smarthome.Models.Instruction;
 import pl.smarthome.Models.Scene;
+import pl.smarthome.Repositories.DeviceRepository;
+import pl.smarthome.Repositories.InstructionRepository;
 import pl.smarthome.Repositories.SceneRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class SceneService {
 
     private final SceneRepository sceneRepository;
+    private final DeviceRepository deviceRepository;
+    private final InstructionRepository instructionRepository;
 
     public void createScene(Scene scene) {
         sceneRepository.save( scene);
@@ -36,6 +42,14 @@ public class SceneService {
     }
     public List<Scene> getScenesByHouseId(Long houseId) {
         return sceneRepository.getAllByHouseId(houseId);
+    }
+    public List<Optional<Device>> getDevicesBySceneId(Long sceneId){
+        List<Instruction> instructions = instructionRepository.getAllBySceneId(sceneId);
+        List<Long> uniqueDeviceIds = instructions.stream()
+                .map(instruction -> instruction.getId().deviceId).distinct().collect(Collectors.toList());
+
+        return  uniqueDeviceIds.stream().map(deviceRepository::findById).collect(Collectors.toList());
+
     }
 }
 

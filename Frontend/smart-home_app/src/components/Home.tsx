@@ -8,7 +8,7 @@ import { Alert, Box, Button, CardActionArea, Grid, Stack, TextField } from '@mui
 import axios from 'axios';
 import { Component, Device, House, Scene } from '../interfaces';
 import { component_url, device_url, house_url, scene_url } from '../urls';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import AuthService from '../authorization/AuthService';
 
 export default function Home() {
@@ -44,11 +44,8 @@ export default function Home() {
         .then((response) => response.data)
         .then((data) => {
             setComponents(data)
-        }
-            )
-        .catch(error => {
-          console.log(error)
-        });
+        })
+
     }
 
     const getHomeScenes=()=>{
@@ -56,23 +53,13 @@ export default function Home() {
         .then((response) => response.data)
         .then((data) => {
             setScenes(data)
-        }
-            )
-        .catch(error => {
-          console.log(error)
-        });
+        })
     }
 
     const getCurrentDevices=()=>{  
         axios.get(device_url+'/houseId='+home?.id , {})
         .then((response) => response.data)
-        .then((data) => {
-            setDevices(data)
-        }
-            )
-        .catch(error => {
-          console.log(error)
-        });
+        .then((data) => {setDevices(data)})
     }
 
     const getCurrentHome=()=>{
@@ -81,11 +68,7 @@ export default function Home() {
         .then((data) => {
             setHome(data)
             getAllComponents()        
-        }
-            )
-        .catch(error => {
-          console.log(error)
-        });
+        } )
     }
 
     const handleNewComponentClicked=(component:Component)=>{
@@ -269,22 +252,24 @@ export default function Home() {
                 <Grid container justifyContent="center" spacing={3}>
                 {scenes?.map((scene)=>
                     <Button onClick={()=>handleSceneClicked(scene)}>
-                        <Grid item>
-                            <Card>
-                                <CardActionArea>
-                                    <CardMedia
-                                    src="https://img.freepik.com/free-photo/d-rendering-black-background-product-podium-stand-studio_1258-112104.jpg?w=1380&t=st=1672922145~exp=1672922745~hmac=32195b1a4b538e84d8775ad1251285b1f0905f48b66f8875b93b5358166fa7dc"
-                                    component="img"
-                                    height="150"
-                                    />
-                                    <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {scene.name } 
-                                    </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                        </Grid>
+                        <Link to={'/scene/'+scene.id}>
+                            <Grid item>
+                                <Card>
+                                    <CardActionArea>
+                                        <CardMedia
+                                        src="https://img.freepik.com/free-photo/d-rendering-black-background-product-podium-stand-studio_1258-112104.jpg?w=1380&t=st=1672922145~exp=1672922745~hmac=32195b1a4b538e84d8775ad1251285b1f0905f48b66f8875b93b5358166fa7dc"
+                                        component="img"
+                                        height="150"
+                                        />
+                                        <CardContent>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {scene.name } 
+                                        </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                        </Link>
                     </Button>
                 )}
                 </Grid>

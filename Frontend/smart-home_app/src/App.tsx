@@ -32,6 +32,7 @@ import TuyaLED from './components/tuya/TuyaLED';
 import TuyaPlug from './components/tuya/TuyaPlug';
 import ManageHouses from './components/ManageHouses';
 import Home from './components/Home';
+import SceneComponent from './components/Scene';
 
 const drawerWidth: number = 240;
 
@@ -205,6 +206,7 @@ function App() {
                         <Route path="/TuyaSmartPlug/:deviceId" element={<TuyaPlug/>}/>
                         <Route path="/manageHomes" element={<ManageHouses/>}/>
                         <Route path="/home/:id" element={<Home/>}/>
+                        <Route path="/scene/:id" element={<SceneComponent/>}/>
                       </Routes>     
                       </div>
                     </header>

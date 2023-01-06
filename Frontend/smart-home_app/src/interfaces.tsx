@@ -34,3 +34,19 @@ export interface Command{
     sceneId:number
 }
 
+export interface CodeValue{
+    code:String,
+    value:any
+}
+
+export interface InstructionId{
+    deviceId:number,
+    sceneId:number
+}
+
+export interface Instruction{
+    id:InstructionId,
+    code:string,
+    value:any
+}
+
