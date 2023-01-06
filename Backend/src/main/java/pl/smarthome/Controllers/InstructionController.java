@@ -3,7 +3,7 @@ package pl.smarthome.Controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.Instruction;
-import pl.smarthome.Models.InstructionId;
+import pl.smarthome.Models.ids.InstructionId;
 import pl.smarthome.Services.InstructionService;
 
 import java.util.List;

@@ -3,7 +3,7 @@ package pl.smarthome.Services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.smarthome.Models.Instruction;
-import pl.smarthome.Models.InstructionId;
+import pl.smarthome.Models.ids.InstructionId;
 import pl.smarthome.Repositories.InstructionRepository;
 
 import java.util.LinkedList;

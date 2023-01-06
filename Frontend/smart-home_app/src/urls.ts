@@ -4,4 +4,6 @@ export const house_url = "http://localhost:8080/houses";
 export const component_url = "http://localhost:8080/component";
 export const device_url = "http://localhost:8080/devices";
 export const scene_url = "http://localhost:8080/scenes";
-export const instruction_url="http://localhost:8080/instructions";
+export const instruction_url= "http://localhost:8080/instructions";
+export const houseUser_url= "http://localhost:8080/house_users";
+export const user_url = "http://localhost:8080/users";

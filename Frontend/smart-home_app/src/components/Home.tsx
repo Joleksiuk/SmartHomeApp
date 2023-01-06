@@ -279,9 +279,15 @@ export default function Home() {
                 <Typography  variant="h6" >Add new scene</Typography>
             </Grid>
             <Grid justifyContent="center" container item xs={12}>
-
                 <TextField  onChange={onTextChange} value={sceneName} label={"home name"}/>
                 <Button variant="contained" onClick={()=>handleCreateNewScene()}>Add new House</Button>           
+            </Grid>
+
+            <Grid justifyContent="center" container item xs={12}>
+                <Link to={'/house/users/'+ id}>
+                    <Button variant="contained" onClick={()=>handleCreateNewScene()}>Manage Roles</Button>     
+                </Link>
+                     
             </Grid>
 
         </Grid>

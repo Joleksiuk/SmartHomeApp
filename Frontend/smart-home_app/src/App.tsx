@@ -33,6 +33,9 @@ import TuyaPlug from './components/tuya/TuyaPlug';
 import ManageHouses from './components/ManageHouses';
 import Home from './components/Home';
 import SceneComponent from './components/Scene';
+import HouseUserList from './components/HouseUserList';
+import HouseUser from './components/HouseUserList';
+import HouseUserComponent from './components/HouseUserList';
 
 const drawerWidth: number = 240;
 
@@ -98,7 +101,6 @@ function App() {
 
   const onLogoutClick =() =>{
     AuthService.logout()
-    window.location.reload()
   }
 
   return (
@@ -207,6 +209,7 @@ function App() {
                         <Route path="/manageHomes" element={<ManageHouses/>}/>
                         <Route path="/home/:id" element={<Home/>}/>
                         <Route path="/scene/:id" element={<SceneComponent/>}/>
+                        <Route path='/house/users/:id' element={<HouseUserComponent/>}/>
                       </Routes>     
                       </div>
                     </header>

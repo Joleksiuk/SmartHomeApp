@@ -50,3 +50,27 @@ export interface Instruction{
     value:any
 }
 
+export interface User{
+    id:number,
+    username:string,
+    email:string
+}
+
+export interface HouseUserDto{
+    userId:number,
+    houseId:number,
+    username:string,
+    email:string,
+    role:string
+}
+
+export interface HouseUser{
+    id:HouseUserId,
+    role:string
+}
+
+export interface HouseUserId{
+    userId:number,
+    houseId:number
+}
+

@@ -1,4 +1,5 @@
 import axios from "axios";
+import AuthService from "../authorization/AuthService";
 import { CodeValue } from "../interfaces";
 
 
@@ -8,10 +9,12 @@ class TuyaLEDService {
 
     makeTuyaRequest=(deviceId: string, command:string, value: string)=>{
        
-        let url = tuya_url+'/device='+deviceId+'/'+command+'='+value   
-        console.log(url)
+        let url = tuya_url+'/device='+deviceId+'/'+command+'='+value       
+        let msg={
+            "userId":AuthService.getLoggedUser().id
+        }  
         return axios       
-        .get(url, {})
+        .post(url, JSON.stringify(msg))
         .catch(error => {
             console.log(error)
         });  
@@ -34,9 +37,11 @@ class TuyaLEDService {
 
     getDeviceDetails(deviceId: string){
         let url = tuya_url+'/device='+deviceId
-
+        let msg={
+            "userId":AuthService.getLoggedUser().id
+        }  
         return axios
-        .get(url, {})
+        .post(url, JSON.stringify(msg))
         .then(response => {
            console.log(response)
         })
@@ -46,7 +51,7 @@ class TuyaLEDService {
     }
 
     makeMultiRequest(values:Array<CodeValue>,deviceId: string){
-        let url = tuya_url+'/multi/'+deviceId  
+        let url = tuya_url+'/multi/'+deviceId+'/'+AuthService.getLoggedUser().id  
         let body = JSON.stringify(values)
         return axios       
         .post(url, body)
