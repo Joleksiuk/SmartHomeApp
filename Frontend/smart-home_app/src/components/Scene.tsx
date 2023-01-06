@@ -1,77 +1,39 @@
-import { Button, Card, CardActionArea, CardContent, CardMedia, Grid, Paper, Slider, Switch, Typography } from '@mui/material';
+import { Button, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Device, Instruction, Scene } from '../interfaces';
-import { device_url, instruction_url, scene_url } from '../urls';
+import { CommandDto, Device, Scene } from '../interfaces';
+import {scene_url } from '../urls';
 import ShellyDuo from './shelly/ShellyDuo';
 import TuyaLED from './tuya/TuyaLED';
 import TuyaPlug from './tuya/TuyaPlug';
 
-
 export default function SceneComponent() {
 
     const [scene, setScene]=useState<Scene>()
-    const [devices,setDevices]=useState<Array<Device>>()
-    const [allDevicesm, setAllDevices]=useState<Array<Device>>()
-    const [instructions, setInstructions]=useState<Array<Instruction>>();
+    const [sceneDevices,setSceneDevices]=useState<Array<Device>>()
+    const [deviceCommandMap,setDeviceCommandMap]=useState<Map<number,Array<CommandDto>>>()
+    const [commands, setCommands]=useState<Array<CommandDto>>();
     const [devicesToAdd, setDevicesToAdd]=useState<Array<Device>>()
-
-
-    //make array of devices in scene and setup instructions
-    //get all devices of that user
-    //filter devices that are in the scene
-    //make add option
-
-    //while adding add current status of devices as default 
 
     const {id}=useParams()
 
-    const getInstructions=()=>{
-
-        axios.get(instruction_url+'sceneId='+id,{})
-        .then((response) => response.data)
-        .then((data) => {setInstructions(data)})
-        .catch(error => {
-          console.log(error)
-        });
-    }
-
     const getCurrentScene=()=>{
-        axios.get(scene_url+id,{})
-        .then((response) => response.data)
-        .then((data) => {setScene(data)})
-        .catch(error => {
-          console.log(error)
-        });
+        axios.get(scene_url+'/'+id,{}).then((response) => response.data).then((data) => {setScene(data)});
     }
 
-    const getDevices=()=>{
-        axios.get(scene_url+'/devices/'+id,{})
-        .then((response) => response.data)
-        .then((data) => {setDevices(data)})
-        .catch(error => {
-          console.log(error)
-        });
+    const getSceneDevices=()=>{
+        axios.get(scene_url+'/devices/'+id,{}).then((response) => response.data).then((data) => {setSceneDevices(data)})
     }
-    const getAllDevices=()=>{
-        axios.get(device_url+'/houseId='+scene?.houseId, {})
-        .then((response) => response.data)
-        .then((data) => {
-            setAllDevices(data)
-            setDevicesToAdd(allDevicesm?.filter(el=>!devices?.includes(el)))
-        })
-        .catch(error => {
-          console.log(error)
-        });
+
+    const getDevicesToAdd=()=>{
+        axios.get(scene_url+'/Add/houseId='+scene?.houseId+'/sceneId='+id, {}).then((response) => response.data).then((data) => {setDevicesToAdd(data)})
     }
 
     useEffect(() => {
        getCurrentScene()
-       getInstructions()
-       getDevices()    
-       getAllDevices()
-
+       getSceneDevices()
+       getDevicesToAdd()
     }, []);
 
     const showPanel=(device:Device)=>{
@@ -95,12 +57,40 @@ export default function SceneComponent() {
             <Grid justifyContent="center" container item xs={12}>
                 <Typography  variant="h4" >Welcome to scene: {scene?.name}</Typography>
             </Grid>
+
             <Grid justifyContent="center" container item xs={12}>
-                <Typography  variant="h6" >Your current devices</Typography>
+                <Typography  variant="h6" >Scene Devices</Typography>
             </Grid>
             <Grid justifyContent="center" container item xs={12}>
                 <Grid container justifyContent="center" spacing={3}>
-                {devices?.map((device)=>
+                {sceneDevices?.map((device)=>
+                    <Button onClick={()=>handleDeviceClicked(device)}>
+                        <Grid item>
+                            <Card>
+                                <CardActionArea>
+                                    <CardMedia
+                                    component="img"
+                                    height="150"
+                                    />
+                                    <CardContent>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {device.name } 
+                                    </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        </Grid>
+                    </Button>
+                )}
+                </Grid>
+            </Grid> 
+
+            <Grid justifyContent="center" container item xs={12}>
+                <Typography  variant="h6" >Devices to add</Typography>
+            </Grid>
+            <Grid justifyContent="center" container item xs={12}>
+                <Grid container justifyContent="center" spacing={3}>
+                {devicesToAdd?.map((device)=>
                     <Button onClick={()=>handleDeviceClicked(device)}>
                         <Grid item>
                             <Card>

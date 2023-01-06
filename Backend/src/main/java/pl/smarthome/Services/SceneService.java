@@ -2,12 +2,11 @@ package pl.smarthome.Services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.smarthome.Models.Command;
 import pl.smarthome.Models.Device;
-import pl.smarthome.Models.House;
-import pl.smarthome.Models.Instruction;
 import pl.smarthome.Models.Scene;
+import pl.smarthome.Repositories.CommandRepository;
 import pl.smarthome.Repositories.DeviceRepository;
-import pl.smarthome.Repositories.InstructionRepository;
 import pl.smarthome.Repositories.SceneRepository;
 
 import java.util.*;
@@ -19,7 +18,7 @@ public class SceneService {
 
     private final SceneRepository sceneRepository;
     private final DeviceRepository deviceRepository;
-    private final InstructionRepository instructionRepository;
+    private final CommandRepository commandRepository;
 
     public void createScene(Scene scene) {
         sceneRepository.save( scene);
@@ -43,13 +42,27 @@ public class SceneService {
     public List<Scene> getScenesByHouseId(Long houseId) {
         return sceneRepository.getAllByHouseId(houseId);
     }
-    public List<Optional<Device>> getDevicesBySceneId(Long sceneId){
-        List<Instruction> instructions =new LinkedList<>();
-       // List<Instruction> instructions = instructionRepository.getAllBySceneId(sceneId);
-        List<Long> uniqueDeviceIds = instructions.stream()
-                .map(instruction -> instruction.getId().deviceId).distinct().collect(Collectors.toList());
 
-        return  uniqueDeviceIds.stream().map(deviceRepository::findById).collect(Collectors.toList());
+
+    public List<Device> getDevicesBySceneId(Long sceneId){
+        List<Command> commands = commandRepository.getAllBySceneId(sceneId);
+        List<Long> uniqueDeviceIds = commands.stream()
+                .map(Command::getDeviceId).distinct().collect(Collectors.toList());
+
+        return  uniqueDeviceIds.stream()
+                .map(deviceRepository::findById)
+                .map(device -> device.orElse(null))
+                .collect(Collectors.toList());
+    }
+
+    public List<Device> getHouseDevicesToAddBySceneId(Long houseId, Long sceneId){
+        List<Device> houseDevices = deviceRepository.getAllByHouseId(houseId);
+        List<Device> sceneDevices = getDevicesBySceneId(sceneId);
+        houseDevices.removeAll(sceneDevices);
+        return  houseDevices;
+    }
+
+    public void addDeviceToScene(Long deviceId, Long sceneId){
 
     }
 }

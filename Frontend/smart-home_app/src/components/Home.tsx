@@ -280,7 +280,7 @@ export default function Home() {
             </Grid>
             <Grid justifyContent="center" container item xs={12}>
                 <TextField  onChange={onTextChange} value={sceneName} label={"home name"}/>
-                <Button variant="contained" onClick={()=>handleCreateNewScene()}>Add new House</Button>           
+                <Button variant="contained" onClick={()=>handleCreateNewScene()}>Add new Scene</Button>           
             </Grid>
 
             <Grid justifyContent="center" container item xs={12}>

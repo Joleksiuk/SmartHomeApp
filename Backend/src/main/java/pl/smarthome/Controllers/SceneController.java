@@ -51,8 +51,13 @@ public class SceneController {
     }
 
     @GetMapping("devices/{id}")
-    public List<Optional<Device>> getDevicesBySceneId(@PathVariable Long id) {
+    public List<Device> getDevicesBySceneId(@PathVariable Long id) {
         return sceneService.getDevicesBySceneId(id);
+    }
+
+    @GetMapping("Add/houseId={houseId}/sceneId={sceneId}")
+    public List<Device> getHouseDevicesToAddBySceneId(@PathVariable Long sceneId,@PathVariable Long houseId){
+        return sceneService.getHouseDevicesToAddBySceneId(houseId,sceneId);
     }
 
 }

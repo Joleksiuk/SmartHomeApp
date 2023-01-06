@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS public.devices
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.instructions
+CREATE TABLE IF NOT EXISTS public.commands
 (
     code text NOT NULL,
     value text NOT NULL,

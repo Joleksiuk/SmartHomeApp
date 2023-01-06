@@ -1,11 +1,9 @@
-package pl.smarthome.Controllers.tuya.controllers;
+package pl.smarthome.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.smarthome.Models.tuya.Parameter;
+import pl.smarthome.Models.Parameter;
 import pl.smarthome.Services.ParameterService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("parameters")
@@ -29,13 +27,13 @@ public class ParameterController {
         parameterService.updateParameter(parameter);
     }
 
-    @GetMapping("{id}")
-    public Parameter findParameterById(@PathVariable Integer id) {
-        return parameterService.findParameterById(id).orElse(null);
-    }
-
-    @GetMapping
-    public List<Parameter> getParameters(){
-        return parameterService.getAllParameters();
-    }
+//    @GetMapping("{id}")
+//    public Parameter findParameterById(@PathVariable Integer id) {
+//        return parameterService.findParameterById(id).orElse(null);
+//    }
+//
+//    @GetMapping
+//    public List<Parameter> getParameters(){
+//        return parameterService.getAllParameters();
+//    }
 }

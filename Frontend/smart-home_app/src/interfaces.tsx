@@ -39,13 +39,8 @@ export interface CodeValue{
     value:any
 }
 
-export interface InstructionId{
+export interface CommandDto{
     deviceId:number,
-    sceneId:number
-}
-
-export interface Instruction{
-    id:InstructionId,
     code:string,
     value:any
 }
