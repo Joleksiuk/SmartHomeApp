@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -8,26 +8,20 @@ import { Box, Button, CardActionArea, Grid, TextField } from '@mui/material';
 import axios from 'axios';
 import AuthService from '../authorization/AuthService';
 import { House } from '../interfaces';
-import { house_url } from '../urls';
+import { houseUser_url, house_url } from '../urls';
 import { Link } from 'react-router-dom';
 
 export default function ManageHouses() {
 
-    const [houses, setHouses] = React.useState<Array<House>>([]);
+    const [houses, setHouses] = useState<Array<House>>([]);
     const [homeName, setTextValue] = useState<string>("");
     const onTextChange = (e: any) => setTextValue(e.target.value);
     
     useEffect(() => {
         
-        axios.get(house_url+'/ownerId='+AuthService.getLoggedUser().id.toString() , {})
+        axios.get(houseUser_url+'/userId='+AuthService.getLoggedUser().id.toString() , {})
         .then((response) => response.data)
-        .then((data) => {
-            setHouses(data)
-        }
-            )
-        .catch(error => {
-          console.log(error)
-        });
+        .then((data) => {setHouses(data)})
 
     }, []);
 

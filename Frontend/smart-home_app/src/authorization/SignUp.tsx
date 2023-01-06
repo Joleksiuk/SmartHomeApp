@@ -59,7 +59,7 @@ export default function SignUp() {
     
     if(username!==null &&  email!==null && password!==null &&username!==undefined &&  email!==undefined&& password!==undefined){
       authService.register(username,email,password)
-      .then(()=>  navigate("/"))
+      .then(()=>  navigate("/SignIn"))
       .catch(error => {
         setShowError(true);
         setErrorMessage("That username or email already exist!");
@@ -67,11 +67,6 @@ export default function SignUp() {
      
     } 
   };
-
-  const goSignIn=()=>{
-    navigate('/')
-    navigate('signIn')
-  }
 
   return (
     <ThemeProvider theme={theme}>
