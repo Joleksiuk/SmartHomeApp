@@ -2,24 +2,48 @@ import { Button, Grid, Paper, Slider, Switch, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Device } from '../../interfaces';
+import { ComponentProp, Device } from '../../interfaces';
 import ComponentService, { Component } from '../../Services/ComponentService';
 import ShellyDuoService, { State } from '../../Services/ShellyDuoService';
 import { device_url } from '../../urls';
 
 export interface ShellyDuoProps{
-    turn?:string,
-    white?:string,
-    brightness?:string,
-    temp?:string,
-    transition?:string
+    turn?:boolean,
+    white?:Number,
+    brightness?:Number,
+    temp?:Number
 }
 
-export default function ShellyDuo(props?:ShellyDuoProps) {
+export default function ShellyDuo(props?:ComponentProp) {
 
   const { deviceId } = useParams();
   const [device,setDevice]=useState<Device>()
+  const [shellyProps, setShellyProps]=useState<ShellyDuoProps>()
   
+  const readProp=()=>{
+
+    let turn=false
+
+    let  state = props?.pp?.find(elem => elem.code == 'colour_data')?.value
+    if(state=='On'){
+      turn=true
+    }
+
+    let pp={
+      turn: turn,
+      white: Number(props?.pp?.find(elem => elem.code == 'white')?.value),
+      brightness: Number(props?.pp?.find(elem => elem.code == 'brightness')?.value),
+      temp: Number(props?.pp?.find(elem => elem.code == 'temp')?.value)
+    }
+
+    setChecked(pp.turn)
+    setBrightnessValue(pp.brightness)
+    setTempValue(pp.temp)
+    setWhiteValue(pp.white)
+
+    setShellyProps(pp)
+  }
+
   useEffect(() => {
      getDeviceById()
   }, []);

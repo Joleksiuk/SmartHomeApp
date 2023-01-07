@@ -26,7 +26,7 @@ public class ComponentService {
     public Optional<Component> findByName(String name){
         return componentRepository.findByName(name);
     }
-    public Optional<Component> findComponentById(Integer id) {
+    public Optional<Component> findComponentById(Long id) {
         return componentRepository.findById(id);
     }
     public List<Component> getAllComponents(){

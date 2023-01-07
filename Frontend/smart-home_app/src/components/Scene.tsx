@@ -1,9 +1,11 @@
 import { Button, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import axios from 'axios';
+import { stringify } from 'querystring';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { json } from 'stream/consumers';
 import AuthService from '../authorization/AuthService';
-import { CommandDto, Device, Scene } from '../interfaces';
+import { CodeValue, CommandDto, ComponentProp, Device, DeviceDto, Scene } from '../interfaces';
 import {scene_url } from '../urls';
 import ShellyDuo, { ShellyDuoProps } from './shelly/ShellyDuo';
 import TuyaLED from './tuya/TuyaLED';
@@ -12,18 +14,16 @@ import TuyaPlug from './tuya/TuyaPlug';
 export default function SceneComponent() {
 
     const [scene, setScene]=useState<Scene>()
-    const [sceneDevices,setSceneDevices]=useState<Array<Device>>()
-    const [deviceCommandMap,setDeviceCommandMap]=useState<Map<number,Array<CommandDto>>>()
-    const [commands, setCommands]=useState<Array<CommandDto>>();
-    const [devicesToAdd, setDevicesToAdd]=useState<Array<Device>>();
+    const [sceneDevices,setSceneDevices]=useState<Array<DeviceDto>>()
+    const [devicesToAdd, setDevicesToAdd]=useState<Array<DeviceDto>>();
 
     const [sceneReady,setSceneReady]=useState<Boolean>(false)
     const [devicesReady,setDevicesReady]=useState<Boolean>(false)
     const [addReady,setAddReady]=useState<Boolean>(false)
+    const [prop,setProp]=useState<CodeValue[]>([])
 
     const {id}=useParams()
-
-    
+ 
     useEffect(() => {
         getCurrentScene()
      }, []);
@@ -35,7 +35,7 @@ export default function SceneComponent() {
 
 
      useEffect(() => {
-        //generate panels
+        getDefaultProps();
 
      }, [devicesReady]);
 
@@ -65,9 +65,18 @@ export default function SceneComponent() {
         })
     }
 
+    const getDefaultProps=()=>{
+        axios.get<CodeValue[]>(scene_url+'/props/default/1', {})
+        .then((response) => response.data).
+        then((data) => {
+            setProp(data) 
+        }) 
+    }
+
     type ComponentMap = {
         [key: string]: React.ComponentType;
     };
+
 
     const componentMap: ComponentMap = {
         'Shelly duo': ShellyDuo,
@@ -81,33 +90,20 @@ export default function SceneComponent() {
         return <Component {...componentProps}/>;
       }
 
-    const showPanel=(device:Device)=>{
+    const showPanel=(device:DeviceDto)=>{
+
+        let p: ComponentProp = {
+            pp: prop,
+        };
+
         return(
             <div>
                 {devicesReady &&
-                    render('Tuya Smart LED',tuyaLEDProps)
+                    render(device.componentName ,p)
                 }
             </div>
         );
-    }
-
-    const tuyaLEDProps={
-        switch_1:"true",
-    }
-
-    const tuyaPlugProps={
-        switch_led:"true",
-        colour_data:"fc51eb",
-        intensity:"1000"
-    }
-
-    const shellyDefaultProps = {turn:'on',
-        white:'50',
-        brightness:'50',
-        temp:'2500',
-        transition:'400' };
-
- 
+    } 
 
     const handleAddDeviceToScene =(device:Device)=>{
         axios.get(scene_url+'/Add/deviceId='+device.id+'/sceneId='+id, {}).then((response) => console.log(response.data)).catch(error => {
@@ -142,10 +138,13 @@ export default function SceneComponent() {
             </Grid> 
             <Grid justifyContent="center" container item xs={12}>
             {devicesToAdd?.length!=0 && 
-              <div> 
+              <> 
                 <Grid justifyContent="center" container item xs={12}>
-                <Typography  variant="h6" >Devices to add</Typography>
-                </Grid>
+                <Typography  variant="h4" >Devices to add</Typography>
+                </Grid> 
+                <br></br>
+                <br></br> 
+                <br></br>
                 <Grid justifyContent="center" container item xs={12}>
                     <Grid container justifyContent="center" spacing={3}>
                     {devicesToAdd?.map((device)=>
@@ -154,6 +153,7 @@ export default function SceneComponent() {
                                 <Card>
                                     <CardActionArea>
                                         <CardMedia
+                                        src ={device.imagePath}
                                         component="img"
                                         height="150"
                                         />
@@ -169,11 +169,9 @@ export default function SceneComponent() {
                     )}
                     </Grid>
                 </Grid> 
-              </div>
+              </>
             }
-            </Grid> 
-                   
-
+          </Grid> 
             <Grid justifyContent="center" container item xs={12}>
                 <Button variant="contained" onClick={executeScene}>Execute Scene</Button>           
             </Grid>   

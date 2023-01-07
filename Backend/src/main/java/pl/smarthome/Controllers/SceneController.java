@@ -2,12 +2,12 @@ package pl.smarthome.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.smarthome.Models.Device;
+import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Models.Scene;
+import pl.smarthome.Models.dtos.DeviceDto;
 import pl.smarthome.Services.SceneService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("scenes")
@@ -51,12 +51,12 @@ public class SceneController {
     }
 
     @GetMapping("devices/{id}")
-    public List<Device> getDevicesBySceneId(@PathVariable Long id) {
+    public List<DeviceDto> getDevicesBySceneId(@PathVariable Long id) {
         return sceneService.getDevicesBySceneId(id);
     }
 
     @GetMapping("Add/houseId={houseId}/sceneId={sceneId}")
-    public List<Device> getHouseDevicesToAddBySceneId(@PathVariable Long sceneId,@PathVariable Long houseId){
+    public List<DeviceDto> getHouseDevicesToAddBySceneId(@PathVariable Long sceneId, @PathVariable Long houseId){
         return sceneService.getHouseDevicesToAddBySceneId(houseId,sceneId);
     }
 
@@ -69,5 +69,15 @@ public class SceneController {
     public void setScene(@PathVariable Long sceneId, @PathVariable Long userId){
         sceneService.setScene(sceneId,userId);
     }
+    @GetMapping("props/{sceneId}/{deviceId}")
+    public List<CodeValue> getDeviceSceneProps(@PathVariable Long sceneId, @PathVariable Long deviceId){
+        return sceneService.getDeviceSceneProps(sceneId,deviceId);
+    }
+
+    @GetMapping("props/default/{componentId}")
+    public List<CodeValue> getDefaultProps(@PathVariable Long componentId){
+        return sceneService.getDefaultComponentProps(componentId);
+    }
+
 
 }

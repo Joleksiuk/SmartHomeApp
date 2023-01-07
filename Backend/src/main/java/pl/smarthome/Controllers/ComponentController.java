@@ -31,7 +31,7 @@ public class ComponentController {
     }
 
     @GetMapping("id={id}")
-    public Component findComponentById(@PathVariable Integer id) {
+    public Component findComponentById(@PathVariable Long id) {
         return componentService.findComponentById(id).orElse(null);
     }
 

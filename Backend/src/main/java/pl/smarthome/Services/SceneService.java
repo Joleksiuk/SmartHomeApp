@@ -7,6 +7,7 @@ import pl.smarthome.Controllers.tuya.TuyaService;
 import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Models.*;
 import pl.smarthome.Models.dtos.CommandDto;
+import pl.smarthome.Models.dtos.DeviceDto;
 import pl.smarthome.Repositories.*;
 
 import java.util.*;
@@ -20,6 +21,8 @@ public class SceneService {
     private final DeviceRepository deviceRepository;
     private final CommandRepository commandRepository;
     private final ParameterRepository parameterRepository;
+
+    private final ParameterService parameterService;
 
     private final CommandService commandService;
     private final ComponentRepository componentRepository;
@@ -52,21 +55,36 @@ public class SceneService {
     }
 
 
-    public List<Device> getDevicesBySceneId(Long sceneId){
+    public DeviceDto devicetoDto(Device device){
+        Component component = componentRepository.findById(device.getComponentId()).orElse(null);
+        return new DeviceDto(device,component.getName(),component.getImagePath(),
+                component.getBrand(),"");
+    }
+    public List<DeviceDto> getDevicesBySceneId(Long sceneId){
         List<Command> commands = commandRepository.getAllBySceneId(sceneId);
         List<Long> uniqueDeviceIds = commands.stream()
                 .map(Command::getDeviceId).distinct().collect(Collectors.toList());
 
-        return  uniqueDeviceIds.stream()
+        List<Device> devices = uniqueDeviceIds.stream()
                 .map(deviceRepository::findById)
                 .map(device -> device.orElse(null))
                 .collect(Collectors.toList());
+
+        return devices.stream().map(this::devicetoDto).toList();
     }
 
-    public List<Device> getHouseDevicesToAddBySceneId(Long houseId, Long sceneId){
-        List<Device> houseDevices = deviceRepository.getAllByHouseId(houseId);
-        List<Device> sceneDevices = getDevicesBySceneId(sceneId);
-        houseDevices.removeAll(sceneDevices);
+    public List<DeviceDto> getHouseDevicesToAddBySceneId(Long houseId, Long sceneId){
+        List<Device> homeDevices = deviceRepository.getAllByHouseId(houseId);
+        List<DeviceDto> houseDevices =  new ArrayList<> (homeDevices.stream().map(this::devicetoDto).toList());
+        List<DeviceDto> sceneDevices = new ArrayList<> (getDevicesBySceneId(sceneId));
+
+        for(DeviceDto device: houseDevices){
+            for(DeviceDto d:sceneDevices){
+                if(device.getId()==d.getId()){
+                    houseDevices.remove(device);
+                }
+            }
+        }
         return  houseDevices;
     }
 
@@ -83,8 +101,8 @@ public class SceneService {
     }
 
     public void setScene(Long sceneId, Long userId){
-        List<Device> devices = getDevicesBySceneId(sceneId);
-        for(Device device: devices){
+        List<DeviceDto> devices = getDevicesBySceneId(sceneId);
+        for(DeviceDto device: devices){
             List<CodeValue> cvs = new LinkedList<>();
             List <CommandDto> list =  commandService.getAllCommandsDtoByIds(sceneId,device.getId());
             for(CommandDto c:list){
@@ -97,6 +115,20 @@ public class SceneService {
                 case "Shelly" -> shellyService.multiControl(cvs, device.getSpecificId(), "/device/light/control", userId);
             }
         }
+    }
+    public List<CodeValue> getDeviceSceneProps(Long sceneId, Long deviceId){
+        return commandService.getAllCommandsBySceneId(sceneId).stream()
+                .filter(command -> {return command.getDeviceId()==deviceId;})
+                .map(command -> {return new CodeValue(command.getCode(),command.getValue());}).toList();
+    }
+
+    public List<CodeValue> getDefaultComponentProps(Long componentId){
+
+        List<CodeValue> cvs = parameterService.getAllByComponentId(componentId)
+                .stream().map(parameter -> {
+                    return new CodeValue(parameter.getCode(),parameter.getValue());})
+                .toList();
+        return cvs;
     }
 }
 

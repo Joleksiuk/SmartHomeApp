@@ -37,6 +37,7 @@ import HouseUserList from './components/HouseUserList';
 import HouseUser from './components/HouseUserList';
 import HouseUserComponent from './components/HouseUserList';
 import PermissionComponent from './components/PermissionComp';
+import { CodeValue } from './interfaces';
 
 const drawerWidth: number = 240;
 
@@ -102,6 +103,7 @@ function App() {
   const onLogoutClick =() =>{
     AuthService.logout()
   }
+  const ex: CodeValue[] = []
 
   return (
     <BrowserRouter>

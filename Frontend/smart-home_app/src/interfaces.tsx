@@ -19,6 +19,24 @@ export interface Device{
     name:string
 }
 
+export interface DeviceDto{
+    id:number,
+    componentId:number,
+    houseId:number,
+    specificId:string
+    name:string,
+    componentName:string,
+    imagePath:string,
+    brand:string,
+}
+
+
+export interface ComponentProp{
+
+    pp?: CodeValue[]
+  }
+  
+
 export interface Scene{
     id:number,
     houseId:number,
@@ -35,8 +53,8 @@ export interface Command{
 }
 
 export interface CodeValue{
-    code:String,
-    value:any
+    code:string,
+    value:string
 }
 
 export interface CommandDto{
