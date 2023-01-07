@@ -28,6 +28,7 @@ export interface DeviceDto{
     componentName:string,
     imagePath:string,
     brand:string,
+    props:CodeValue[]
 }
 
 

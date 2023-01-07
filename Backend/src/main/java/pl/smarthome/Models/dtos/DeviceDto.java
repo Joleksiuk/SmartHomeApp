@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Models.Device;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,9 +22,9 @@ public class DeviceDto {
     private String componentName;
     private String imagePath;
     private String brand;
-    private String props;
+    private List<CodeValue> props;
 
-    public DeviceDto(Device device, String componentName, String imagePath, String brand, String props){
+    public DeviceDto(Device device, String componentName, String imagePath, String brand, List<CodeValue> props){
         this.id = device.getId();
         this.componentId = device.getComponentId();
         this.houseId=device.getHouseId();
@@ -31,6 +34,7 @@ public class DeviceDto {
         this.imagePath=imagePath;
         this.brand=brand;
         this.props=props;
+
     }
 
 }

@@ -58,7 +58,13 @@ public class SceneService {
     public DeviceDto devicetoDto(Device device){
         Component component = componentRepository.findById(device.getComponentId()).orElse(null);
         return new DeviceDto(device,component.getName(),component.getImagePath(),
-                component.getBrand(),"");
+                component.getBrand(),getDefaultComponentProps(device.getComponentId()));
+    }
+
+    public DeviceDto devicetoDto(Device device, Long sceneId){
+        Component component = componentRepository.findById(device.getComponentId()).orElse(null);
+        return new DeviceDto(device,component.getName(),component.getImagePath(),
+                component.getBrand(),getDeviceSceneProps(sceneId,device.getId()));
     }
     public List<DeviceDto> getDevicesBySceneId(Long sceneId){
         List<Command> commands = commandRepository.getAllBySceneId(sceneId);
@@ -70,12 +76,16 @@ public class SceneService {
                 .map(device -> device.orElse(null))
                 .collect(Collectors.toList());
 
-        return devices.stream().map(this::devicetoDto).toList();
+        return devices.stream().map(device -> {
+            return devicetoDto(device,sceneId);
+        } ).toList();
     }
 
     public List<DeviceDto> getHouseDevicesToAddBySceneId(Long houseId, Long sceneId){
         List<Device> homeDevices = deviceRepository.getAllByHouseId(houseId);
-        List<DeviceDto> houseDevices =  new ArrayList<> (homeDevices.stream().map(this::devicetoDto).toList());
+        List<DeviceDto> houseDevices =  new ArrayList<> (homeDevices.stream().map(device -> {
+            return devicetoDto(device,sceneId);
+        } ).toList());
         List<DeviceDto> sceneDevices = new ArrayList<> (getDevicesBySceneId(sceneId));
 
         for(DeviceDto device: houseDevices){

@@ -20,7 +20,6 @@ export default function SceneComponent() {
     const [sceneReady,setSceneReady]=useState<Boolean>(false)
     const [devicesReady,setDevicesReady]=useState<Boolean>(false)
     const [addReady,setAddReady]=useState<Boolean>(false)
-    const [prop,setProp]=useState<CodeValue[]>([])
 
     const {id}=useParams()
  
@@ -33,11 +32,6 @@ export default function SceneComponent() {
         getSceneDevices()
      }, [sceneReady]);
 
-
-     useEffect(() => {
-        getDefaultProps();
-
-     }, [devicesReady]);
 
     const getCurrentScene=()=>{
         axios.get(scene_url+'/'+id,{})
@@ -65,14 +59,6 @@ export default function SceneComponent() {
         })
     }
 
-    const getDefaultProps=()=>{
-        axios.get<CodeValue[]>(scene_url+'/props/default/1', {})
-        .then((response) => response.data).
-        then((data) => {
-            setProp(data) 
-        }) 
-    }
-
     type ComponentMap = {
         [key: string]: React.ComponentType;
     };
@@ -92,14 +78,11 @@ export default function SceneComponent() {
 
     const showPanel=(device:DeviceDto)=>{
 
-        let p: ComponentProp = {
-            pp: prop,
-        };
-
+        console.log(device.props)
         return(
             <div>
                 {devicesReady &&
-                    render(device.componentName ,p)
+                    render(device.componentName ,device.props)
                 }
             </div>
         );

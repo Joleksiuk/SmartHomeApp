@@ -2,18 +2,29 @@ import { Button, Grid, Paper, Switch, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Device } from '../../interfaces';
+import { ComponentProp, Device } from '../../interfaces';
 import { Component } from '../../Services/ComponentService';
 import TuyaPlugService from '../../Services/TuyaPlugService';
 import { device_url } from '../../urls';
 
-export default function ShellyDuo() {
+export default function TuyaPlug(props?:ComponentProp) {
 
   const { deviceId } = useParams();
   const [component, setComponent]=useState<Component>()
   const [device,setDevice]=useState<Device>()
   
   useEffect(() => {
+    let value = props?.pp?.find(elem => elem.code == 'switch_1')?.value;
+
+    let valueMapped: boolean = false;
+    if (value == 'false'){
+      valueMapped = false;
+    }
+    else if (value == 'true'){ 
+      valueMapped = true;
+    }
+    setChecked(valueMapped);
+
      getDeviceById()
   }, []);
 
