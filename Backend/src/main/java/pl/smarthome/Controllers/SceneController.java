@@ -60,4 +60,14 @@ public class SceneController {
         return sceneService.getHouseDevicesToAddBySceneId(houseId,sceneId);
     }
 
+    @GetMapping("Add/deviceId={deviceId}/sceneId={sceneId}")
+    public void addDeviceToScene(@PathVariable Long deviceId,@PathVariable Long sceneId){
+        sceneService.addDeviceToScene(deviceId,sceneId);
+    }
+
+    @GetMapping("SetScene/{sceneId}/{userId}")
+    public void setScene(@PathVariable Long sceneId, @PathVariable Long userId){
+        sceneService.setScene(sceneId,userId);
+    }
+
 }

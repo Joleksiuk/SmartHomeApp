@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.smarthome.Models.Parameter;
 import pl.smarthome.Repositories.ParameterRepository;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @Service
@@ -20,12 +22,7 @@ public class ParameterService {
         parameterRepository.save(parameter);
     }
 
-//    public Optional<Parameter> findParameterById(Long id) {
-//        return parameterRepository.findById(id);
-//    }
-//    public List<Parameter> getAllParameters(){
-//        List<Parameter> parameter = new LinkedList<>();
-//        parameterRepository.findAll().forEach(parameter::add);
-//        return parameter;
-//    }
+    public List<Parameter> getAllByComponentId(Long componentId){
+        return parameterRepository.findAllByComponentId(componentId);
+    }
 }

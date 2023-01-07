@@ -19,7 +19,16 @@ export default function SceneComponent() {
     const {id}=useParams()
 
     const getCurrentScene=()=>{
-        axios.get(scene_url+'/'+id,{}).then((response) => response.data).then((data) => {setScene(data)});
+        axios.get(scene_url+'/'+id,{})
+        .then((response) => response.data)
+        .then((data) => {
+            setScene(data)
+        })
+        .then((data) =>{
+            getDevicesToAdd()
+            getSceneDevices()
+        }
+       )
     }
 
     const getSceneDevices=()=>{
@@ -32,8 +41,7 @@ export default function SceneComponent() {
 
     useEffect(() => {
        getCurrentScene()
-       getSceneDevices()
-       getDevicesToAdd()
+
     }, []);
 
     const showPanel=(device:Device)=>{
@@ -48,9 +56,12 @@ export default function SceneComponent() {
         'Tuya Smart LED': TuyaLED,
       };
 
-    const handleDeviceClicked =(devices:Device)=>{
-
+    const handleAddDeviceToScene =(device:Device)=>{
+        axios.post(scene_url+'/Add/deviceId='+device.id+'/sceneId='+id, {}).then((response) => console.log(response.data)).catch(error => {
+           console.log(error);
+          }); 
     }
+
 
     return (
         <Grid container spacing={3}>
@@ -64,7 +75,7 @@ export default function SceneComponent() {
             <Grid justifyContent="center" container item xs={12}>
                 <Grid container justifyContent="center" spacing={3}>
                 {sceneDevices?.map((device)=>
-                    <Button onClick={()=>handleDeviceClicked(device)}>
+                    <Button onClick={()=>handleAddDeviceToScene(device)}>
                         <Grid item>
                             <Card>
                                 <CardActionArea>
@@ -91,7 +102,7 @@ export default function SceneComponent() {
             <Grid justifyContent="center" container item xs={12}>
                 <Grid container justifyContent="center" spacing={3}>
                 {devicesToAdd?.map((device)=>
-                    <Button onClick={()=>handleDeviceClicked(device)}>
+                    <Button onClick={()=>handleAddDeviceToScene(device)}>
                         <Grid item>
                             <Card>
                                 <CardActionArea>

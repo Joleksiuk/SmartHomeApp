@@ -34,6 +34,7 @@ public class TuyaService {
 
         for(CodeValue cv: codeValueList){
             switch (cv.getCode()) {
+                case "switch_led", "switch_1" -> cv.setValue(Boolean.valueOf(cv.getValue().toString()));
                 case "colour_data" -> cv.setValue(HSVColor.hsvToJson( HSVColor.fromHex(cv.getValue().toString())));
                 case "intensity" -> {
                     HSVColor currentHSV = getCurrentLEDColor(id,userId);

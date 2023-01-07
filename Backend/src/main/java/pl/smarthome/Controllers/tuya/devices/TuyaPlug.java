@@ -22,8 +22,8 @@ public class TuyaPlug {
     }
 
     @PostMapping("device={id}/switch={state}")
-    public String switchPlug (@PathVariable String state, @PathVariable String id, @RequestBody Long userId) {
-        CodeValue codeValue=new CodeValue("switch_1",state);
+    public String switchPlug (@PathVariable Boolean state, @PathVariable String id, @RequestBody Long userId) {
+        CodeValue codeValue=new CodeValue("switch_1",state.toString());
         List<CodeValue> codeValues=new LinkedList(List.of(codeValue));
         return tuyaService.multiCommandsRequest(codeValues,id,userId);
     }

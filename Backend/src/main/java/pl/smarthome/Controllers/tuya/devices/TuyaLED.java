@@ -21,7 +21,7 @@ public class TuyaLED {
 
     @PostMapping("device={id}/switch={state}")
     public String switchLed (@PathVariable Boolean state, @PathVariable String id, @RequestBody Long userId) {
-        CodeValue codeValue=new CodeValue("switch_led",state);
+        CodeValue codeValue=new CodeValue("switch_led",state.toString());
         List<CodeValue> codeValues=new LinkedList(List.of(codeValue));
         return tuyaService.multiCommandsRequest(codeValues,id, userId);
     }

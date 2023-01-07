@@ -17,7 +17,7 @@ public class Component {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    Long id;
     String name;
     String imagePath;
     String brand;

@@ -110,7 +110,6 @@ class TuyaServiceTest {
     void testMulti(){
         CommandList commandList=new CommandList();
         commandList.getCommands().add(new CodeValue("code1", "value1"));
-        commandList.getCommands().add(new CodeValue("switch_led", true));
         Gson gson=new Gson();
         System.out.println(gson.toJson(commandList));
     }

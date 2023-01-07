@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS public.commands
     code text NOT NULL,
     value text NOT NULL,
     device_id bigint REFERENCES devices(id),
-    scene_id bigint REFERENCES scenes(id)
+    scene_id bigint REFERENCES scenes(id),
+    PRIMARY KEY (code,device_id,scene_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.scenes
