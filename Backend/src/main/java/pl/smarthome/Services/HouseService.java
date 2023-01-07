@@ -14,9 +14,11 @@ import java.util.Optional;
 public class HouseService {
 
     private final HouseRepository houseRepository;
+    private final HouseUserService houseUserService;
 
-    public void createHouse(House house) {
+    public void createHouse(House house, Long userId) {
         houseRepository.save( house);
+        houseUserService.addHouseUser(house.getId(),userId,"Admin");
     }
 
     public void updateHouse(House house) {

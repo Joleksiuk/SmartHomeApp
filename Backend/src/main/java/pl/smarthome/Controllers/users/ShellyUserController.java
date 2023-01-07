@@ -27,7 +27,7 @@ public class ShellyUserController {
     }
 
     @GetMapping("{id}")
-    public ShellyUser findShellyUserById(@PathVariable Integer id) {
+    public ShellyUser findShellyUserById(@PathVariable Long id) {
         return shellyUserService.findShellyUserById(id).orElse(null);
     }
 

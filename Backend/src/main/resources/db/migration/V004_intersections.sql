@@ -1,9 +1,9 @@
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS public.device_permission
+CREATE TABLE IF NOT EXISTS public.role_permission
 (
     device_id bigint REFERENCES devices(id),
-    user_id bigint REFERENCES users(id),
+    role text NOT NULL,
     can_control text NOT NULL,
     can_see text NOT NULL
 );

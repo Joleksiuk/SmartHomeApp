@@ -1,5 +1,6 @@
 package pl.smarthome.Controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.House;
@@ -8,19 +9,15 @@ import pl.smarthome.Services.HouseService;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("houses")
 public class HouseController {
 
     private final HouseService houseService;
 
-    @Autowired
-    public HouseController(HouseService houseService) {
-        this.houseService = houseService;
-    }
-
-    @PostMapping
-    public void createComponent(@RequestBody House house) {
-        houseService.createHouse(house);
+    @PostMapping("{userId}")
+    public void createComponent(@RequestBody House house ,@PathVariable Long userId) {
+        houseService.createHouse(house,userId);
     }
 
     @PutMapping

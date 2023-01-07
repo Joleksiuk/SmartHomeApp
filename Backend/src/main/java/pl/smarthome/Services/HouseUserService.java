@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.smarthome.Models.House;
 import pl.smarthome.Models.HouseUser;
-import pl.smarthome.Models.HouseUserDto;
+import pl.smarthome.Models.dtos.HouseUserDto;
 import pl.smarthome.Models.ids.HouseUserId;
 import pl.smarthome.Models.users.User;
 import pl.smarthome.Repositories.HouseRepository;
@@ -80,6 +80,10 @@ public class HouseUserService {
             return "User already is a member of house!";
         }
         return "User does not exist!";
+    }
+
+    public void addHouseUser(Long houseId, Long userId, String role){
+       createHouseUser( new HouseUser(userId,houseId,role));
     }
 
     public List<House> getHousesByUserId(Long userId){

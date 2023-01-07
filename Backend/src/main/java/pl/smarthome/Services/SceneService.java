@@ -5,9 +5,8 @@ import org.springframework.stereotype.Service;
 import pl.smarthome.Controllers.shelly.ShellyService;
 import pl.smarthome.Controllers.tuya.TuyaService;
 import pl.smarthome.Controllers.tuya.details.CodeValue;
-import pl.smarthome.Controllers.tuya.devices.TuyaLED;
-import pl.smarthome.Controllers.tuya.devices.TuyaPlug;
 import pl.smarthome.Models.*;
+import pl.smarthome.Models.dtos.CommandDto;
 import pl.smarthome.Repositories.*;
 
 import java.util.*;
@@ -78,9 +77,9 @@ public class SceneService {
         }
         List<Parameter> params = parameterRepository.findAllByComponentId(device.getComponentId());
         for(Parameter param:params){
-            commandRepository.save(new Command(param.getCode(),param.getValue(),deviceId,sceneId));
+            Command command =new Command(param.getCode(),param.getValue(),deviceId,sceneId);
+            commandService.createCommand(command);
         }
-
     }
 
     public void setScene(Long sceneId, Long userId){

@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.House;
 import pl.smarthome.Models.HouseUser;
-import pl.smarthome.Models.HouseUserDto;
+import pl.smarthome.Models.dtos.HouseUserDto;
 import pl.smarthome.Models.ids.HouseUserId;
-import pl.smarthome.Services.HouseService;
 import pl.smarthome.Services.HouseUserService;
 
 

@@ -36,6 +36,7 @@ import SceneComponent from './components/Scene';
 import HouseUserList from './components/HouseUserList';
 import HouseUser from './components/HouseUserList';
 import HouseUserComponent from './components/HouseUserList';
+import PermissionComponent from './components/PermissionComp';
 
 const drawerWidth: number = 240;
 
@@ -89,7 +90,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const mdTheme = createTheme();
-
 
 
 function App() {
@@ -210,6 +210,7 @@ function App() {
                         <Route path="/home/:id" element={<Home/>}/>
                         <Route path="/scene/:id" element={<SceneComponent/>}/>
                         <Route path='/house/users/:id' element={<HouseUserComponent/>}/>
+                        <Route path='/house/permission/:id' element={<PermissionComponent/>}/>
                       </Routes>     
                       </div>
                     </header>

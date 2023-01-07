@@ -27,7 +27,7 @@ public class TuyaUserController {
     }
 
     @GetMapping("{id}")
-    public TuyaUser findTuyaUserById(@PathVariable Integer id) {
+    public TuyaUser findTuyaUserById(@PathVariable Long id) {
         return tuyaUserService.findTuyaUserById(id).orElse(null);
     }
 

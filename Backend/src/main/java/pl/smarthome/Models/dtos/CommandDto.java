@@ -1,4 +1,4 @@
-package pl.smarthome.Models;
+package pl.smarthome.Models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

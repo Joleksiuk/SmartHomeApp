@@ -8,7 +8,7 @@ import pl.smarthome.Models.ids.HouseUserId;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommandRepository  extends JpaRepository<Command, CommandId> {
+public interface CommandRepository  extends JpaRepository<Command, Long> {
 
     List<Command> getAllBySceneId(Long sceneId);
 }

@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import {Button, Grid, Typography} from '@mui/material';
 import ShellyForm from './ShellyForm';
 import TuyaForm from './TuyaForm';
-import ShellyService from '../../Services/ShellyService';
-import TuyaService, { TuyaUser } from '../../Services/TuyaService';
+import axios from 'axios';
+import { shelly_users_url, tuya_users_url, } from '../../urls';
+import AuthService from '../../authorization/AuthService';
 
 export default function ConfigureAccounts() {
 
@@ -12,23 +13,12 @@ export default function ConfigureAccounts() {
     
     useEffect(() => {
 
-        var shellyUser = ShellyService.initShellyUser()
-        if( shellyUser!==null){
-            console.log('Shelly user exists') 
-            setShellyUserExists(true)
-        }
-        else{
-            console.log("Shelly user does not exist")
-        }
+      axios.get(shelly_users_url+'/'+AuthService.getLoggedUser().id.toString(), {})
+      .then(response => { if (response.data) setShellyUserExists(true)})
 
-        let tuyaUser = TuyaService.getTuyaUser()
-        if(tuyaUser!==null){    
-            console.log('Tuya user exists') 
-            setTuyaUserExists(true)
-        }
-        else{
-            console.log("Tuya user does not exist")
-        }
+      axios.get(tuya_users_url+'/'+AuthService.getLoggedUser().id.toString(), {})
+      .then(response => { if (response.data) setTuyaUserExists(true)})
+    
       }, []);
 
 

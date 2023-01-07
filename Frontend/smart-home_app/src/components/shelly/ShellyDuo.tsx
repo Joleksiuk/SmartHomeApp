@@ -7,14 +7,15 @@ import ComponentService, { Component } from '../../Services/ComponentService';
 import ShellyDuoService, { State } from '../../Services/ShellyDuoService';
 import { device_url } from '../../urls';
 
-export interface ShellyDetails{
-    state:State,
-    brightness:string,
-    temp:string,
-    white:string
+export interface ShellyDuoProps{
+    turn?:string,
+    white?:string,
+    brightness?:string,
+    temp?:string,
+    transition?:string
 }
 
-export default function ShellyDuo() {
+export default function ShellyDuo(props?:ShellyDuoProps) {
 
   const { deviceId } = useParams();
   const [device,setDevice]=useState<Device>()

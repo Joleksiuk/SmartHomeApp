@@ -49,7 +49,7 @@ export default function Home() {
     }
 
     const getHomeScenes=()=>{
-        axios.get(scene_url+'/houseId='+home?.id , {})
+        axios.get(scene_url+'/houseId='+id , {})
         .then((response) => response.data)
         .then((data) => {
             setScenes(data)
@@ -57,7 +57,7 @@ export default function Home() {
     }
 
     const getCurrentDevices=()=>{  
-        axios.get(device_url+'/houseId='+home?.id , {})
+        axios.get(device_url+'/houseId='+id , {})
         .then((response) => response.data)
         .then((data) => {setDevices(data)})
     }
@@ -286,8 +286,7 @@ export default function Home() {
             <Grid justifyContent="center" container item xs={12}>
                 <Link to={'/house/users/'+ id}>
                     <Button variant="contained" onClick={()=>handleCreateNewScene()}>Manage Roles</Button>     
-                </Link>
-                     
+                </Link>           
             </Grid>
 
         </Grid>

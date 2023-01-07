@@ -3,7 +3,7 @@ package pl.smarthome.Controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.Command;
-import pl.smarthome.Models.CommandDto;
+import pl.smarthome.Models.dtos.CommandDto;
 import pl.smarthome.Services.CommandService;
 
 import java.util.List;

@@ -23,7 +23,7 @@ public class TuyaUserService {
         tuyaUserRepository.save( createEncryptedUser(tuyaUser));
     }
 
-    public Optional<TuyaUser> findTuyaUserById(Integer id) {
+    public Optional<TuyaUser> findTuyaUserById(Long id) {
         return tuyaUserRepository.findById(id);
     }
 

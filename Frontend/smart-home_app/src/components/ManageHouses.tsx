@@ -31,7 +31,7 @@ export default function ManageHouses() {
             'name': name,
             }
             JSON.stringify(msg)
-            return axios.post(house_url ,msg);   
+            return axios.post(house_url+'/'+AuthService.getLoggedUser().id.toString() ,msg);   
     }
     const handleCreateNewHome=()=>{
         createHouse(homeName);

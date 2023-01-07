@@ -4,31 +4,30 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.smarthome.Models.ids.CommandId;
+import pl.smarthome.Models.ids.HouseUserId;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-@Table(name = "commands")
+@Table(name = "role_permission")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Command {
+public class RolePermission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String code;
-    private String value;
     private Long deviceId;
-    private Long sceneId;
+    private String role;
+    private String canSee;
+    private String canControl;
 
-    public Command(String code, String value, Long deviceId, Long sceneId) {
-        this.code = code;
-        this.value = value;
+    public RolePermission(Long deviceId, String role, String canSee, String canControl) {
         this.deviceId = deviceId;
-        this.sceneId = sceneId;
+        this.role = role;
+        this.canSee = canSee;
+        this.canControl = canControl;
     }
 }

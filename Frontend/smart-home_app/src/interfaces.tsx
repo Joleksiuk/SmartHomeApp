@@ -69,3 +69,21 @@ export interface HouseUserId{
     houseId:number
 }
 
+export interface RolePermissionDto{
+    id:number,
+    deviceId:number,
+    deviceName:string,
+    role:string,
+    canSee:string,
+    canControl:string
+}
+
+export interface RolePermission{
+    id:number,
+    deviceId:number,
+    role:string,
+    canSee:string,
+    canControl:string
+}
+
+

@@ -3,8 +3,7 @@ package pl.smarthome.Services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.smarthome.Models.Command;
-import pl.smarthome.Models.CommandDto;
-import pl.smarthome.Models.ids.CommandId;
+import pl.smarthome.Models.dtos.CommandDto;
 import pl.smarthome.Repositories.CommandRepository;
 
 import java.util.List;

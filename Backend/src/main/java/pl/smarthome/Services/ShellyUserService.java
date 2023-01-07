@@ -23,7 +23,7 @@ public class ShellyUserService {
         shellyUserRepository.save(createEncryptedUser(shellyUser));
     }
 
-    public Optional<ShellyUser> findShellyUserById(Integer id) {
+    public Optional<ShellyUser> findShellyUserById(Long id) {
         return shellyUserRepository.findById(id);
     }
 

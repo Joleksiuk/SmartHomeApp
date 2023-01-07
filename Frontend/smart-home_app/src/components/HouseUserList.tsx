@@ -1,7 +1,7 @@
 import {Alert,Box,Button,FormControl,FormControlLabel,FormLabel,Grid,List,ListItem, ListItemText, ListSubheader,Radio,RadioGroup,Stack,Switch,Table,TableBody,TableCell,TableRow,TextField,Typography,} from "@mui/material";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AuthService from "../authorization/AuthService";
 import { HouseUserDto} from "../interfaces";
 import { houseUser_url } from "../urls";
@@ -11,7 +11,7 @@ export default function HouseUserComponent() {
     const onTextChange = (e: any) => setNewUser(e.target.value);
     const [showError, setShowError] = useState<Boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
-    const [meAdmin, setMeAdmin]=useState<Boolean>(false);
+    const [meAdmin, setMeAdmin]=useState<Boolean>(true);
 
     const [userList, setUserList] = useState<HouseUserDto[]>();
     const [newUser, setNewUser] = useState<string>();
@@ -26,11 +26,12 @@ export default function HouseUserComponent() {
 
         axios.get<HouseUserDto>(houseUser_url+"/userId="+user.id +'/houseId=' + id)
         .then((response) => {
-            console.log(response.data)
             setMe(response.data);
-            if(me?.role==="Admin"){
-                setMeAdmin(true)
-            }})
+        })
+        .then((response)=>{
+            if(me?.role==='Admin'){
+            setMeAdmin(true)
+        }})
         .catch((error) => console.log(error));
 
     }, []);
@@ -65,7 +66,7 @@ export default function HouseUserComponent() {
                         <FormLabel id="demo-radio-buttons-group-label">Role</FormLabel>
                             <RadioGroup
                                 aria-labelledby="demo-radio-buttons-group-label"
-                                defaultValue="Guest"
+                                defaultValue={dto.role}
                                 name="radio-buttons-group"
                                 onChange={(e,value) => setUserRole(e,value,dto.userId)}
                             >
@@ -107,7 +108,15 @@ export default function HouseUserComponent() {
                             </Grid>}
                         <TextField onChange={onTextChange} value={newUser} label={"Username"} />
                         <Button variant="contained" onClick={() => handleAddHomeUser()}>Add User to house</Button>
-                    </Grid></>
+                    </Grid>
+                    
+                    <Grid justifyContent="center" container item xs={12}>
+                        <Link to={'/house/permission/'+ id}>
+                            <Button variant="contained">Manage role permission</Button>     
+                        </Link>
+                            
+                    </Grid>
+                </>
             }
             <Grid justifyContent="center" container item xs={12}>
                 <Typography  variant="h6" >Current house users</Typography>
@@ -123,6 +132,7 @@ export default function HouseUserComponent() {
                     </TableBody>
                 </Table>
             </Grid>
+
 
         </Grid>
     );  
