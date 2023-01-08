@@ -1,4 +1,4 @@
-package pl.smarthome.Controllers.tuya.models;
+package pl.smarthome.Controllers.tuya.details;
 
 import com.google.gson.Gson;
 import lombok.Getter;

@@ -33,13 +33,10 @@ public class TuyaPlug {
         return tuyaService.multiCommandsRequest(codeValues,id,userId);
     }
 
-    @PostMapping("power_consumption/{id}")
-    public String getPowerConsumption(@PathVariable String id,@RequestBody Long userId){
+    @PostMapping("power_consumption/{deviceId}/{userId}")
+    public String getPowerConsumption(@PathVariable String deviceId,@PathVariable Long userId){
 
-//        String path = "/v1.0/iot-03/energy/electricity/devices/nodes/statistics-trend?energy_action=consume&statisticsType=day&startTime=1672615088&endTime=1672960688device_ids="+id;
-//        Object result = TuyaFunctions.execute(TuyaFunctions.getAccessToken(),path,"GET", "",new HashMap<>() );
-//        return result.toString();
-            return "";
+        return this.tuyaService.getPowerConsumption(deviceId,userId);
     }
 
 }

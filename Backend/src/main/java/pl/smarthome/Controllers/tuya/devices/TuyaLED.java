@@ -50,4 +50,10 @@ public class TuyaLED {
     public String makeMultiCommands(@RequestBody List<CodeValue> codeValues,  @PathVariable String id, @PathVariable Long userId){
         return tuyaService.multiCommandsRequest(codeValues,id,userId);
     }
+
+    @GetMapping("{userId}/{deviceId}/Status")
+    public List<CodeValue> getDeviceStatus(@PathVariable String deviceId, @PathVariable Long userId){
+        return tuyaService.getDeviceStatus(deviceId,userId);
+    }
+
 }

@@ -32,6 +32,4 @@ public class Result {
     String uid;
     long update_time;
     String uuid;
-
-
 }

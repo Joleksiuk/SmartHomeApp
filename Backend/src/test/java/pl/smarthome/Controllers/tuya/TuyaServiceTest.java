@@ -5,8 +5,6 @@ import com.google.gson.Gson;
 import lombok.*;
 import org.junit.jupiter.api.Test;
 import pl.smarthome.AES.AES;
-import pl.smarthome.Controllers.tuya.details.DeviceDetails;
-import pl.smarthome.Controllers.tuya.models.CodeValueString;
 import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Controllers.tuya.details.CommandList;
 import pl.smarthome.Models.users.TuyaUser;
@@ -14,36 +12,6 @@ import pl.smarthome.Models.users.TuyaUser;
 import java.util.*;
 
 class TuyaServiceTest {
-
-    @Test
-    void getDeviceDetails() {
-//        String path = "/v1.0/devices/bf2b8148e20535ca2eaik5";
-//        Object result = TuyaFunctions.execute(TuyaFunctions.getAccessToken(),path,"GET", "",new HashMap<>() );
-//        Gson gson=new Gson();
-//        System.out.println(gson.fromJson(gson.toJson(result), DeviceDetails.class));
-    }
-
-    @Test
-    void testMultiRequestBody(){
-
-        class MyList {
-
-            public List<CodeValueString> commands=new LinkedList<>();
-        }
-
-        String id="1";
-        List<CodeValueString> codeValueList=new LinkedList<>();
-
-        codeValueList.add(new CodeValueString("switch_led","true"));
-        codeValueList.add(new CodeValueString("switch_led","false"));
-        Gson gson=new Gson();
-
-
-        MyList myList=new MyList();
-        myList.commands= codeValueList;
-        String a = gson.toJson(myList);
-        System.out.println(a);
-    }
 
     @Test
     void testInterfacesCodeValueToJson(){

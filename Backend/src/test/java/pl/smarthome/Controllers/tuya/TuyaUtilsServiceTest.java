@@ -2,9 +2,7 @@ package pl.smarthome.Controllers.tuya;
 
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
-import pl.smarthome.Controllers.tuya.models.HSVColor;
-
-import java.util.HashMap;
+import pl.smarthome.Controllers.tuya.details.HSVColor;
 
 class TuyaUtilsServiceTest {
 

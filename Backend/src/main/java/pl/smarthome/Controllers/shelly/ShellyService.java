@@ -8,14 +8,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import pl.smarthome.AES.AES;
 import pl.smarthome.Controllers.tuya.details.CodeValue;
-import pl.smarthome.Controllers.tuya.models.CodeValueString;
 import pl.smarthome.Models.users.ShellyUser;
-import pl.smarthome.Models.users.User;
 import pl.smarthome.Repositories.ShellyUserRepository;
-import pl.smarthome.Repositories.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

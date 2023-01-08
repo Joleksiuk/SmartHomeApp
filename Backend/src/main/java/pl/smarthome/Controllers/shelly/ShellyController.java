@@ -1,15 +1,10 @@
 package pl.smarthome.Controllers.shelly;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Controllers.tuya.details.CodeValue;
-import pl.smarthome.Controllers.tuya.models.CodeValueString;
 
 import java.util.List;
 

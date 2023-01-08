@@ -3,12 +3,10 @@ package pl.smarthome.Controllers.tuya;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.smarthome.Controllers.tuya.details.DeviceDetails;
-import pl.smarthome.Controllers.tuya.details.Status;
-import pl.smarthome.Controllers.tuya.models.HSVColor;
-import pl.smarthome.Controllers.tuya.details.CodeValue;
-import pl.smarthome.Controllers.tuya.details.CommandList;
+import pl.smarthome.Controllers.tuya.details.*;
+import pl.smarthome.Controllers.tuya.details.HSVColor;
 import pl.smarthome.Models.users.TuyaUser;
+import pl.smarthome.Repositories.DeviceRepository;
 import pl.smarthome.Repositories.TuyaUserRepository;
 
 import java.util.*;
@@ -18,6 +16,7 @@ import java.util.*;
 public class TuyaService {
 
     private final TuyaUserRepository tuyaUserRepository;
+    private final DeviceRepository deviceRepository;
 
     public DeviceDetails getDeviceDetails(String id, Long userId){
         TuyaUser user = tuyaUserRepository.findById(userId).orElse(null);
@@ -26,6 +25,29 @@ public class TuyaService {
             Object result = TuyaFunctions.execute(TuyaFunctions.getAccessToken(user), path, "GET", "", new HashMap<>(), user);
             Gson gson = new Gson();
             return gson.fromJson(gson.toJson(result), DeviceDetails.class);
+        }
+        return null;
+    }
+
+    public List<CodeValue> getDeviceStatus(String id, Long userId){
+        TuyaUser user = tuyaUserRepository.findById(userId).orElse(null);
+        if(user!=null) {
+            String path = "/v1.0/iot-03/devices/"+id+"/status";
+            Object result = TuyaFunctions.execute(TuyaFunctions.getAccessToken(user), path, "GET", "", new HashMap<>(), user);
+            Gson gson = new Gson();
+            return gson.fromJson(gson.toJson(result), TuyaStatusResponse.class).getResult();
+        }
+        return null;
+    }
+
+    public String getPowerConsumption(String id, Long userId){
+        TuyaUser user = tuyaUserRepository.findById(userId).orElse(null);
+        if(user!=null) {
+            String base = "/v1.0/iot-03/energy/electricity/device/nodes/statistics-sum";
+            String path = base+"?energy_action=consume&statisticsType=day&startTime=20230101&endTime=20230108&containChilds=false&device_ids="+id;
+            Object result = TuyaFunctions.execute(TuyaFunctions.getAccessToken(user), path, "GET", "", new HashMap<>(), user);
+            Gson gson = new Gson();
+            return gson.toJson(result);
         }
         return null;
     }
