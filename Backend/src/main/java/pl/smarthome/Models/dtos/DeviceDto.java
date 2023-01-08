@@ -7,6 +7,7 @@ import lombok.Setter;
 import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Models.Device;
 
+import java.lang.reflect.Member;
 import java.util.List;
 
 @NoArgsConstructor
@@ -35,6 +36,14 @@ public class DeviceDto {
         this.brand=brand;
         this.props=props;
 
+    }
+    @Override
+    public boolean equals(Object anObject) {
+        if (!(anObject instanceof Member)) {
+            return false;
+        }
+        DeviceDto otherMember = (DeviceDto)anObject;
+        return otherMember.getId().equals(getId());
     }
 
 }

@@ -25,38 +25,45 @@ export default function SceneComponent() {
  
     useEffect(() => {
         getCurrentScene()
+        
      }, []);
 
      useEffect(() => {
-        getDevicesToAdd()
         getSceneDevices()
+        getDevicesToAdd()
      }, [sceneReady]);
 
 
     const getCurrentScene=()=>{
-        axios.get(scene_url+'/'+id,{})
-        .then((response) => response.data)
-        .then((data) => {
-            setScene(data)
-            setSceneReady(true)
-        })
+        if(id!==undefined){
+            axios.get(scene_url+'/'+id,{})
+            .then((response) => response.data)
+            .then((data) => {
+                setScene(data)
+                setSceneReady(true)
+            }).catch(error => { });
+        }
     }
 
     const getSceneDevices=()=>{
-        axios.get(scene_url+'/devices/'+id,{}).then((response) => response.data)
-        .then((data) => {
-            setSceneDevices(data)
-            setDevicesReady(true)
-        })
+        if(id!==undefined){
+            axios.get(scene_url+'/devices/'+id,{}).then((response) => response.data)
+            .then((data) => {
+                setSceneDevices(data)
+                setDevicesReady(true)
+            }).catch(error => { });
+        }
     }
 
     const getDevicesToAdd=()=>{
+        if(id!==undefined && scene!=undefined){
         axios.get(scene_url+'/Add/houseId='+scene?.houseId+'/sceneId='+id, {})
         .then((response) => response.data).
         then((data) => {
             setDevicesToAdd(data)
             setAddReady(true)
-        })
+        }).catch(error => { }); 
+    }
     }
 
     type ComponentMap = {
@@ -78,14 +85,16 @@ export default function SceneComponent() {
 
     const showPanel=(device:DeviceDto)=>{
 
-        console.log(device.props)
-        return(
-            <div>
-                {devicesReady &&
-                    render(device.componentName ,device.props)
-                }
-            </div>
-        );
+        if(device!==undefined){
+            return(
+                <div>
+                    {devicesReady &&
+                        render(device.componentName ,device)
+                    }
+                </div>
+            );
+        }
+        
     } 
 
     const handleAddDeviceToScene =(device:Device)=>{

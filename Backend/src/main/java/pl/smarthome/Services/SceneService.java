@@ -83,17 +83,11 @@ public class SceneService {
 
     public List<DeviceDto> getHouseDevicesToAddBySceneId(Long houseId, Long sceneId){
         List<Device> homeDevices = deviceRepository.getAllByHouseId(houseId);
-        List<DeviceDto> houseDevices =  new ArrayList<> (homeDevices.stream().map(device -> {
-            return devicetoDto(device,sceneId);
-        } ).toList());
-        List<DeviceDto> sceneDevices = new ArrayList<> (getDevicesBySceneId(sceneId));
+        List<DeviceDto> houseDevices = new ArrayList<>(homeDevices.stream().map(this::devicetoDto).toList());
+        List<DeviceDto> sceneDevices = getDevicesBySceneId(sceneId);
 
-        for(DeviceDto device: houseDevices){
-            for(DeviceDto d:sceneDevices){
-                if(device.getId()==d.getId()){
-                    houseDevices.remove(device);
-                }
-            }
+        for(DeviceDto device: sceneDevices){
+            houseDevices.removeIf(d -> Objects.equals(device.getId(), d.getId()));
         }
         return  houseDevices;
     }

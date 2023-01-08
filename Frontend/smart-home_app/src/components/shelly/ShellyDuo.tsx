@@ -24,16 +24,16 @@ export default function ShellyDuo(props?:ComponentProp) {
 
     let turn=false
 
-    let  state = props?.pp?.find(elem => elem.code == 'colour_data')?.value
+    let  state = props?.device?.props.find(elem => elem.code == 'colour_data')?.value
     if(state=='On'){
       turn=true
     }
 
     let pp={
       turn: turn,
-      white: Number(props?.pp?.find(elem => elem.code == 'white')?.value),
-      brightness: Number(props?.pp?.find(elem => elem.code == 'brightness')?.value),
-      temp: Number(props?.pp?.find(elem => elem.code == 'temp')?.value)
+      white: Number(props?.device?.props.find(elem => elem.code == 'white')?.value),
+      brightness: Number(props?.device?.props.find(elem => elem.code == 'brightness')?.value),
+      temp: Number(props?.device?.props?.find(elem => elem.code == 'temp')?.value)
     }
 
     setChecked(pp.turn)

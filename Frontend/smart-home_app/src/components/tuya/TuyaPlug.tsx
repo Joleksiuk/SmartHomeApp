@@ -14,7 +14,7 @@ export default function TuyaPlug(props?:ComponentProp) {
   const [device,setDevice]=useState<Device>()
   
   useEffect(() => {
-    let value = props?.pp?.find(elem => elem.code == 'switch_1')?.value;
+    let value = props?.device?.props?.find(elem => elem.code == 'switch_1')?.value;
 
     let valueMapped: boolean = false;
     if (value == 'false'){
@@ -29,14 +29,18 @@ export default function TuyaPlug(props?:ComponentProp) {
   }, []);
 
   const getDeviceById=()=>{
-    axios.get(device_url+'/'+deviceId , {})
-    .then((response) => response.data)
-    .then((data) => {
-        setDevice(data)
-    })
-    .catch(error => {
-      console.log(error)
-    });
+
+    if(deviceId!==undefined){
+      axios.get(device_url+'/'+deviceId , {})
+      .then((response) => response.data)
+      .then((data) => {
+          setDevice(data)
+      })
+      .catch(error => {
+        console.log(error)
+      });
+    }
+  
   }
 
    const getComponent=()=>{
@@ -60,12 +64,6 @@ export default function TuyaPlug(props?:ComponentProp) {
   const [checked, setChecked] = React.useState(true);
 
     return (
-      <Paper
-        sx={{
-        p: 2,
-        display: 'flex',
-        flexDirection: 'column', 
-      }}>
           <Grid container spacing={3}>
 
               <Grid justifyContent="center" container item xs={12}>
@@ -78,6 +76,5 @@ export default function TuyaPlug(props?:ComponentProp) {
             
               </Grid>
           </Grid>
-        </Paper>
       );
 }

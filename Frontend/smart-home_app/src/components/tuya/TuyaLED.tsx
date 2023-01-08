@@ -16,7 +16,7 @@ export default function TuyaLED(props?:ComponentProp) {
   const [colourData, setColourData] = useState<any>("")
 
   const readProps=()=>{
-    let value = props?.pp?.find(elem => elem.code == 'switch_led')?.value;
+    let value = props?.device?.props.find(elem => elem.code == 'switch_led')?.value;
 
     let valueMapped: boolean = false;
     if (value == 'false'){
@@ -26,25 +26,26 @@ export default function TuyaLED(props?:ComponentProp) {
       valueMapped = true;
     }
     setChecked(valueMapped);
-    setColourData(props?.pp?.find(elem => elem.code == 'colour_data')?.value)
-    setIntensity(Number(props?.pp?.find(elem => elem.code == 'intensity')?.value))
+    setColourData(props?.device?.props?.find(elem => elem.code == 'colour_data')?.value)
+    setIntensity(Number(props?.device?.props?.find(elem => elem.code == 'intensity')?.value))
+    console.log(props)
+    console.log(props?.device)
+    console.log(props?.device?.props?.find(elem => elem.code == 'colour_data')?.value)
   }
 
-  useEffect(() => {
-
-    readProps()
+  useEffect(() => {  
     getDeviceById();
+    readProps()
   }, []);
 
   const getDeviceById=()=>{
+    if(deviceId!==undefined){
     axios.get(device_url+'/'+deviceId , {})
     .then((response) => response.data)
     .then((data) => {
         setDevice(data)
-    })
-    .catch(error => {
-      console.log(error)
-    });
+    }).catch(error => {console.log(error)});
+  }
   }
 
   const [component, setComponent]=useState<Component>()

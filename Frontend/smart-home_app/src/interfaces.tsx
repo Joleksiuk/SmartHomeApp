@@ -34,7 +34,8 @@ export interface DeviceDto{
 
 export interface ComponentProp{
 
-    pp?: CodeValue[]
+    device?:DeviceDto
+
   }
   
 
