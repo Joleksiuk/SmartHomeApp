@@ -21,9 +21,8 @@ public class AES {
     private static String password ="ZzYoHZnFIdeKs4aVcnT9";
     private static String secret="bRNWBoru6ou47Xi2E12h";
     public static SecretKey generatedKey;
-    public static IvParameterSpec ivParameterSpec = generateIv();
     public static String algorithm = "AES/CBC/PKCS5Padding";
-    public static byte[] specs={ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+    public static byte[] specs={ 101,-72,97,-116,51,85,61,-54,-105,12,-21,9,-115,31,101,-106};
 
     static {
         try {
@@ -45,24 +44,24 @@ public class AES {
     }
 
     public static String encrypt(String input) {
-//        try{
-//            IvParameterSpec ivParameterSpec = new IvParameterSpec(specs);
-//            return AES.encryptPasswordBased(input, generatedKey, ivParameterSpec);
-//        }catch (Exception e){
-//            e.printStackTrace();}
-//       return "";
-        return input;
+        try{
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(specs);
+            return AES.encryptPasswordBased(input, generatedKey, ivParameterSpec);
+        }catch (Exception e){
+            e.printStackTrace();}
+       return "";
+        //return input;
     }
 
     public static String decrypt(String cipherText) {
-//        try {
-//            IvParameterSpec ivParameterSpec = new IvParameterSpec(specs);
-//            return AES.decryptPasswordBased(cipherText, generatedKey, ivParameterSpec);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return "";
-        return cipherText;
+        try {
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(specs);
+            return AES.decryptPasswordBased(cipherText, generatedKey, ivParameterSpec);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+        //return cipherText;
     }
 
     public static String decrypt(String algorithm, String cipherText, SecretKey key,

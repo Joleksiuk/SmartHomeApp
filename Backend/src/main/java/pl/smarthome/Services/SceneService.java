@@ -8,6 +8,7 @@ import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Models.*;
 import pl.smarthome.Models.dtos.CommandDto;
 import pl.smarthome.Models.dtos.DeviceDto;
+import pl.smarthome.Models.users.Role;
 import pl.smarthome.Repositories.*;
 
 import java.util.*;
@@ -26,6 +27,7 @@ public class SceneService {
 
     private final CommandService commandService;
     private final ComponentRepository componentRepository;
+    private final PermissionRepository permissionRepository;
 
     private final TuyaService tuyaService;
     private final ShellyService shellyService;
@@ -57,15 +59,21 @@ public class SceneService {
 
     public DeviceDto devicetoDto(Device device){
         Component component = componentRepository.findById(device.getComponentId()).orElse(null);
+
+        List<RolePermission> rolePermissions = permissionRepository.getAllByDeviceId(device.getId());
+
         return new DeviceDto(device,component.getName(),component.getImagePath(),
-                component.getBrand(),getDefaultComponentProps(device.getComponentId()));
+                component.getBrand(),getDefaultComponentProps(device.getComponentId()),rolePermissions);
     }
 
     public DeviceDto devicetoDto(Device device, Long sceneId){
         Component component = componentRepository.findById(device.getComponentId()).orElse(null);
+        List<RolePermission> rolePermissions = permissionRepository.getAllByDeviceId(device.getId());
+
         return new DeviceDto(device,component.getName(),component.getImagePath(),
-                component.getBrand(),getDeviceSceneProps(sceneId,device.getId()));
+                component.getBrand(),getDeviceSceneProps(sceneId,device.getId()),rolePermissions);
     }
+
     public List<DeviceDto> getDevicesBySceneId(Long sceneId){
         List<Command> commands = commandRepository.getAllBySceneId(sceneId);
         List<Long> uniqueDeviceIds = commands.stream()

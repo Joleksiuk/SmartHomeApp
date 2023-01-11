@@ -1,22 +1,22 @@
 package pl.smarthome.Controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.Device;
+import pl.smarthome.Models.dtos.DeviceDto;
 import pl.smarthome.Services.DeviceService;
+import pl.smarthome.Services.SceneService;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("devices")
 public class DeviceController {
 
     private final DeviceService deviceService;
-
-    @Autowired
-    public DeviceController(DeviceService houseService) {
-        this.deviceService = houseService;
-    }
+    private final SceneService sceneService;
 
     @PostMapping
     public void createDevice(@RequestBody Device house) {
@@ -39,8 +39,9 @@ public class DeviceController {
     }
 
     @GetMapping("houseId={id}")
-    public List<Device> getDevicesByHouseId(@PathVariable Long id) {
-        return deviceService.getDevicesByHouseId(id);
+    public List<DeviceDto> getDevicesByHouseId(@PathVariable Long id) {
+
+        return deviceService.getDevicesByHouseId(id).stream().map(sceneService::devicetoDto).toList();
     }
 
     @PostMapping("houseId={houseId}/deviceId={deviceId}")
