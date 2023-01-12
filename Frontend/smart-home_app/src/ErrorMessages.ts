@@ -1,0 +1,1 @@
+export const ERROR_GET_HOUSE_USERS = "Could not load any house users";

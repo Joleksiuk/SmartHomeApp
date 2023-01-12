@@ -1,109 +1,118 @@
-import { Button, Grid, Paper, Slider, Switch, TextField, Typography } from '@mui/material';
-import axios from 'axios';
+import { Button, ButtonProps, Grid, Slider, styled, Switch, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CodeValue, ComponentProp, Device } from '../../interfaces';
-import { Component } from '../../Services/ComponentService';
+import { CodeValue, ComponentProp, DeviceDto } from '../../interfaces';
 import TuyaLEDService from '../../Services/TuyaLEDService';
-import { device_url } from '../../urls';
-
-
+import DeviceService from '../../Services/DeviceService';
+import { SketchPicker } from 'react-color';
 
 export default function TuyaLED(props?:ComponentProp) {
 
   const { deviceId } = useParams();
-  const [device,setDevice]=useState<Device>();
-  const [colourData, setColourData] = useState<any>("")
+  const [device,setDevice]=useState<DeviceDto>();
+  const [deviceFetched,setDeviceFetched]=useState<boolean>(false);
+  const [sketchColor, setSketchColor] = useState("#0000FF");
+  const label = { inputProps: { 'aria-label': 'Size switch demo'}};
+  const [checked, setChecked] = React.useState(true);
+  const [intensity, setIntensity] = React.useState<number>(200);
+  const [isSceneComponent, setIsSceneComponent]=useState<Boolean>(false);
 
-  const readProps=()=>{
-    let value = props?.device?.props.find(elem => elem.code == 'switch_led')?.value;
-
-    let valueMapped: boolean = false;
-    if (value == 'false'){
-      valueMapped = false;
-    }
-    else if (value == 'true'){ 
-      valueMapped = true;
-    }
-    setChecked(valueMapped);
-    setColourData(props?.device?.props?.find(elem => elem.code == 'colour_data')?.value)
-    setIntensity(Number(props?.device?.props?.find(elem => elem.code == 'intensity')?.value))
-    console.log(props)
-    console.log(props?.device)
-    console.log(props?.device?.props?.find(elem => elem.code == 'colour_data')?.value)
-  }
-
-  useEffect(() => {  
+  useEffect(() => { 
     getDeviceById();
-    readProps()
   }, []);
 
-  const getDeviceById=()=>{
-    if(deviceId!==undefined){
-    axios.get(device_url+'/'+deviceId , {})
-    .then((response) => response.data)
-    .then((data) => {
-        setDevice(data)
-    }).catch(error => {console.log(error)});
-  }
-  }
-
-  const [component, setComponent]=useState<Component>()
-
-   const getDeviceStatus=()=>{
+  useEffect(() => {  
     if(device!==undefined)
-      console.log(TuyaLEDService.getDeviceDetails(device.specificId))
+      getDeviceStatus(device?.id);
+  }, [deviceFetched]);
+
+  const getDeviceById = async ()=>{
+    if(deviceId!==undefined){
+      let response = await DeviceService.getDeviceDto(Number(deviceId))
+      setDevice(response)
+    }   
+    else if(props!==undefined && props.device!==undefined){
+      setDevice(props.device)
+      setIsSceneComponent(true)
+      setDefaults(props.device?.props)
+    }
+    setDeviceFetched(true)
   }
+
+  const setDefaults=(status: CodeValue[])=>
+  {
+    status.forEach(prop=>{
+      switch(prop.code){
+        case "colour_data":
+          setSketchColor(prop.value)
+          break;
+        case "switch_led":
+          setChecked(Boolean(prop.value));
+          break;
+        case "Intensity":
+          setIntensity(Number(prop.value));
+          break;       
+      }
+    });
+  }
+
+   const getDeviceStatus= async (deviceId:number)=>{
+      let response = await TuyaLEDService.getDeviceStatus(deviceId);
+      if(response!==undefined)
+        setDefaults(response)
+  }
+
    const changeIntensity=()=>{
     if(device!==undefined)
-      TuyaLEDService.changeIntensity(device.specificId,intensity.toString())
+      TuyaLEDService.changeIntensity(device.id,intensity.toString())
    }
 
    const changeColor=()=>{
       if(device!==undefined)
-        TuyaLEDService.changeColor(device.specificId,colorHex)
-   }
-
-
-   const getComponent=()=>{
-    const component_url = "http://localhost:8080/component";
-    axios.get(component_url+'/name=LED', {})
-        .then((response) => response.data)
-        .then((data) => setComponent(data))
-        .catch(error => {
-        console.log(error)
-        });
+        TuyaLEDService.changeColor(device.id,sketchColor)
    }
 
    const handleSwitchChange =()=>{
     setChecked(!checked)
     if(device!==undefined)
-      TuyaLEDService.switchLed(device.specificId,checked)
+      TuyaLEDService.switchLed(device.id,checked)
    }
 
   const handleIntensityChange = (event: Event, newValue: number | number[]) => {
     setIntensity(newValue as number);
   };
+  
+  const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
+    color: theme.palette.getContrastText(sketchColor),
+    backgroundColor: sketchColor,
+    '&:hover': {
+      backgroundColor: "#474798",
+    },
+  }));
+  
+  return (
 
-  const label = { inputProps: { 'aria-label': 'Size switch demo' } };
-  const [checked, setChecked] = React.useState(true);
-  const [intensity, setIntensity] = React.useState<number>(200);
-  const [colorHex, setColorValue] = useState<string>("");
+      <Grid container>
 
-  const onTextChange = (e: any) => setColorValue(e.target.value);
-    return (
-
-        <Grid container spacing={3}>
-
-            <Grid justifyContent="center" container item xs={12}>
-                <Typography  variant="h4" >Device name: {device?.name} </Typography>
-            </Grid>
-            <Grid item xs={12} md={8} lg={25}>
-            <img src={component?.imagePath}/>
-            <Button onClick = {getDeviceStatus}>Get device status</Button>
-            <Button onClick = {getComponent}>Get component</Button>
-            <Switch checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
+          <Grid justifyContent="center" container item >
+              <Typography  variant="h4" >Device name: {device?.name} </Typography>
+          </Grid>
+          <Grid justifyContent="center" container item>
             
+            <Grid item justifyContent="center" container >
+            <Grid item ><img width="300" height="300" src={device?.imagePath}/></Grid>
+              <SketchPicker              
+              color={sketchColor}
+              onChange={(e) => setSketchColor(e.hex)}
+            />
+            <ColorButton onClick = {changeColor} variant="contained">Change color</ColorButton>
+            </Grid>
+    
+          </Grid>
+          <Grid justifyContent="center" container item>
+            <Switch checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
+          </Grid>
+          <Grid justifyContent="center" container item >
             <Slider 
                 aria-label="Volume" 
                 value={intensity} 
@@ -112,14 +121,9 @@ export default function TuyaLED(props?:ComponentProp) {
                 min={0}
                 max={1000}
                 defaultValue={1000}
-                />
+                />                            
             <Button onClick = {changeIntensity}>Change brightness</Button>
-
-            <TextField  onChange={onTextChange} defaultValue={colourData} value={colorHex} label={colourData}/>
-            <Button onClick = {changeColor}>Change color</Button>
-        
-            </Grid>
-        </Grid>
-
-      );
+          </Grid>
+      </Grid>
+    );
 }

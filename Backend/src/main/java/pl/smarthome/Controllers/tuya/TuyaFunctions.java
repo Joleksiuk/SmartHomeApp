@@ -26,16 +26,6 @@ import java.util.stream.Collectors;
 
 public class TuyaFunctions {
 
-//    private static String accessId = "7u5g78ek3yp4v7pfd735";
-//    private static String accessKey = "8e7be48e8b4146089929474d30d0488f";
-//    private static String endpoint = "https://openapi.tuyaeu.com";
-//
-//    static {
-//        Constant.CONTAINER.put(Constant.ENDPOINT, endpoint);
-//        Constant.CONTAINER.put(Constant.ACCESS_ID, accessId);
-//        Constant.CONTAINER.put(Constant.ACCESS_KEY, accessKey);
-//    }
-
     private static final MediaType CONTENT_TYPE = MediaType.parse("application/json");
     private static final String EMPTY_HASH = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
     private static final String SING_HEADER_NAME = "Signature-Headers";
@@ -108,7 +98,6 @@ public class TuyaFunctions {
 
     public static String getPathAndSortParam(URL url) {
         try {
-            // supported the query contains zh-Han char
             String query = URLDecoder.decode(url.getQuery(), "UTF-8");
             String path = url.getPath();
             if (StringUtils.isBlank(query)) {

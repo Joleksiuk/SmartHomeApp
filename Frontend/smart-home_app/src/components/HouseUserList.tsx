@@ -1,8 +1,9 @@
-import {Alert,Box,Button,FormControl,FormControlLabel,FormLabel,Grid,List,ListItem, ListItemText, ListSubheader,Radio,RadioGroup,Stack,Switch,Table,TableBody,TableCell,TableRow,TextField,Typography,} from "@mui/material";
+import {Alert,Box,Button,FormControl,FormControlLabel,FormLabel,Grid,LinearProgress,Radio,RadioGroup,Stack,Table,TableBody,TableCell,TableRow,TextField,Typography,} from "@mui/material";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import AuthService from "../authorization/AuthService";
+import { ERROR_GET_HOUSE_USERS } from "../ErrorMessages";
 import { HouseUserDto} from "../interfaces";
 import { houseUser_url } from "../urls";
   
@@ -11,31 +12,30 @@ export default function HouseUserComponent() {
     const onTextChange = (e: any) => setNewUser(e.target.value);
     const [showError, setShowError] = useState<Boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
-    const [meAdmin, setMeAdmin]=useState<Boolean>(true);
+    const [loading,setLoading] =useState<boolean>(true);
 
     const [userList, setUserList] = useState<HouseUserDto[]>();
     const [newUser, setNewUser] = useState<string>();
     const {id} = useParams()
     const [me, setMe] =useState<HouseUserDto>();
 
-    useEffect(() => {
-        const user = AuthService.getLoggedUser();
+    const fetchData=()=>{
         axios.get<HouseUserDto[]>(houseUser_url+ '/houseId=' + id)
-        .then((response) => {setUserList(response.data);})
-        .catch((error) => console.log(error));
-
-        axios.get<HouseUserDto>(houseUser_url+"/userId="+user.id +'/houseId=' + id)
         .then((response) => {
-            setMe(response.data);
-        })
-        .then((response)=>{
-            if(me?.role==='Admin'){
-            setMeAdmin(true)
-        }})
-        .catch((error) => console.log(error));
+            setUserList(response.data);})
+        .catch((error) => console.log(ERROR_GET_HOUSE_USERS));
+    }
 
+    useEffect(() => {    
+        setMe(userList?.filter(user=>(user.userId == AuthService.getLoggedUser().id))[0])
+        if(me!==undefined){
+            setLoading(false)
+        }
+    }, [userList]);
+
+    useEffect(() => {
+        fetchData();
     }, []);
-
 
     const handleAddHomeUser=()=>{
 
@@ -43,10 +43,8 @@ export default function HouseUserComponent() {
         .then((response) => {
             setShowError(true);
             setErrorMessage(response.data);
-        })
-        .catch((error) => console.log(error));
+        }).catch((error) => console.log(error));
     }
-
 
     const setUserRole = (event:any, value:any, userId:number) => {
         let msg={
@@ -60,7 +58,7 @@ export default function HouseUserComponent() {
       };
 
     const generateRadio=(dto:HouseUserDto)=>{
-        if(meAdmin){
+        if(me?.role==='Admin'){
             return (
                     <FormControl>
                         <FormLabel id="demo-radio-buttons-group-label">Role</FormLabel>
@@ -95,44 +93,50 @@ export default function HouseUserComponent() {
     
     return (
         <Grid container spacing={3}>
+            {!loading ?<>
+                {me?.role==='Admin' &&
+                    <><Grid justifyContent="center" container item xs={12}>
+                        <Typography variant="h6">Add new home user</Typography>
+                    </Grid><Grid justifyContent="center" container item xs={12}>
+                            {showError &&
+                                <Grid item xs={12}>
+                                    <Stack sx={{ width: '100%' }} spacing={2}>
+                                        <Alert severity="error">{errorMessage}</Alert>
+                                    </Stack>
+                                </Grid>}
+                            <TextField onChange={onTextChange} value={newUser} label={"Username"} />
+                            <Button variant="contained" onClick={() => handleAddHomeUser()}>Add User to house</Button>
+                        </Grid>
+                        
+                        <Grid justifyContent="center" container item xs={12}>
+                            <Link to={'/house/permission/'+ id}>
+                                <Button variant="contained">Manage role permission</Button>     
+                            </Link>
+                                
+                        </Grid>
+                    </>
+                }
+                <Grid justifyContent="center" container item xs={12}>
+                    <Typography  variant="h6" >Current house users</Typography>
 
-            {meAdmin &&
-                <><Grid justifyContent="center" container item xs={12}>
-                    <Typography variant="h6">Add new home user</Typography>
-                </Grid><Grid justifyContent="center" container item xs={12}>
-                        {showError &&
-                            <Grid item xs={12}>
-                                <Stack sx={{ width: '100%' }} spacing={2}>
-                                    <Alert severity="error">{errorMessage}</Alert>
-                                </Stack>
-                            </Grid>}
-                        <TextField onChange={onTextChange} value={newUser} label={"Username"} />
-                        <Button variant="contained" onClick={() => handleAddHomeUser()}>Add User to house</Button>
-                    </Grid>
-                    
-                    <Grid justifyContent="center" container item xs={12}>
-                        <Link to={'/house/permission/'+ id}>
-                            <Button variant="contained">Manage role permission</Button>     
-                        </Link>
-                            
-                    </Grid>
-                </>
-            }
-            <Grid justifyContent="center" container item xs={12}>
-                <Typography  variant="h6" >Current house users</Typography>
+                </Grid>    
 
-            </Grid>    
-
-            <Grid justifyContent="center" container item xs={12}>
-                <Table>
-                    <TableBody>
-                        {userList?.map(user => (
-                            generateTableRow(user)
-                        ))}
-                    </TableBody>
-                </Table>
-            </Grid>
-
+                <Grid justifyContent="center" container item xs={12}>
+                    <Table>
+                        <TableBody>
+                            {userList?.map(user => (
+                                generateTableRow(user)
+                            ))}
+                        </TableBody>
+                    </Table>
+                </Grid>
+            </>
+            :
+            <Box sx={{ width: '100%' }}>
+                <LinearProgress />
+            </Box>
+            
+        }
 
         </Grid>
     );  

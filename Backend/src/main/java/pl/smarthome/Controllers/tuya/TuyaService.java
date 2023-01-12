@@ -2,9 +2,11 @@ package pl.smarthome.Controllers.tuya;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.apache.bcel.classfile.Code;
 import org.springframework.stereotype.Service;
 import pl.smarthome.Controllers.tuya.details.*;
 import pl.smarthome.Controllers.tuya.details.HSVColor;
+import pl.smarthome.Models.Device;
 import pl.smarthome.Models.users.TuyaUser;
 import pl.smarthome.Repositories.DeviceRepository;
 import pl.smarthome.Repositories.TuyaUserRepository;
@@ -29,13 +31,24 @@ public class TuyaService {
         return null;
     }
 
-    public List<CodeValue> getDeviceStatus(String id, Long userId){
+    public List<CodeValue> getDeviceStatus(Long id, Long userId){
+        Device device = deviceRepository.findById(id).orElse(null);
         TuyaUser user = tuyaUserRepository.findById(userId).orElse(null);
         if(user!=null) {
-            String path = "/v1.0/iot-03/devices/"+id+"/status";
+            String path = "/v1.0/iot-03/devices/"+device.getSpecificId()+"/status";
             Object result = TuyaFunctions.execute(TuyaFunctions.getAccessToken(user), path, "GET", "", new HashMap<>(), user);
             Gson gson = new Gson();
-            return gson.fromJson(gson.toJson(result), TuyaStatusResponse.class).getResult();
+            List<CodeValue> cvs = gson.fromJson(gson.toJson(result), TuyaStatusResponse.class).getResult();
+            CodeValue el=new CodeValue("test",0);
+            for(CodeValue cv:cvs){
+                if(cv.getCode().equals("colour_data")){
+                    HSVColor hsv = gson.fromJson(cv.getValue().toString(),HSVColor.class);
+                    cv.setValue(HSVColor.toHex(hsv));
+                    el =new CodeValue("Intensity",hsv.getV());
+                }
+            }
+            cvs.add(el);
+            return cvs;
         }
         return null;
     }
@@ -57,7 +70,11 @@ public class TuyaService {
         for(CodeValue cv: codeValueList){
             switch (cv.getCode()) {
                 case "switch_led", "switch_1" -> cv.setValue(Boolean.valueOf(cv.getValue().toString()));
-                case "colour_data" -> cv.setValue(HSVColor.hsvToJson( HSVColor.fromHex(cv.getValue().toString())));
+                case "colour_data" -> {
+                    HSVColor color = HSVColor.fromHex(cv.getValue().toString());
+                    String hsv = HSVColor.hsvToJson(color);
+                    cv.setValue(hsv);
+                }
                 case "intensity" -> {
                     HSVColor currentHSV = getCurrentLEDColor(id,userId);
                     currentHSV.setV(Integer.parseInt( cv.getValue().toString()));

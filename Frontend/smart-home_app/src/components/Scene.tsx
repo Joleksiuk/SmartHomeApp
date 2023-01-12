@@ -1,13 +1,12 @@
-import { Button, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@mui/material';
+import {Box, Button, Card, CardActionArea, CardContent, CardMedia, Grid, LinearProgress, Typography } from '@mui/material';
 import axios from 'axios';
-import { stringify } from 'querystring';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { json } from 'stream/consumers';
 import AuthService from '../authorization/AuthService';
-import { CodeValue, CommandDto, ComponentProp, Device, DeviceDto, Scene } from '../interfaces';
+import {Device, DeviceDto, Scene, ComponentProp } from '../interfaces';
+import SceneService from '../Services/SceneService';
 import {scene_url } from '../urls';
-import ShellyDuo, { ShellyDuoProps } from './shelly/ShellyDuo';
+import ShellyDuo from './shelly/ShellyDuo';
 import TuyaLED from './tuya/TuyaLED';
 import TuyaPlug from './tuya/TuyaPlug';
 
@@ -16,16 +15,13 @@ export default function SceneComponent() {
     const [scene, setScene]=useState<Scene>()
     const [sceneDevices,setSceneDevices]=useState<Array<DeviceDto>>()
     const [devicesToAdd, setDevicesToAdd]=useState<Array<DeviceDto>>();
-
     const [sceneReady,setSceneReady]=useState<Boolean>(false)
     const [devicesReady,setDevicesReady]=useState<Boolean>(false)
     const [addReady,setAddReady]=useState<Boolean>(false)
-
     const {id}=useParams()
  
     useEffect(() => {
-        getCurrentScene()
-        
+        getCurrentScene()       
      }, []);
 
      useEffect(() => {
@@ -34,42 +30,33 @@ export default function SceneComponent() {
      }, [sceneReady]);
 
 
-    const getCurrentScene=()=>{
+    const getCurrentScene = async()=>{
         if(id!==undefined){
-            axios.get(scene_url+'/'+id,{})
-            .then((response) => response.data)
-            .then((data) => {
-                setScene(data)
-                setSceneReady(true)
-            }).catch(error => { });
+            let response = await SceneService.getScene(id)
+            setScene(response)
+            setSceneReady(true)
         }
     }
 
-    const getSceneDevices=()=>{
+    const getSceneDevices = async()=>{
         if(id!==undefined){
-            axios.get(scene_url+'/devices/'+id,{}).then((response) => response.data)
-            .then((data) => {
-                setSceneDevices(data)
-                setDevicesReady(true)
-            }).catch(error => { });
+            let response = await SceneService.getSceneDevices(id);
+            setSceneDevices(response)
+            setDevicesReady(true)
         }
     }
 
-    const getDevicesToAdd=()=>{
-        if(id!==undefined && scene!=undefined){
-        axios.get(scene_url+'/Add/houseId='+scene?.houseId+'/sceneId='+id, {})
-        .then((response) => response.data).
-        then((data) => {
-            setDevicesToAdd(data)
+    const getDevicesToAdd = async ()=>{
+        if(id!==undefined && scene!==undefined){
+            let response = await SceneService.getDevicesToAdd(id,scene?.houseId.toString())
+            setDevicesToAdd(response)
             setAddReady(true)
-        }).catch(error => { }); 
-    }
+        }
     }
 
     type ComponentMap = {
         [key: string]: React.ComponentType;
     };
-
 
     const componentMap: ComponentMap = {
         'Shelly duo': ShellyDuo,
@@ -84,33 +71,27 @@ export default function SceneComponent() {
       }
 
     const showPanel=(device:DeviceDto)=>{
-
         if(device!==undefined){
             return(
                 <div>
                     {devicesReady &&
-                        render(device.componentName ,device)
+                        render(device.componentName , new ComponentProp(device))
                     }
                 </div>
             );
-        }
-        
+        }    
     } 
 
     const handleAddDeviceToScene =(device:Device)=>{
-        axios.get(scene_url+'/Add/deviceId='+device.id+'/sceneId='+id, {}).then((response) => console.log(response.data)).catch(error => {
-           console.log(error);
-          }); 
+        axios.get(scene_url+'/Add/deviceId='+device.id+'/sceneId='+id, {}).then((response) => console.log(response.data)).catch(error => {console.log(error);}); 
     }
 
     const executeScene=()=>{
-        axios.get(scene_url+'/SetScene/'+id+'/'+AuthService.getLoggedUser().id, {}).then((response) => console.log(response.data)).catch(error => {
-            console.log(error);
-           }); 
+        axios.get(scene_url+'/SetScene/'+id+'/'+AuthService.getLoggedUser().id, {}).then((response) => console.log(response.data)).catch(error => {console.log(error);}); 
     }
     return (
         <div>
-        {(sceneReady && addReady && devicesReady) &&
+        {(sceneReady && addReady && devicesReady) ?
         <Grid container spacing={3}>
             <Grid justifyContent="center" container item xs={12}>
                 <Typography  variant="h4" >Welcome to scene: {scene?.name}</Typography>
@@ -168,7 +149,11 @@ export default function SceneComponent() {
                 <Button variant="contained" onClick={executeScene}>Execute Scene</Button>           
             </Grid>   
 
-        </Grid>
+        </Grid>     
+        :
+        <Box sx={{ width: '100%' }}>
+            <LinearProgress />
+        </Box>
     }
     </div>
     

@@ -11,6 +11,7 @@ import { component_url, device_url, house_url, scene_url } from '../urls';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import AuthService from '../authorization/AuthService';
 
+
 export default function Home() {
 
     const { id } = useParams();
@@ -24,6 +25,7 @@ export default function Home() {
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [scenes, setScenes] =  useState<Array<Scene>>();
     const [sceneName, setSceneName] = useState<string>();
+    const [loading, setLoading]=useState<boolean>(false);
 
     useEffect(() => {
         getCurrentHome()
@@ -144,6 +146,7 @@ export default function Home() {
         JSON.stringify(msg)
         axios.post(scene_url ,msg);   
         getHomeScenes()
+
     }
 
     return (
@@ -285,7 +288,7 @@ export default function Home() {
 
             <Grid justifyContent="center" container item xs={12}>
                 <Link to={'/house/users/'+ id}>
-                    <Button variant="contained" onClick={()=>handleCreateNewScene()}>Manage Roles</Button>     
+                    <Button variant="contained">Manage Roles</Button>     
                 </Link>           
             </Grid>
 

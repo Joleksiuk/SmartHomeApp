@@ -7,35 +7,33 @@ const tuya_url = "http://localhost:8080/tuya_led";
 
 class TuyaLEDService {
 
-    makeTuyaRequest=(deviceId: string, command:string, value: string)=>{
+    makeTuyaRequest=(deviceId: number, command:string, value: string)=>{
        
-        let url = tuya_url+'/device='+deviceId+'/'+command+'='+value       
-        let msg={
-            "userId":AuthService.getLoggedUser().id
-        }  
+        let url = tuya_url+'/userId='+AuthService.getLoggedUser().id+'/device='+deviceId+'/'+command+'='+value   
+        console.log(url)    
         return axios       
-        .post(url, JSON.stringify(msg))
+        .post(url, {})
         .catch(error => {
             console.log(error)
         });  
     }
   
-    switchLed(deviceId: string, state: boolean) {
+    switchLed(deviceId: number, state: boolean) {
 
         this.makeTuyaRequest(deviceId,'switch',state.toString()); 
     }
 
-    changeColor(deviceId: string, value: string) {
+    changeColor(deviceId: number, value: string) {
 
-        this.makeTuyaRequest(deviceId,'color',value); 
+        this.makeTuyaRequest(deviceId,'color',value.slice(1)); 
     }
 
-    changeIntensity(deviceId: string, value: string) {
+    changeIntensity(deviceId: number, value: string) {
 
         this.makeTuyaRequest(deviceId,'intensity',value); 
     }
 
-    getDeviceDetails(deviceId: string){
+    getDeviceDetails(deviceId: number){
         let url = tuya_url+'/device='+deviceId
         let msg={
             "userId":AuthService.getLoggedUser().id
@@ -44,6 +42,18 @@ class TuyaLEDService {
         .post(url, JSON.stringify(msg))
         .then(response => {
            console.log(response)
+        })
+        .catch(error => {
+            console.log(error)
+        }); 
+    }
+   
+    getDeviceStatus(deviceId: number){
+        let url = tuya_url+'/'+AuthService.getLoggedUser().id+'/'+deviceId+'/Status'
+        return axios
+        .get(url)
+        .then(response => {
+           return response.data as CodeValue[]
         })
         .catch(error => {
             console.log(error)

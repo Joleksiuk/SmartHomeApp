@@ -34,8 +34,8 @@ public class DeviceController {
     }
 
     @GetMapping("{id}")
-    public Device findDeviceById(@PathVariable Long id) {
-        return deviceService.findById(id).orElse(null);
+    public DeviceDto findDeviceById(@PathVariable Long id) {
+        return sceneService.devicetoDto(deviceService.findById(id).orElse(null));
     }
 
     @GetMapping("houseId={id}")

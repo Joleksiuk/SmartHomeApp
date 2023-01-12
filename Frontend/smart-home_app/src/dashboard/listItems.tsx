@@ -6,9 +6,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import AppShortcutIcon from '@mui/icons-material/AppShortcut';
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import AddHomeIcon from '@mui/icons-material/AddHome';
-import Home from '@mui/icons-material/Home';
 
 export const mainListItems = (
   <React.Fragment>

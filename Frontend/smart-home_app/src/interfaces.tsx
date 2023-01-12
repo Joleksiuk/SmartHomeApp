@@ -19,6 +19,12 @@ export interface Device{
     name:string
 }
 
+export interface HSV{
+    h:number,
+    s:number,
+    v:number
+}
+
 export interface DeviceDto{
     id:number,
     componentId:number,
@@ -28,16 +34,37 @@ export interface DeviceDto{
     componentName:string,
     imagePath:string,
     brand:string,
-    props:CodeValue[]
+    props:CodeValue[],
+    permissions:RolePermission[]
+}
+
+export interface DevicePermissionDto{
+    id:number,
+    name:string,
+    componentName:string,
+    imagePath:string,
+    brand:string,
+    permissions:PermissionDto[]
+}
+
+export interface PermissionDto{
+    canSee:string,
+    canControl:string,
+    role:string
 }
 
 
-export interface ComponentProp{
+export class ComponentProp{
 
     device?:DeviceDto
-
+    constructor(device:DeviceDto){
+        this.device=device;
+    }
   }
-  
+
+export interface Secret{
+    userId:number;
+}
 
 export interface Scene{
     id:number,

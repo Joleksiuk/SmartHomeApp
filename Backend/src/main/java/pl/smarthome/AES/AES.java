@@ -25,11 +25,11 @@ public class AES {
     public static byte[] specs={ 101,-72,97,-116,51,85,61,-54,-105,12,-21,9,-115,31,101,-106};
 
     static {
-        try {
-            generatedKey = getKeyFromPassword();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            generatedKey = getKeyFromPassword();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static String encrypt(String algorithm, String input, SecretKey key,
@@ -44,24 +44,24 @@ public class AES {
     }
 
     public static String encrypt(String input) {
-        try{
-            IvParameterSpec ivParameterSpec = new IvParameterSpec(specs);
-            return AES.encryptPasswordBased(input, generatedKey, ivParameterSpec);
-        }catch (Exception e){
-            e.printStackTrace();}
-       return "";
-        //return input;
+//        try{
+//            IvParameterSpec ivParameterSpec = new IvParameterSpec(specs);
+//            return AES.encryptPasswordBased(input, generatedKey, ivParameterSpec);
+//        }catch (Exception e){
+//            e.printStackTrace();}
+//       return "";
+        return input;
     }
 
     public static String decrypt(String cipherText) {
-        try {
-            IvParameterSpec ivParameterSpec = new IvParameterSpec(specs);
-            return AES.decryptPasswordBased(cipherText, generatedKey, ivParameterSpec);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-        //return cipherText;
+//        try {
+//            IvParameterSpec ivParameterSpec = new IvParameterSpec(specs);
+//            return AES.decryptPasswordBased(cipherText, generatedKey, ivParameterSpec);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return "";
+        return cipherText;
     }
 
     public static String decrypt(String algorithm, String cipherText, SecretKey key,
