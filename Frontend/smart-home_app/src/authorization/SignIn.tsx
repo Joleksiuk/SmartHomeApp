@@ -45,7 +45,6 @@ export default function SignIn() {
         navigate('/')  
         window.location.reload();
       })
-      .then(() => console.log(authService.getLoggedUser()))
       .catch(error => {
         setShowError(true);
         setErrorMessage("Wrong login credentials!");

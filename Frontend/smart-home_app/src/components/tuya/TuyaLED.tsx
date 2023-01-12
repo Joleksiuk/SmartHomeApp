@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Grid, Slider, styled, Switch, Typography } from '@mui/material';
+import { Button, ButtonProps, Card, Grid, Slider, styled, Switch, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CodeValue, ComponentProp, DeviceDto } from '../../interfaces';
@@ -13,9 +13,12 @@ export default function TuyaLED(props?:ComponentProp) {
   const [deviceFetched,setDeviceFetched]=useState<boolean>(false);
   const [sketchColor, setSketchColor] = useState("#0000FF");
   const label = { inputProps: { 'aria-label': 'Size switch demo'}};
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = useState<boolean>(true);
   const [intensity, setIntensity] = React.useState<number>(200);
   const [isSceneComponent, setIsSceneComponent]=useState<Boolean>(false);
+
+
+  let first:boolean=true;
 
   useEffect(() => { 
     getDeviceById();
@@ -35,6 +38,7 @@ export default function TuyaLED(props?:ComponentProp) {
       setDevice(props.device)
       setIsSceneComponent(true)
       setDefaults(props.device?.props)
+      console.log('is component')
     }
     setDeviceFetched(true)
   }
@@ -47,7 +51,8 @@ export default function TuyaLED(props?:ComponentProp) {
           setSketchColor(prop.value)
           break;
         case "switch_led":
-          setChecked(Boolean(prop.value));
+          console.log('prop value', prop.value)
+            setChecked(Boolean(prop.value))        
           break;
         case "Intensity":
           setIntensity(Number(prop.value));
@@ -74,8 +79,16 @@ export default function TuyaLED(props?:ComponentProp) {
 
    const handleSwitchChange =()=>{
     setChecked(!checked)
-    if(device!==undefined)
-      TuyaLEDService.switchLed(device.id,checked)
+    if(device!==undefined){
+      if(first){
+        TuyaLEDService.switchLed(device.id,!checked)
+        first=false;
+      }
+      else{
+        TuyaLEDService.switchLed(device.id,checked)
+      }
+
+    }
    }
 
   const handleIntensityChange = (event: Event, newValue: number | number[]) => {
@@ -91,7 +104,7 @@ export default function TuyaLED(props?:ComponentProp) {
   }));
   
   return (
-
+      <Card>
       <Grid container>
 
           <Grid justifyContent="center" container item >
@@ -110,7 +123,7 @@ export default function TuyaLED(props?:ComponentProp) {
     
           </Grid>
           <Grid justifyContent="center" container item>
-            <Switch checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
+            <Switch checked={checked} onChange={handleSwitchChange} {...label} />
           </Grid>
           <Grid justifyContent="center" container item >
             <Slider 
@@ -125,5 +138,6 @@ export default function TuyaLED(props?:ComponentProp) {
             <Button onClick = {changeIntensity}>Change brightness</Button>
           </Grid>
       </Grid>
+      </Card>
     );
 }

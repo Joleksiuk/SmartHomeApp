@@ -1,4 +1,4 @@
-import { Button, Grid, Paper, Switch, Typography } from '@mui/material';
+import { Button, Card, Grid, Paper, Switch, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -64,6 +64,7 @@ export default function TuyaPlug(props?:ComponentProp) {
   const [checked, setChecked] = React.useState(true);
 
     return (
+        <Card>
           <Grid container spacing={3}>
 
               <Grid justifyContent="center" container item xs={12}>
@@ -76,5 +77,6 @@ export default function TuyaPlug(props?:ComponentProp) {
             
               </Grid>
           </Grid>
+        </Card>
       );
 }
