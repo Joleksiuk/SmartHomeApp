@@ -15,4 +15,14 @@ class HSVColorTest {
         String result= String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
         System.out.println(result);
     }
+    @Test
+    void toHex(){
+        String hex="f5a623";
+        if(hex.charAt(0)!='#'){
+            hex="#"+hex;
+        }
+        CodeValue cv=new CodeValue("colour_data",hex);
+        HSVColor color = HSVColor.fromHex(cv.getValue().toString());
+        System.out.println(color);
+    }
 }

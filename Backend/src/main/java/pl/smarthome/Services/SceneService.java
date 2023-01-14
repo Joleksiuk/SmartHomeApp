@@ -84,9 +84,9 @@ public class SceneService {
                 .map(device -> device.orElse(null))
                 .collect(Collectors.toList());
 
-        return devices.stream().map(device -> {
-            return devicetoDto(device,sceneId);
-        } ).toList();
+        List<DeviceDto> result= devices.stream().map(device -> (devicetoDto(device,sceneId))).toList();
+        result.forEach(deviceDto -> deviceDto.setProps(getDeviceSceneProps(sceneId,deviceDto.getId())));
+        return result;
     }
 
     public List<DeviceDto> getHouseDevicesToAddBySceneId(Long houseId, Long sceneId){
@@ -116,8 +116,8 @@ public class SceneService {
         List<DeviceDto> devices = getDevicesBySceneId(sceneId);
         for(DeviceDto device: devices){
             List<CodeValue> cvs = new LinkedList<>();
-            List <CommandDto> list =  commandService.getAllCommandsDtoByIds(sceneId,device.getId());
-            for(CommandDto c:list){
+            List <Command> list =  commandService.getAllCommandsDtoByIds(sceneId,device.getId());
+            for(Command c:list){
                 cvs.add(new CodeValue(c.getCode(),c.getValue()));
             }
 
@@ -130,8 +130,8 @@ public class SceneService {
     }
     public List<CodeValue> getDeviceSceneProps(Long sceneId, Long deviceId){
         return commandService.getAllCommandsBySceneId(sceneId).stream()
-                .filter(command -> {return command.getDeviceId()==deviceId;})
-                .map(command -> {return new CodeValue(command.getCode(),command.getValue());}).toList();
+                .filter(command -> (command.getDeviceId().equals(deviceId)))
+                .map(command -> ( new CodeValue(command.getCode(),command.getValue()))).toList();
     }
 
     public List<CodeValue> getDefaultComponentProps(Long componentId){

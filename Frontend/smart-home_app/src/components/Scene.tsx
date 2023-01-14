@@ -29,7 +29,6 @@ export default function SceneComponent() {
         getDevicesToAdd()
      }, [sceneReady]);
 
-
     const getCurrentScene = async()=>{
         if(id!==undefined){
             let response = await SceneService.getScene(id)
@@ -74,8 +73,8 @@ export default function SceneComponent() {
         if(device!==undefined){
             return(
                 <div>
-                    {devicesReady &&
-                        render(device.componentName , new ComponentProp(device))
+                    {devicesReady  && id!=undefined&&
+                        render(device.componentName , new ComponentProp(device,id))
                     }
                 </div>
             );

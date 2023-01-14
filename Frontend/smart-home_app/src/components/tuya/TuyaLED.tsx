@@ -5,6 +5,7 @@ import { CodeValue, ComponentProp, DeviceDto } from '../../interfaces';
 import TuyaLEDService from '../../Services/TuyaLEDService';
 import DeviceService from '../../Services/DeviceService';
 import { SketchPicker } from 'react-color';
+import SceneService from '../../Services/SceneService';
 
 export default function TuyaLED(props?:ComponentProp) {
 
@@ -17,7 +18,6 @@ export default function TuyaLED(props?:ComponentProp) {
   const [intensity, setIntensity] = React.useState<number>(200);
   const [isSceneComponent, setIsSceneComponent]=useState<Boolean>(false);
 
-
   let first:boolean=true;
 
   useEffect(() => { 
@@ -25,9 +25,14 @@ export default function TuyaLED(props?:ComponentProp) {
   }, []);
 
   useEffect(() => {  
-    if(device!==undefined)
+    if(device!==undefined && !isSceneComponent){
       getDeviceStatus(device?.id);
+    }     
+    else if(props!==undefined  && props.device!==undefined)
+      setDefaults(props?.device?.props)
+ 
   }, [deviceFetched]);
+
 
   const getDeviceById = async ()=>{
     if(deviceId!==undefined){
@@ -38,7 +43,6 @@ export default function TuyaLED(props?:ComponentProp) {
       setDevice(props.device)
       setIsSceneComponent(true)
       setDefaults(props.device?.props)
-      console.log('is component')
     }
     setDeviceFetched(true)
   }
@@ -51,10 +55,14 @@ export default function TuyaLED(props?:ComponentProp) {
           setSketchColor(prop.value)
           break;
         case "switch_led":
-          console.log('prop value', prop.value)
-            setChecked(Boolean(prop.value))        
+          setChecked(Boolean(prop.value))   
+          if(isSceneComponent){
+            if(prop.value=='false'){
+              setChecked(false)
+            }
+          } 
           break;
-        case "Intensity":
+        case "intensity":
           setIntensity(Number(prop.value));
           break;       
       }
@@ -87,8 +95,20 @@ export default function TuyaLED(props?:ComponentProp) {
       else{
         TuyaLEDService.switchLed(device.id,checked)
       }
-
     }
+   }
+
+   const saveScene=()=>{
+    if(props!=undefined && props.sceneId!=undefined && props.device!=undefined){
+      const newProps=[
+        new CodeValue("switch_led",String(checked)),
+        new CodeValue("intensity", String(intensity)),
+        new CodeValue("colour_data",sketchColor.slice(1))
+      ]
+      let newDevice = props.device;
+      newDevice.props=newProps;
+      SceneService.putNewSceneProps(props?.sceneId,newDevice)
+    }     
    }
 
   const handleIntensityChange = (event: Event, newValue: number | number[]) => {
@@ -118,7 +138,7 @@ export default function TuyaLED(props?:ComponentProp) {
               color={sketchColor}
               onChange={(e) => setSketchColor(e.hex)}
             />
-            <ColorButton onClick = {changeColor} variant="contained">Change color</ColorButton>
+             {!isSceneComponent && <ColorButton onClick = {changeColor} variant="contained">Change color</ColorButton>}
             </Grid>
     
           </Grid>
@@ -135,7 +155,8 @@ export default function TuyaLED(props?:ComponentProp) {
                 max={1000}
                 defaultValue={1000}
                 />                            
-            <Button onClick = {changeIntensity}>Change brightness</Button>
+            {!isSceneComponent && <Button variant="contained" onClick = {changeIntensity}>Change brightness</Button>}
+            {isSceneComponent  && <Button variant="contained" onClick = {saveScene}>Save Scene</Button>}
           </Grid>
       </Grid>
       </Card>

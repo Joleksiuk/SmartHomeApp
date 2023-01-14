@@ -56,9 +56,11 @@ export interface PermissionDto{
 
 export class ComponentProp{
 
-    device?:DeviceDto
-    constructor(device:DeviceDto){
+    device?:DeviceDto;
+    sceneId?:string;
+    constructor(device:DeviceDto, sceneId:string){
         this.device=device;
+        this.sceneId=sceneId;
     }
   }
 
@@ -81,9 +83,13 @@ export interface Command{
     sceneId:number
 }
 
-export interface CodeValue{
-    code:string,
-    value:string
+export class CodeValue{
+    code:string;
+    value:string;
+    constructor(code:string,value:string){
+        this.code=code;
+        this.value=value;
+    }
 }
 
 export interface CommandDto{

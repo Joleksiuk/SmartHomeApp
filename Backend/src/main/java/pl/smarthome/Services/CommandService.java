@@ -2,8 +2,10 @@ package pl.smarthome.Services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Models.Command;
 import pl.smarthome.Models.dtos.CommandDto;
+import pl.smarthome.Models.dtos.DeviceDto;
 import pl.smarthome.Repositories.CommandRepository;
 
 import java.util.List;
@@ -31,12 +33,21 @@ public class CommandService {
         return new CommandDto(command.getDeviceId(),command.getCode(),command.getValue());
     }
 
-    public List<CommandDto> getAllCommandsDtoByIds(Long sceneId, Long deviceId){
+    public List<Command> getAllCommandsDtoByIds(Long sceneId, Long deviceId){
         List<Command> commands = commandRepository.getAllBySceneId(sceneId);
         return commands.stream()
                 .filter(command -> (deviceId==command.getDeviceId()))
-                .map(this::commandToDto)
                 .collect(Collectors.toList());
     }
 
+    public void putNewSceneProps(Long sceneId, DeviceDto device) {
+        List<Command> commands = commandRepository.getAllBySceneId(sceneId);
+        for (CodeValue cv : device.getProps()) {
+            Command c = commands.stream().filter(arg -> (arg.getCode().equals(cv.getCode()))).findFirst().orElse(null);
+            if (c != null) {
+                c.setValue(cv.getValue().toString());
+            }
+        }
+        commandRepository.saveAll(commands);
+    }
 }

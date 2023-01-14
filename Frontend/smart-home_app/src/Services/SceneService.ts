@@ -1,5 +1,6 @@
 import axios from "axios";
-import { scene_url } from "../urls";
+import { DeviceDto } from "../interfaces";
+import { commands_url, scene_url } from "../urls";
 
 class SceneService {
   
@@ -9,7 +10,7 @@ class SceneService {
         .then((response) => response.data)
         .then((data) => {
             return data;
-        }).catch(error => { });
+        }).catch(error => { console.log(error)});
     }
 
     getSceneDevices(sceneId:string){
@@ -17,7 +18,7 @@ class SceneService {
         .then((response) => response.data)
         .then((data) => {
             return data;
-        }).catch(error => { });
+        }).catch(error => { console.log(error)});
     }
 
     getDevicesToAdd(sceneId:string, houseId:string){
@@ -25,7 +26,24 @@ class SceneService {
         .then((response) => response.data)
         .then((data) => {
             return data;
+        }).catch(error => { console.log(error)});
+    }
+
+    getSceneProps(sceneId:string, deviceId:string){
+       
+        return axios.get(commands_url+'/sceneId='+sceneId+'/deviceId='+deviceId, {})
+        .then((response) => response.data)
+        .then((data) => {
+            return data;
         }).catch(error => { });
+    }
+
+    putNewSceneProps(sceneId:string, device:DeviceDto){
+
+        return axios.put(commands_url+'/new_props/sceneId='+sceneId,device)
+        .then((data) => {
+            console.log(data)
+        }).catch(error => { console.log(error)});
     }
 }
 export default new SceneService();

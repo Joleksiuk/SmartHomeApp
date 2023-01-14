@@ -20,12 +20,10 @@ class TuyaLEDService {
   
     switchLed(deviceId: number, state: boolean) {
         
-        console.log(state)
         let value='false';
         if(state==true){
             value ='true';
         }
-        console.log(value)
         this.makeTuyaRequest(deviceId,'switch',value); 
     }
 

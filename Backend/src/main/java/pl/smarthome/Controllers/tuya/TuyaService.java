@@ -71,7 +71,11 @@ public class TuyaService {
             switch (cv.getCode()) {
                 case "switch_led", "switch_1" -> cv.setValue(Boolean.valueOf(cv.getValue().toString()));
                 case "colour_data" -> {
-                    HSVColor color = HSVColor.fromHex(cv.getValue().toString());
+                    String hex = cv.getValue().toString();
+                    if(hex.charAt(0)!='#'){
+                        hex='#'+hex;
+                    }
+                    HSVColor color = HSVColor.fromHex(hex);
                     String hsv = HSVColor.hsvToJson(color);
                     cv.setValue(hsv);
                 }
