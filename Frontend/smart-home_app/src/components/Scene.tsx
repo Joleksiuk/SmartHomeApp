@@ -58,7 +58,7 @@ export default function SceneComponent() {
     };
 
     const componentMap: ComponentMap = {
-        'Shelly duo': ShellyDuo,
+        'Shelly Duo': ShellyDuo,
         'Tuya Smart Plug': TuyaPlug,
         'Tuya Smart LED': TuyaLED,
    };

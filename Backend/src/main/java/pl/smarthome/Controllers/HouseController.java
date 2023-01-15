@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.House;
+import pl.smarthome.Models.dtos.HouseDto;
 import pl.smarthome.Services.HouseService;
 
 import java.util.List;
@@ -38,6 +39,11 @@ public class HouseController {
     @GetMapping("ownerId={id}")
     public List<House> findHouseByOwnerId(@PathVariable Long id) {
         return houseService.findHousesByOwnerId(id);
+    }
+
+    @GetMapping("{houseId}/data")
+    public HouseDto getHouseData(@PathVariable Long houseId){
+        return houseService.getHouseData(houseId);
     }
 
 }

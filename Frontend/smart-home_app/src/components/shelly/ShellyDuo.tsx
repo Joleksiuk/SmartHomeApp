@@ -1,101 +1,138 @@
-import { Button, Grid, Paper, Slider, Switch, Typography } from '@mui/material';
-import axios from 'axios';
+import { Box, Button, Grid, LinearProgress, Paper, Slider, Switch, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ComponentProp, Device } from '../../interfaces';
-import ComponentService, { Component } from '../../Services/ComponentService';
+import { CodeValue, ComponentProp, DeviceDto } from '../../interfaces';
+import DeviceService from '../../Services/DeviceService';
+import SceneService from '../../Services/SceneService';
 import ShellyDuoService, { State } from '../../Services/ShellyDuoService';
-import { device_url } from '../../urls';
-
-export interface ShellyDuoProps{
-    turn?:boolean,
-    white?:Number,
-    brightness?:Number,
-    temp?:Number
-}
 
 export default function ShellyDuo(props?:ComponentProp) {
 
   const { deviceId } = useParams();
-  const [device,setDevice]=useState<Device>()
-  const [shellyProps, setShellyProps]=useState<ShellyDuoProps>()
+  const [device,setDevice]=useState<DeviceDto>()
+  const [deviceFetched,setDeviceFetched]=useState<boolean>(false);
+  const [loading, setLoading]=useState<boolean>(true);
+
+  const [isSceneComponent, setIsSceneComponent]=useState<Boolean>(false);
   
-  const readProp=()=>{
+  let first:boolean=true;
 
-    let turn=false
-
-    let  state = props?.device?.props.find(elem => elem.code == 'colour_data')?.value
-    if(state=='On'){
-      turn=true
-    }
-
-    let pp={
-      turn: turn,
-      white: Number(props?.device?.props.find(elem => elem.code == 'white')?.value),
-      brightness: Number(props?.device?.props.find(elem => elem.code == 'brightness')?.value),
-      temp: Number(props?.device?.props?.find(elem => elem.code == 'temp')?.value)
-    }
-
-    setChecked(pp.turn)
-    setBrightnessValue(pp.brightness)
-    setTempValue(pp.temp)
-    setWhiteValue(pp.white)
-
-    setShellyProps(pp)
-  }
-
-  useEffect(() => {
-     getDeviceById()
+   useEffect(() => { 
+    getDeviceById();
   }, []);
 
-  const getDeviceById=()=>{
-    axios.get(device_url+'/'+deviceId , {})
-    .then((response) => response.data)
-    .then((data) => {
-        setDevice(data)
-    })
-    .catch(error => {
-      console.log(error)
+  useEffect(() => {  
+    if(device!==undefined && !isSceneComponent){
+      getDeviceStatus(device?.id);
+    }     
+    else if(props!==undefined  && props.device!==undefined){
+      setDefaults(props?.device?.props)
+    }
+    setLoading(false);
+
+  }, [deviceFetched]);
+
+  const getDeviceById = async ()=>{
+    if(deviceId!==undefined){
+      let response = await DeviceService.getDeviceDto(Number(deviceId))
+      setDevice(response)
+      setDeviceFetched(true)
+    }   
+    else if(props!==undefined && props.device!==undefined){
+
+      setDevice(props.device)
+      setIsSceneComponent(true)
+      setDeviceFetched(true)
+    }
+    
+  }
+  
+  const setDefaults=(status: CodeValue[])=>
+  {
+    status.forEach(prop=>{
+      switch(prop.code){
+        case "temp":
+          setTempValue(Number(prop.value))
+          break;
+        case "switch":
+          if(prop.value==='on'){
+            setChecked(true)
+          }
+          else{
+            setChecked(false)
+          }
+          break;
+        case "brightness":
+          setBrightnessValue(Number(prop.value));
+          break;    
+        case "white":
+          setWhiteValue(Number(prop.value));
+          break;    
+      }
     });
   }
 
-  const [component, setComponent]=useState<Component>()
-   const getDeviceStatus=()=>{
-    if(device!==undefined)
-    console.log(ShellyDuoService.getDeviceStatus(device?.specificId))
-  }
+  const getDeviceStatus= async (deviceId:number)=>{
+    let response = await ShellyDuoService.getDeviceStatus(deviceId);
+    if(response!==undefined)
+      setDefaults(response)
+}
+
    const changeBrightness=()=>{
-    if(device!==undefined)
-      ShellyDuoService.changeBrightness(device?.specificId,brigthnessValue.toString())
+    if(deviceId!==undefined)
+      ShellyDuoService.changeBrightness(deviceId,brigthnessValue.toString())
    }
    const changeTemp=()=>{
-    if(device!==undefined)
-      ShellyDuoService.changeTemperature(device?.specificId,tempValue.toString())
+    if(deviceId!==undefined)
+      ShellyDuoService.changeTemperature(deviceId,tempValue.toString())
    }
    const changeWhite=()=>{
-    if(device!==undefined)
-    ShellyDuoService.changeWhiteness(device?.specificId,whiteValue.toString())
-   }
-
-   const getComponent=()=>{
-
-    const component_url = "http://localhost:8080/component";
-    axios.get(component_url+'/name=Shelly Duo', {})
-        .then((response) => response.data)
-        .then((data) => setComponent(data))
-        .catch(error => {
-        console.log(error)
-        });
+    if(deviceId!==undefined)
+    ShellyDuoService.changeWhiteness(deviceId,whiteValue.toString())
    }
 
    const handleSwitchChange =()=>{
       setChecked(!checked)
       let state =  State.Off
-      if(checked){
-        state = State.On;
+
+      if(first){
+        if(checked){
+          state = State.Off;
+        }
+        else{
+          state = State.On;
+        }
       }
-      if(deviceId!==undefined)
-      ShellyDuoService.switchBulb(deviceId, state)
+      else{
+
+        if(checked){
+          state = State.On;
+        }
+        else{
+          state = State.Off;
+        }
+      }
+
+      if(deviceId!==undefined){
+        ShellyDuoService.switchBulb(deviceId, state)       
+      }
+   }
+
+   const saveScene=()=>{
+    let state =  State.Off
+    if(checked){
+      state = State.On;
+    }
+    if(props!=undefined && props.sceneId!=undefined && props.device!=undefined){
+      const newProps=[
+        new CodeValue("switch",state),
+        new CodeValue("brightness",brigthnessValue.toString()),
+        new CodeValue("temp",tempValue.toString()),
+      ]
+      let newDevice = props.device;
+      newDevice.props=newProps;
+      SceneService.putNewSceneProps(props?.sceneId,newDevice)
+    }     
    }
 
 
@@ -120,41 +157,45 @@ export default function ShellyDuo(props?:ComponentProp) {
   const gradient = 'linear-gradient(to right, #e0561f,#ffd54d,#dcf7f7, #7cc1c2, #09c0e0)';
 
     return (
+      
       <Paper
         sx={{
         p: 2,
         display: 'flex',
         flexDirection: 'column', 
       }}>
-          <Grid justifyContent="center" container item xs={12}>
-                <Typography  variant="h4" >Device name: {device?.name} </Typography>
-          </Grid>
-          <Grid container spacing={3}>
+        {(deviceFetched && !loading) ?
+        <Grid justifyContent="center" container item xs={12}>
+            <Grid justifyContent="center" container item xs={12}>
+                  <Typography  variant="h4" >Device name: {device?.name} </Typography>
+            </Grid>
+            <Grid container spacing={3}>
 
-              <Grid item xs={12} md={8} lg={25}>
-              <img src={component?.imagePath}/>
-              <Button onClick = {getDeviceStatus}>Get device status</Button>
-              <Button onClick = {getComponent}>Get component</Button>
-              <Switch checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
-              
-              <Slider aria-label="Volume" value={brigthnessValue} onChange={handleBrightnessChange} color="primary"/>
-              <Button onClick = {changeBrightness}>Change brightness</Button>
-              
-              <Slider 
-                aria-label="Volume" 
-                value={tempValue} 
-                onChange={handleTempChange} 
-                style={{ background: gradient }} 
-                color="secondary"
-                min={2700}
-                max={6500}/>
-              <Button onClick = {changeTemp}>Change temperature</Button>
-              
-              <Slider aria-label="Volume" value={whiteValue} onChange={handleWhiteChange} color="primary"/>
-              <Button onClick = {changeWhite}>Change White</Button>
-
-              </Grid>
+                <Grid item xs={12} md={8} lg={25}>
+                <img  height ="200"src={device?.imagePath}/>
+                <Switch checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
+                
+                <Slider aria-label="Volume" value={brigthnessValue} onChange={handleBrightnessChange} color="primary"/>
+                {!isSceneComponent && <Button  variant="contained" onClick = {changeBrightness}>Change brightness</Button>}
+                
+                <Slider 
+                  aria-label="Volume" 
+                  value={tempValue} 
+                  onChange={handleTempChange} 
+                  style={{ background: gradient }} 
+                  color="secondary"
+                  min={2700}
+                  max={6500}/>
+                {!isSceneComponent &&  <Button  variant="contained" onClick = {changeTemp}>Change temperature</Button>}
+                {isSceneComponent &&  <Button  variant="contained" onClick = {saveScene}>Save scene</Button>}
+                </Grid>
+            </Grid>
           </Grid>
+          :
+          <Box sx={{ width: '100%' }}>
+          <LinearProgress />
+          </Box>
+}
         </Paper>
       );
 }

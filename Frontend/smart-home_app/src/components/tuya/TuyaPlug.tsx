@@ -1,82 +1,127 @@
-import { Button, Card, Grid, Paper, Switch, Typography } from '@mui/material';
-import axios from 'axios';
+import { Box, Card, Grid, LinearProgress, Switch, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ComponentProp, Device } from '../../interfaces';
-import { Component } from '../../Services/ComponentService';
+import { CodeValue, ComponentProp, DeviceDto } from '../../interfaces';
+import DeviceService from '../../Services/DeviceService';
+import SceneService from '../../Services/SceneService';
 import TuyaPlugService from '../../Services/TuyaPlugService';
-import { device_url } from '../../urls';
 
 export default function TuyaPlug(props?:ComponentProp) {
 
   const { deviceId } = useParams();
-  const [component, setComponent]=useState<Component>()
-  const [device,setDevice]=useState<Device>()
-  
-  useEffect(() => {
-    let value = props?.device?.props?.find(elem => elem.code == 'switch_1')?.value;
-
-    let valueMapped: boolean = false;
-    if (value == 'false'){
-      valueMapped = false;
-    }
-    else if (value == 'true'){ 
-      valueMapped = true;
-    }
-    setChecked(valueMapped);
-
-     getDeviceById()
-  }, []);
-
-  const getDeviceById=()=>{
-
-    if(deviceId!==undefined){
-      axios.get(device_url+'/'+deviceId , {})
-      .then((response) => response.data)
-      .then((data) => {
-          setDevice(data)
-      })
-      .catch(error => {
-        console.log(error)
-      });
-    }
-  
-  }
-
-   const getComponent=()=>{
-
-    const component_url = "http://localhost:8080/component";
-    axios.get(component_url+'/name=Tuya Smart Plug', {})
-        .then((response) => response.data)
-        .then((data) => setComponent(data))
-        .catch(error => {
-        console.log(error)
-        });
-   }
-
-   const handleSwitchChange =()=>{
-      setChecked(!checked)
-      if(device!==undefined)
-        TuyaPlugService.switchPlug(device.specificId, checked)
-   }
-
+  const [device,setDevice]=useState<DeviceDto>()
+  const [isSceneComponent, setIsSceneComponent]=useState<Boolean>(false);
+  const [deviceFetched,setDeviceFetched]=useState<boolean>(false);
+  const [loading, setLoading]=useState<boolean>(false);
   const label = { inputProps: { 'aria-label': 'Size switch demo' } };
   const [checked, setChecked] = React.useState(true);
 
+  let first:boolean=true;
+
+  useEffect(() => {
+     getDeviceById()
+  }, []);
+
+  useEffect(() => {  
+    if(device!==undefined && !isSceneComponent){
+      getDeviceStatus(device?.id);
+    }     
+    else if(props!==undefined  && props.device!==undefined){
+      setDefaults(props?.device?.props)
+      setLoading(false);
+    } 
+  }, [deviceFetched]);
+
+  const getDeviceStatus= async (deviceId:number)=>{
+    let response = await TuyaPlugService.getDeviceStatus(deviceId);
+    if(response!==undefined)
+      setDefaults(response)
+  }
+
+  const setDefaults=(status: CodeValue[])=>
+  {
+    status.forEach(prop=>{
+      switch(prop.code){
+        case "switch_1":
+          setChecked(Boolean(prop.value))   
+          if(isSceneComponent){
+            if(prop.value=='false'){
+              setChecked(false)
+            }
+          } 
+          break;      
+      }
+    });
+  }
+
+  const getDeviceById = async ()=>{
+    if(deviceId!==undefined){
+      let response = await DeviceService.getDeviceDto(Number(deviceId))
+      setDevice(response)
+    }   
+    else if(props!==undefined && props.device!==undefined){
+      setDevice(props.device)
+      setIsSceneComponent(true)
+      setDefaults(props.device?.props)
+    }
+    setDeviceFetched(true)
+  }
+
+  const saveScene=(value: boolean)=>{
+    if(props!=undefined && props.sceneId!=undefined && props.device!=undefined){
+      const newProps=[
+        new CodeValue("switch_1",String(value))
+      ]
+      let newDevice = props.device;
+      newDevice.props=newProps;
+      SceneService.putNewSceneProps(props?.sceneId,newDevice)
+    }     
+   }
+
+   const handleSwitchChange =()=>{
+    setChecked(!checked)
+    if(device!==undefined){
+      if(first){
+        if(isSceneComponent){
+          saveScene(!checked)
+        }
+        else{
+          TuyaPlugService.switchPlug(device.id,!checked)          
+        }
+        first=false;
+      }
+      else{
+        if(isSceneComponent){
+          saveScene(checked)
+        }
+        else{
+          TuyaPlugService.switchPlug(device.id,checked)          
+        }
+      }
+    }
+   }
+
     return (
         <Card>
-          <Grid container spacing={3}>
-
-              <Grid justifyContent="center" container item xs={12}>
-                    <Typography  variant="h4" >Device name: {device?.name} </Typography>
-              </Grid>
-              <Grid item xs={12} md={8} lg={25}>
-              <img src={component?.imagePath}/>
-              <Button onClick = {getComponent}>Get component</Button>
-              <Switch checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
-            
-              </Grid>
-          </Grid>
+          {(deviceFetched && !loading) 
+            ?
+            <Grid container spacing={3}>
+                <Grid justifyContent="center" container item xs={12}>
+                      <Typography  variant="h4" >Device name: {device?.name} </Typography>
+                </Grid>
+                <Grid item justifyContent="center" container >
+                  <Grid item ><img width="300" height="300" src={device?.imagePath}/></Grid>
+                </Grid>
+                <Grid item xs={12} md={8} lg={25}>
+                <Switch checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
+              
+                </Grid>
+            </Grid>
+            :
+          <Box sx={{ width: '100%' }}>
+            <LinearProgress />
+          </Box>
+          }
         </Card>
       );
 }

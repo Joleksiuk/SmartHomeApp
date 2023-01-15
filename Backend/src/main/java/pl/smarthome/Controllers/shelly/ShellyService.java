@@ -1,6 +1,9 @@
 package pl.smarthome.Controllers.shelly;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -11,6 +14,7 @@ import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Models.users.ShellyUser;
 import pl.smarthome.Repositories.ShellyUserRepository;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -19,9 +23,6 @@ public class ShellyService {
 
     private final RestTemplate restTemplate;
     private final ShellyUserRepository shellyUserRepository;
-
-    //private final String authKey = "ZWQxZTN1aWQ8C2F82EE9C857CE6FCAE87A3D4103699E42021BC811BA77FDC325A1F52AA8E4EA828527A61F8E75E";
-    //private final String baseUrl = "https://shelly-38-eu.shelly.cloud";
 
     public String makeShellyRequest(MultiValueMap<String, String> map, String path, Long userid){
 
@@ -52,5 +53,32 @@ public class ShellyService {
         codeValueList.forEach(cv -> map.add(cv.getCode(), cv.getValue().toString()));
         return makeShellyRequest(map,path, userid);
     }
+
+    public List<CodeValue> getStatus(String deviceId, Long userId){
+        List<CodeValue> cvs =new LinkedList<>();
+
+        String response = executeShellyCommand("","",deviceId,"/device/status",userId);
+
+        String [] a = response.split("lights=");
+        String [] b = a[1].split(", has_update");
+
+        String e = b[0].replaceAll("=","\":");
+        String f = e.replaceAll(", ", ", \"");
+        String g = f.replaceAll("ison", "\"ison");
+        String h = g.substring(1,g.length()-1);
+        JSONObject light = new JSONObject(h);
+
+        cvs.add(new CodeValue("temp", light.getInt("temp")));
+        cvs.add(new CodeValue("brightness", light.getInt("brightness")));
+        cvs.add(new CodeValue("white", light.getInt("white")));
+        if(light.getBoolean("ison")){
+            cvs.add(new CodeValue("switch", "on"));
+        }
+        else {
+            cvs.add(new CodeValue("switch", "off"));
+        }
+        return cvs;
+    }
+
 
 }

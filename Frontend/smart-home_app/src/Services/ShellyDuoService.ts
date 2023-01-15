@@ -14,12 +14,9 @@ const Shelly_URL = "http://localhost:8080/shelly";
 class ShellyDuoService {
 
     makeShellyRequest=(deviceId: string, command:string, value: string)=>{
-        let url = Shelly_URL+'/device='+deviceId+'/'+command+'='+value.toString() 
-        let msg={
-            "userId":AuthService.getLoggedUser().id
-        }   
+        let url = Shelly_URL+'/device='+deviceId+'/'+command+'='+value.toString() +'/'+AuthService.getLoggedUser().id
         return axios       
-        .post(url, JSON.stringify(msg))
+        .post(url, JSON.stringify(AuthService.getLoggedUser().id))
         .catch(error => {
             console.log(error)
         });  
@@ -55,19 +52,13 @@ class ShellyDuoService {
         }); 
     }
 
-    getDeviceStatus(deviceId: string){
-        let url = Shelly_URL+'/'+deviceId
-        let msg={
-            "userId":AuthService.getLoggedUser().id
-        }  
+    getDeviceStatus(deviceId: number){
+        let url = Shelly_URL+'/'+ AuthService.getLoggedUser().id+'/'+deviceId+'/Status'
         return axios
-        .post(url, JSON.stringify(msg))
+        .get(url, {})
         .then(response => {
-           console.log(response)
-        })
-        .catch(error => {
-            console.log(error)
-        }); 
+           return response.data as CodeValue[]
+        }).catch(error => { console.log(error)}); 
     }
     
 }

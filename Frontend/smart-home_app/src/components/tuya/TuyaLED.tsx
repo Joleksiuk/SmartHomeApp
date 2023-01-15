@@ -52,7 +52,10 @@ export default function TuyaLED(props?:ComponentProp) {
     status.forEach(prop=>{
       switch(prop.code){
         case "colour_data":
-          setSketchColor(prop.value)
+          let value = prop.value;
+          if(value.at(0)!='#')
+            value='#'+value
+          setSketchColor(value)
           break;
         case "switch_led":
           setChecked(Boolean(prop.value))   
@@ -98,17 +101,21 @@ export default function TuyaLED(props?:ComponentProp) {
     }
    }
 
-   const saveScene=()=>{
+   const saveBrightness=()=>{
     if(props!=undefined && props.sceneId!=undefined && props.device!=undefined){
-      const newProps=[
-        new CodeValue("switch_led",String(checked)),
-        new CodeValue("intensity", String(intensity)),
-        new CodeValue("colour_data",sketchColor.slice(1))
-      ]
+      const newProps=[new CodeValue("intensity", String(intensity)),]
       let newDevice = props.device;
       newDevice.props=newProps;
       SceneService.putNewSceneProps(props?.sceneId,newDevice)
-    }     
+    } 
+   }
+   const saveColor=()=>{
+    if(props!=undefined && props.sceneId!=undefined && props.device!=undefined){
+      const newProps=[new CodeValue("colour_data",sketchColor.slice(1))]
+      let newDevice = props.device;
+      newDevice.props=newProps;
+      SceneService.putNewSceneProps(props?.sceneId,newDevice)
+    } 
    }
 
   const handleIntensityChange = (event: Event, newValue: number | number[]) => {
@@ -139,6 +146,7 @@ export default function TuyaLED(props?:ComponentProp) {
               onChange={(e) => setSketchColor(e.hex)}
             />
              {!isSceneComponent && <ColorButton onClick = {changeColor} variant="contained">Change color</ColorButton>}
+             {isSceneComponent && <ColorButton onClick = {saveColor} variant="contained">Save color</ColorButton>}
             </Grid>
     
           </Grid>
@@ -156,7 +164,7 @@ export default function TuyaLED(props?:ComponentProp) {
                 defaultValue={1000}
                 />                            
             {!isSceneComponent && <Button variant="contained" onClick = {changeIntensity}>Change brightness</Button>}
-            {isSceneComponent  && <Button variant="contained" onClick = {saveScene}>Save Scene</Button>}
+            {isSceneComponent  && <Button variant="contained" onClick = {saveBrightness}>Save brightness</Button>}
           </Grid>
       </Grid>
       </Card>

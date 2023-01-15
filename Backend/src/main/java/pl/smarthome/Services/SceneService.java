@@ -120,9 +120,7 @@ public class SceneService {
             for(Command c:list){
                 cvs.add(new CodeValue(c.getCode(),c.getValue()));
             }
-
-            Component component =componentRepository.findById(device.getComponentId()).orElse(null);
-            switch (component.getBrand()) {
+            switch (device.getBrand()) {
                 case "TUYA" -> tuyaService.multiCommandsRequest(cvs, device.getSpecificId(), userId);
                 case "Shelly" -> shellyService.multiControl(cvs, device.getSpecificId(), "/device/light/control", userId);
             }

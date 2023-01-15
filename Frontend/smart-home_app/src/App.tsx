@@ -24,17 +24,13 @@ import { mainListItems, secondaryListItems } from './dashboard/listItems';
 import Dashboard from './dashboard/Dashboard';
 import ComponentsGrid from './components/ComponentsGrid';
 import AuthService from './authorization/AuthService';
-import { Button } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
-import TestComponent from './components/TestComponent';
 import ShellyDuo from './components/shelly/ShellyDuo';
 import TuyaLED from './components/tuya/TuyaLED';
 import TuyaPlug from './components/tuya/TuyaPlug';
 import ManageHouses from './components/ManageHouses';
 import Home from './components/Home';
 import SceneComponent from './components/Scene';
-import HouseUserList from './components/HouseUserList';
-import HouseUser from './components/HouseUserList';
 import HouseUserComponent from './components/HouseUserList';
 import PermissionComponent from './components/PermissionComp';
 import { CodeValue } from './interfaces';
@@ -204,7 +200,6 @@ function App() {
                         <Route path="/signUp" element={<SignUp />} />
                         <Route path="/devices" element={<ComponentsGrid />} />
                         <Route path="/configAccounts" element ={<ConfigureAccounts/>}/>
-                        <Route path="/test" element={<TestComponent/>}/>
                         <Route path="/ShellyDuo/:deviceId" element={<ShellyDuo/>}/>
                         <Route path="/TuyaSmartLED/:deviceId" element={<TuyaLED/>}/>
                         <Route path="/TuyaSmartPlug/:deviceId" element={<TuyaPlug/>}/>

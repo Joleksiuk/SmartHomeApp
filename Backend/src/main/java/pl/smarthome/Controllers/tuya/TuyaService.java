@@ -3,6 +3,7 @@ package pl.smarthome.Controllers.tuya;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.apache.bcel.classfile.Code;
+import org.apache.xpath.operations.Bool;
 import org.springframework.stereotype.Service;
 import pl.smarthome.Controllers.tuya.details.*;
 import pl.smarthome.Controllers.tuya.details.HSVColor;
@@ -67,6 +68,7 @@ public class TuyaService {
 
     public String multiCommandsRequest(List<CodeValue> codeValueList, String id, Long userId){
 
+        HSVColor currentHSV = null;
         for(CodeValue cv: codeValueList){
             switch (cv.getCode()) {
                 case "switch_led", "switch_1" -> cv.setValue(Boolean.valueOf(cv.getValue().toString()));
@@ -75,12 +77,14 @@ public class TuyaService {
                     if(hex.charAt(0)!='#'){
                         hex='#'+hex;
                     }
-                    HSVColor color = HSVColor.fromHex(hex);
-                    String hsv = HSVColor.hsvToJson(color);
+                    currentHSV = HSVColor.fromHex(hex);
+                    String hsv = HSVColor.hsvToJson(currentHSV);
                     cv.setValue(hsv);
                 }
                 case "intensity" -> {
-                    HSVColor currentHSV = getCurrentLEDColor(id,userId);
+                    if(currentHSV==null){
+                        currentHSV = getCurrentLEDColor(id,userId);
+                    }
                     currentHSV.setV(Integer.parseInt( cv.getValue().toString()));
                     cv.setValue(currentHSV.toJson());
                     cv.setCode("colour_data");
