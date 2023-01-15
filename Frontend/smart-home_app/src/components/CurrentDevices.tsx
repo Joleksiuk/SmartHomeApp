@@ -39,6 +39,7 @@ export default function CurrentDevices(props?:CurrentDevicesProps) {
                                 <CardActionArea>
                                     <CardMedia
                                     component="img"
+                                    src = {device.imagePath}
                                     height="150"
                                     />
                                     <CardContent>

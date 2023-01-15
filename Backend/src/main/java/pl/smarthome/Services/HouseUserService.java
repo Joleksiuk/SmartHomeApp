@@ -1,15 +1,17 @@
 package pl.smarthome.Services;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.xpath.operations.Bool;
 import org.springframework.stereotype.Service;
+import pl.smarthome.Models.Device;
 import pl.smarthome.Models.House;
 import pl.smarthome.Models.HouseUser;
+import pl.smarthome.Models.RolePermission;
 import pl.smarthome.Models.dtos.HouseUserDto;
+import pl.smarthome.Models.dtos.UserPermisson;
 import pl.smarthome.Models.ids.HouseUserId;
 import pl.smarthome.Models.users.User;
-import pl.smarthome.Repositories.HouseRepository;
-import pl.smarthome.Repositories.HouseUserRepository;
-import pl.smarthome.Repositories.UserRepository;
+import pl.smarthome.Repositories.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +25,8 @@ public class HouseUserService {
     private final HouseUserRepository houseUserRepository;
     private final UserRepository userRepository;
     private final HouseRepository houseRepository;
+    private final DeviceRepository deviceRepository;
+    private final PermissionRepository permissionRepository;
 
     public void createHouseUser(HouseUser house) {
         houseUserRepository.save( house);
@@ -96,4 +100,41 @@ public class HouseUserService {
                 .collect(Collectors.toList());
         return houses;
     }
+
+    public UserPermisson getUserPermisson(Long userId, Long deviceId){
+        UserPermisson userPermisson=new UserPermisson();
+        Device device=  deviceRepository.findById(deviceId).orElse(null);
+        HouseUserId houseUserId=new HouseUserId(userId,device.getHouseId());
+
+        HouseUser houseUser = houseUserRepository.findById(houseUserId).orElse(null);
+        String role="";
+        if(houseUser!=null){
+            role=houseUser.getRole();
+        }
+        List<RolePermission> permissions =  permissionRepository.getAllByDeviceId(deviceId);
+        if(role.equals("Admin")){
+            return new UserPermisson(userId,deviceId,true,true);
+        }
+        for(RolePermission perm:permissions){
+            if(perm.getRole().equals(role)){
+                Boolean canSee =false;
+                if(perm.getCanSee().equals("true")){
+                    canSee=true;
+                }
+
+                Boolean canControl =false;
+                if(perm.getCanControl().equals("true")){
+                    canControl=true;
+                }
+                userPermisson.setCanSee(canSee);
+                userPermisson.setCanControl(canControl);
+                userPermisson.setUserId(userId);
+                userPermisson.setDeviceId(deviceId);
+            }
+        }
+        return userPermisson;
+    }
+
+
+
 }

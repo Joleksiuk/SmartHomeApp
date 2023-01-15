@@ -117,5 +117,4 @@ public class TuyaService {
         }
         return "User id is not correct";
     }
-
 }

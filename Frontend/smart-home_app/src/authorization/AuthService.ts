@@ -45,5 +45,6 @@ class AuthService {
   isUserLoggedIn() {
     return this.getLoggedUser() !== null;
   }
+
 }
 export default new AuthService();

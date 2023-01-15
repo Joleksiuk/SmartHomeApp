@@ -1,7 +1,7 @@
 import { Box, Card, Grid, LinearProgress, Switch, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CodeValue, ComponentProp, DeviceDto } from '../../interfaces';
+import { CodeValue, ComponentProp, DeviceDto, UserPermisson } from '../../interfaces';
 import DeviceService from '../../Services/DeviceService';
 import SceneService from '../../Services/SceneService';
 import TuyaPlugService from '../../Services/TuyaPlugService';
@@ -15,11 +15,14 @@ export default function TuyaPlug(props?:ComponentProp) {
   const [loading, setLoading]=useState<boolean>(false);
   const label = { inputProps: { 'aria-label': 'Size switch demo' } };
   const [checked, setChecked] = React.useState(true);
+  const [devicePermission, setDevicePermisson] = useState<UserPermisson>();
+  const [controlEnabled, setControlEnabled] = useState<Boolean>(false);
 
   let first:boolean=true;
 
   useEffect(() => {
-     getDeviceById()
+     getDeviceById();
+     getDevicePermisson();
   }, []);
 
   useEffect(() => {  
@@ -31,6 +34,32 @@ export default function TuyaPlug(props?:ComponentProp) {
       setLoading(false);
     } 
   }, [deviceFetched]);
+
+  useEffect(() => {  
+    if(devicePermission!=undefined && devicePermission.canControl!=undefined ){
+      setControlEnabled(devicePermission?.canControl)
+    }
+ 
+  }, [devicePermission]);
+
+  const getDevicePermisson=async()=>{
+
+    if(deviceId!=undefined){
+      let response = await DeviceService.getDevicePermission(deviceId);
+      setDevicePermisson(response)
+      console.log(response)
+
+    }
+    else if(props?.device?.id!=undefined){
+      let response = await DeviceService.getDevicePermission(props?.device?.id.toString());
+      setDevicePermisson(response)
+      console.log(response)
+
+    }
+    if(devicePermission!=undefined && devicePermission.canControl!=undefined ){
+      setControlEnabled(devicePermission?.canControl)
+    }
+  }
 
   const getDeviceStatus= async (deviceId:number)=>{
     let response = await TuyaPlugService.getDeviceStatus(deviceId);
@@ -113,7 +142,7 @@ export default function TuyaPlug(props?:ComponentProp) {
                   <Grid item ><img width="300" height="300" src={device?.imagePath}/></Grid>
                 </Grid>
                 <Grid item xs={12} md={8} lg={25}>
-                <Switch checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
+                <Switch disabled= {!controlEnabled}  checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
               
                 </Grid>
             </Grid>

@@ -1,13 +1,13 @@
 import axios from "axios";
 import AuthService from "../authorization/AuthService";
 import { CodeValue } from "../interfaces";
-import { tuya_url } from "../urls";
+import { tuya_led_url, tuya_plug_url } from "../urls";
 
 
 class TuyaLEDService {
 
     makeTuyaRequest=(deviceId: number, command:string, value: string)=>{
-        let url = tuya_url+'/device='+deviceId.toString()+'/'+command+'='+value.toString()+'/'+AuthService.getLoggedUser().id     
+        let url = tuya_plug_url+'/device='+deviceId.toString()+'/'+command+'='+value.toString()+'/'+AuthService.getLoggedUser().id     
         return axios       
         .post(url, {})
         .catch(error => {console.log(error)});  
@@ -18,7 +18,7 @@ class TuyaLEDService {
     }
     
     makeMultiRequest(values:Array<CodeValue>,deviceId: number){
-        let url = tuya_url+'/multi/'+deviceId.toString()+'/'+AuthService.getLoggedUser().id       
+        let url = tuya_plug_url+'/multi/'+deviceId.toString()+'/'+AuthService.getLoggedUser().id       
         let body = JSON.stringify(values)
         return axios       
         .post(url, body)
@@ -26,7 +26,7 @@ class TuyaLEDService {
     }
 
     getDeviceStatus(deviceId: number){
-        let url = tuya_url+'/'+AuthService.getLoggedUser().id+'/'+deviceId.toString()+'/Status'
+        let url = tuya_led_url+'/'+AuthService.getLoggedUser().id+'/'+deviceId.toString()+'/Status'
         return axios
         .get(url)
         .then(response => {

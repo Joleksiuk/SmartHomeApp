@@ -146,3 +146,10 @@ export interface HouseDto{
     scenes?: Scene[]
 }
 
+export interface UserPermisson{
+    userId?:number,
+    deviceId?:number,
+    canSee?:Boolean,
+    canControl?:Boolean,
+}
+

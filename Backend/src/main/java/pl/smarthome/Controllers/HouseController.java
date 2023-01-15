@@ -46,4 +46,9 @@ public class HouseController {
         return houseService.getHouseData(houseId);
     }
 
+    @GetMapping("{houseId}/{userId}/data")
+    public HouseDto getHouseDataOfUser(@PathVariable Long houseId, @PathVariable Long userId){
+        return houseService.getHouseDataOfUser(houseId,userId);
+    }
+
 }

@@ -11,4 +11,5 @@ export const permission_url ="http://localhost:8080/permissions"
 export const tuya_users_url = "http://localhost:8080/tuya_users"
 export const shelly_users_url = "http://localhost:8080/shelly_users"
 export const commands_url = "http://localhost:8080/commands"
-export const tuya_url = "http://localhost:8080/tuya_plug";
+export const tuya_led_url = "http://localhost:8080/tuya_led";
+export const tuya_plug_url = "http://localhost:8080/tuya_plug";

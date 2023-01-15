@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.House;
 import pl.smarthome.Models.HouseUser;
 import pl.smarthome.Models.dtos.HouseUserDto;
+import pl.smarthome.Models.dtos.UserPermisson;
 import pl.smarthome.Models.ids.HouseUserId;
 import pl.smarthome.Services.HouseUserService;
 
@@ -63,4 +64,13 @@ public class HouseUserController {
         return houseUserService.getHousesByUserId(id);
     }
 
+    @GetMapping("deviceId={deviceId}/userId={userId}/permission")
+    public UserPermisson getUserDevicePermisson(@PathVariable Long userId, @PathVariable Long deviceId){
+        return houseUserService.getUserPermisson(userId, deviceId);
+    }
+    @GetMapping("userId={userId}/houseId={houseId}/role")
+    public String getRoleOfHouseUser(@PathVariable Long houseId, @PathVariable Long userId){
+        HouseUserId id=new HouseUserId(userId,houseId);
+        return houseUserService.findHouseUserById(id).orElse(null).getRole();
+    }
 }

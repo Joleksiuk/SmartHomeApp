@@ -1,6 +1,7 @@
 import axios from "axios";
+import AuthService from "../authorization/AuthService";
 import { Component, DeviceDto, HouseDto, Scene } from "../interfaces";
-import { component_url, house_url, scene_url } from "../urls";
+import { component_url, houseUser_url, house_url, scene_url } from "../urls";
 
 class ShellyService {
   
@@ -42,12 +43,19 @@ class ShellyService {
     }
 
     getHomeData(houseId:string){
-        return axios.get(house_url+'/'+houseId+'/data' , {})
+        return axios.get(house_url+'/'+houseId+'/'+AuthService.getLoggedUser().id +'/data' , {})
         .then((response) => response.data)
         .then((data) => {
             return data as HouseDto;
         } )
     }
-    
+
+    getHomeUserRole(houseId:string){
+        return axios.get(houseUser_url+'/userId='+AuthService.getLoggedUser().id+'/houseId='+houseId+'/role' , {})
+        .then((response) => response.data)
+        .then((data) => {
+            return data ;
+        } )   
+    } 
 }
 export default new ShellyService();

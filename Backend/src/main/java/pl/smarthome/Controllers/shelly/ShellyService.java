@@ -11,7 +11,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import pl.smarthome.AES.AES;
 import pl.smarthome.Controllers.tuya.details.CodeValue;
+import pl.smarthome.Models.Device;
 import pl.smarthome.Models.users.ShellyUser;
+import pl.smarthome.Repositories.DeviceRepository;
+import pl.smarthome.Repositories.HouseRepository;
 import pl.smarthome.Repositories.ShellyUserRepository;
 
 import java.util.LinkedList;
@@ -23,6 +26,8 @@ public class ShellyService {
 
     private final RestTemplate restTemplate;
     private final ShellyUserRepository shellyUserRepository;
+    private final DeviceRepository deviceRepository;
+    private final HouseRepository houseRepository;
 
     public String makeShellyRequest(MultiValueMap<String, String> map, String path, Long userid){
 

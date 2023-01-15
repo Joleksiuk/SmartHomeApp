@@ -1,6 +1,7 @@
 package pl.smarthome.Controllers.shelly;
 
 import com.google.gson.JsonObject;
+import org.apache.xpath.operations.Bool;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,5 +40,13 @@ class ShellyServiceTest {
         String b = a.replaceAll(", ", ", \"");
         String c = b.replaceAll("ison", "\"ison");
         System.out.println(c);
+    }
+
+    @Test
+    void testBoooleanParse(){
+        System.out.println(Boolean.getBoolean("True"));
+        System.out.println(Boolean.getBoolean("true"));
+        System.out.println(Boolean.getBoolean("TRUE"));
+
     }
 }

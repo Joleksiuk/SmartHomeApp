@@ -1,7 +1,7 @@
 import { Box, Button, Grid, LinearProgress, Paper, Slider, Switch, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CodeValue, ComponentProp, DeviceDto } from '../../interfaces';
+import { CodeValue, ComponentProp, DeviceDto, UserPermisson } from '../../interfaces';
 import DeviceService from '../../Services/DeviceService';
 import SceneService from '../../Services/SceneService';
 import ShellyDuoService, { State } from '../../Services/ShellyDuoService';
@@ -13,13 +13,23 @@ export default function ShellyDuo(props?:ComponentProp) {
   const [deviceFetched,setDeviceFetched]=useState<boolean>(false);
   const [loading, setLoading]=useState<boolean>(true);
 
-  const [isSceneComponent, setIsSceneComponent]=useState<Boolean>(false);
-  
+  const [isSceneComponent, setIsSceneComponent]=useState<Boolean>(false); 
+  const [controlEnabled, setControlEnabled] = useState<Boolean>(false);
+  const [devicePermission, setDevicePermisson] = useState<UserPermisson>();
+
   let first:boolean=true;
 
    useEffect(() => { 
     getDeviceById();
+    getDevicePermisson();
   }, []);
+
+  useEffect(() => {  
+    if(devicePermission!=undefined && devicePermission.canControl!=undefined ){
+      setControlEnabled(devicePermission?.canControl)
+    }
+ 
+  }, [devicePermission]);
 
   useEffect(() => {  
     if(device!==undefined && !isSceneComponent){
@@ -31,6 +41,21 @@ export default function ShellyDuo(props?:ComponentProp) {
     setLoading(false);
 
   }, [deviceFetched]);
+
+  const getDevicePermisson=async()=>{
+
+    if(deviceId!=undefined){
+      let response = await DeviceService.getDevicePermission(deviceId);
+      setDevicePermisson(response)
+      console.log(response)
+
+    }
+    else if(props?.device?.id!=undefined){
+      let response = await DeviceService.getDevicePermission(props?.device?.id.toString());
+      setDevicePermisson(response)
+      console.log(response)
+    }
+  }
 
   const getDeviceById = async ()=>{
     if(deviceId!==undefined){
@@ -173,12 +198,13 @@ export default function ShellyDuo(props?:ComponentProp) {
 
                 <Grid item xs={12} md={8} lg={25}>
                 <img  height ="200"src={device?.imagePath}/>
-                <Switch checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
+                <Switch disabled= {!controlEnabled}  checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
                 
-                <Slider aria-label="Volume" value={brigthnessValue} onChange={handleBrightnessChange} color="primary"/>
-                {!isSceneComponent && <Button  variant="contained" onClick = {changeBrightness}>Change brightness</Button>}
+                <Slider aria-label="Volume"  disabled= {!controlEnabled}  value={brigthnessValue} onChange={handleBrightnessChange} color="primary"/>
+                {!isSceneComponent && <Button  disabled= {!controlEnabled}  variant="contained" onClick = {changeBrightness}>Change brightness</Button>}
                 
                 <Slider 
+                  disabled= {!controlEnabled} 
                   aria-label="Volume" 
                   value={tempValue} 
                   onChange={handleTempChange} 
@@ -186,8 +212,8 @@ export default function ShellyDuo(props?:ComponentProp) {
                   color="secondary"
                   min={2700}
                   max={6500}/>
-                {!isSceneComponent &&  <Button  variant="contained" onClick = {changeTemp}>Change temperature</Button>}
-                {isSceneComponent &&  <Button  variant="contained" onClick = {saveScene}>Save scene</Button>}
+                {!isSceneComponent &&  <Button disabled= {!controlEnabled}  variant="contained" onClick = {changeTemp}>Change temperature</Button>}
+                {isSceneComponent &&  <Button disabled= {!controlEnabled}  variant="contained" onClick = {saveScene}>Save scene</Button>}
                 </Grid>
             </Grid>
           </Grid>

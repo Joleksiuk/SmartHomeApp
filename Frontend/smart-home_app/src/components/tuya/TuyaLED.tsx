@@ -1,7 +1,7 @@
 import { Button, ButtonProps, Card, Grid, Slider, styled, Switch, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CodeValue, ComponentProp, DeviceDto } from '../../interfaces';
+import { CodeValue, ComponentProp, DeviceDto, UserPermisson } from '../../interfaces';
 import TuyaLEDService from '../../Services/TuyaLEDService';
 import DeviceService from '../../Services/DeviceService';
 import { SketchPicker } from 'react-color';
@@ -18,10 +18,14 @@ export default function TuyaLED(props?:ComponentProp) {
   const [intensity, setIntensity] = React.useState<number>(200);
   const [isSceneComponent, setIsSceneComponent]=useState<Boolean>(false);
 
+  const [devicePermission, setDevicePermisson] = useState<UserPermisson>();
+  const [controlEnabled, setControlEnabled] = useState<Boolean>(false);
+
   let first:boolean=true;
 
   useEffect(() => { 
     getDeviceById();
+    getDevicePermisson()
   }, []);
 
   useEffect(() => {  
@@ -32,6 +36,29 @@ export default function TuyaLED(props?:ComponentProp) {
       setDefaults(props?.device?.props)
  
   }, [deviceFetched]);
+
+
+  useEffect(() => {  
+    if(devicePermission!=undefined && devicePermission.canControl!=undefined ){
+      setControlEnabled(devicePermission?.canControl)
+    }
+ 
+  }, [devicePermission]);
+
+  const getDevicePermisson=async()=>{
+
+    if(deviceId!=undefined){
+      let response = await DeviceService.getDevicePermission(deviceId);
+      setDevicePermisson(response)
+      console.log(response)
+
+    }
+    else if(props?.device?.id!=undefined){
+      let response = await DeviceService.getDevicePermission(props?.device?.id.toString());
+      setDevicePermisson(response)
+      console.log(response)
+    }
+  }
 
 
   const getDeviceById = async ()=>{
@@ -145,26 +172,29 @@ export default function TuyaLED(props?:ComponentProp) {
               color={sketchColor}
               onChange={(e) => setSketchColor(e.hex)}
             />
-             {!isSceneComponent && <ColorButton onClick = {changeColor} variant="contained">Change color</ColorButton>}
-             {isSceneComponent && <ColorButton onClick = {saveColor} variant="contained">Save color</ColorButton>}
+             {!isSceneComponent && <ColorButton  disabled= {!controlEnabled} onClick = {changeColor} variant="contained">Change color</ColorButton>}
+             {isSceneComponent && <ColorButton disabled= {!controlEnabled} onClick = {saveColor} variant="contained">Save color</ColorButton>}
             </Grid>
     
           </Grid>
           <Grid justifyContent="center" container item>
-            <Switch checked={checked} onChange={handleSwitchChange} {...label} />
+            <Switch  disabled= {!controlEnabled} checked={checked} onChange={handleSwitchChange} {...label} />
           </Grid>
           <Grid justifyContent="center" container item >
-            <Slider 
-                aria-label="Volume" 
-                value={intensity} 
-                onChange={handleIntensityChange} 
-                color="primary" 
-                min={0}
-                max={1000}
-                defaultValue={1000}
-                />                            
-            {!isSceneComponent && <Button variant="contained" onClick = {changeIntensity}>Change brightness</Button>}
-            {isSceneComponent  && <Button variant="contained" onClick = {saveBrightness}>Save brightness</Button>}
+          
+              <Slider 
+              disabled= {!controlEnabled}
+              aria-label="Volume" 
+              value={intensity} 
+              onChange={handleIntensityChange} 
+              color="primary" 
+              min={0}
+              max={1000}
+              defaultValue={1000}
+              />   
+                                  
+            {!isSceneComponent && <Button  disabled= {!controlEnabled} variant="contained" onClick = {changeIntensity}>Change brightness</Button>}
+            {isSceneComponent  && <Button  disabled= {!controlEnabled} variant="contained" onClick = {saveBrightness}>Save brightness</Button>}
           </Grid>
       </Grid>
       </Card>
