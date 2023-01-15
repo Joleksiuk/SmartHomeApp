@@ -139,4 +139,10 @@ export interface RolePermission{
     canControl:string
 }
 
+export interface HouseDto{
+    house?:House,
+    components?:Component[],
+    devices?: DeviceDto[],
+    scenes?: Scene[]
+}
 
