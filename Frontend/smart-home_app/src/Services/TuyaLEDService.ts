@@ -1,6 +1,7 @@
 import axios from "axios";
 import AuthService from "../authorization/AuthService";
 import { CodeValue } from "../interfaces";
+import { tuya_led_url } from "../urls";
 
 
 const tuya_url = "http://localhost:8080/tuya_led";
@@ -9,7 +10,7 @@ class TuyaLEDService {
 
     makeTuyaRequest=(deviceId: number, command:string, value: string)=>{
        
-        let url = tuya_url+'/userId='+AuthService.getLoggedUser().id+'/device='+deviceId+'/'+command+'='+value   
+        let url = tuya_led_url+'/userId='+AuthService.getLoggedUser().id+'/device='+deviceId+'/'+command+'='+value   
         console.log(url)    
         return axios       
         .post(url, {})
@@ -38,7 +39,7 @@ class TuyaLEDService {
     }
 
     getDeviceDetails(deviceId: number){
-        let url = tuya_url+'/device='+deviceId
+        let url = tuya_led_url+'/device='+deviceId
         let msg={
             "userId":AuthService.getLoggedUser().id
         }  
@@ -53,19 +54,17 @@ class TuyaLEDService {
     }
    
     getDeviceStatus(deviceId: number){
-        let url = tuya_url+'/'+AuthService.getLoggedUser().id+'/'+deviceId+'/Status'
+        let url = tuya_led_url+'/'+AuthService.getLoggedUser().id+'/'+deviceId.toString()+'/Status'
         return axios
         .get(url)
         .then(response => {
            return response.data as CodeValue[]
         })
-        .catch(error => {
-            console.log(error)
-        }); 
-    }
+        .catch(error => { console.log(error) }); 
+    } 
 
     makeMultiRequest(values:Array<CodeValue>,deviceId: string){
-        let url = tuya_url+'/multi/'+deviceId+'/'+AuthService.getLoggedUser().id  
+        let url = tuya_led_url+'/multi/'+deviceId+'/'+AuthService.getLoggedUser().id  
         let body = JSON.stringify(values)
         return axios       
         .post(url, body)

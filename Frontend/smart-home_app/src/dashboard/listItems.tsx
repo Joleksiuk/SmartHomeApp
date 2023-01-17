@@ -17,14 +17,6 @@ export const mainListItems = (
         <ListItemText primary="HomePage" />
       </ListItemButton>
     </Link>
-    <Link to="/devices"> 
-      <ListItemButton>
-        <ListItemIcon>
-          <AppShortcutIcon />
-        </ListItemIcon>
-        <ListItemText primary="Devices" />
-      </ListItemButton>
-    </Link>
     <Link to="/configAccounts"> 
     <ListItemButton>
       <ListItemIcon>

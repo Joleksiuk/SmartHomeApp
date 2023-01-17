@@ -37,9 +37,9 @@ export default function PermissionComponent() {
       };
 
     const setNewPermission=(event:any, value:any, rp:RolePermission, role:string)=>{
-            
-        let canSee:string="true";
-        let canControl:string="false";
+        
+        let canSee='false';
+        let canControl='false';
 
         switch(value){
             case 'See':
@@ -71,9 +71,12 @@ export default function PermissionComponent() {
     const generateRadio=(device:DeviceDto, role:string)=>{
         
         let rp = device?.permissions?.filter(per=>per.role==role)[0]
-        let defaultRadio ='See';
+        let defaultRadio ="None";
         if(rp?.canControl=='true'){
             defaultRadio="Control"
+        }
+        else if (rp?.canSee=='true'){
+            defaultRadio="See"
         }
 
         if(me?.role==='Admin'){
@@ -85,6 +88,7 @@ export default function PermissionComponent() {
                         name="radio-buttons-group"
                         onChange={(e,value) => setNewPermission(e,value,rp,role)}
                     >
+                         <FormControlLabel value="None" control={<Radio />} label="None" />
                         <FormControlLabel value="See" control={<Radio />} label="See" />
                         <FormControlLabel value="Control" control={<Radio />} label="Control" />
                     </RadioGroup>

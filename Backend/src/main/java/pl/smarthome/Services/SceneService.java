@@ -140,5 +140,19 @@ public class SceneService {
                 .toList();
         return cvs;
     }
+
+    public String deleteDeviceFromScene(Long deviceId, Long sceneId){
+        List<Command> commands =  commandRepository.getAllBySceneId(sceneId).stream()
+                .filter(command -> (command.getDeviceId()==deviceId)).toList();
+        commandRepository.deleteAll(commands);
+        return "Device has been deleted from scene";
+    }
+
+    public String deleteScene(Long sceneId){
+        List<Command> commands =  commandRepository.getAllBySceneId(sceneId);
+        commandRepository.deleteAll(commands);
+        sceneRepository.deleteById(sceneId);
+        return "Scene has been deleted";
+    }
 }
 

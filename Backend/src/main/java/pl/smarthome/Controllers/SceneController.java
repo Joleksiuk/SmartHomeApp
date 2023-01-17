@@ -79,5 +79,15 @@ public class SceneController {
         return sceneService.getDefaultComponentProps(componentId);
     }
 
+    @DeleteMapping("{sceneId}")
+    public void deleteScene(@PathVariable Long sceneId){
+        sceneService.deleteScene(sceneId);
+    }
+
+    @DeleteMapping("{sceneId}/{deviceId}")
+    public void deleteDeviceFromScene(@PathVariable Long sceneId,@PathVariable Long deviceId){
+        sceneService.deleteDeviceFromScene(deviceId,sceneId);
+    }
+
 
 }
