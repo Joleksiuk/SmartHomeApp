@@ -45,5 +45,23 @@ class SceneService {
             console.log(data)
         }).catch(error => { console.log(error)});
     }
+
+    deleteDeviceFromScene(sceneId:string, deviceId:string){
+        return axios
+        .delete(scene_url+'/'+sceneId+'/'+deviceId)
+        .then((response) => response.data)
+        .then((data) => {
+            return data ;
+        }).catch(error => {console.log(error)});
+      }
+    
+    deleteScene(sceneId:string){
+        return axios
+        .delete(scene_url+'/'+sceneId+'/')
+        .then((response) => response.data)
+        .then((data) => {
+            return data ;
+        }).catch(error => {console.log(error)});
+    }
 }
 export default new SceneService();
