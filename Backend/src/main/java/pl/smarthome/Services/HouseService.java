@@ -42,14 +42,10 @@ public class HouseService {
 
     public void deleteHouseById(Long id){
 
-        //delete all house users
         houseUserRepository.getAllByHouseId(id)
                 .forEach(houseUser -> houseUserService.deleteHouseUserById(new HouseUserId(houseUser.getUserId(),id)));
-        //delete all scenes
         sceneRepository.getAllByHouseId(id).forEach(scene -> sceneService.deleteScene(id));
-        //delete all devices
         deviceService.deleteAllDevicesByHouseId(id);
-        //device house
         houseRepository.deleteById(id);
     }
 

@@ -1,4 +1,4 @@
-import { Box, Card, Grid, LinearProgress, Switch, Typography } from '@mui/material';
+import { Box, Card, Grid, LinearProgress, Paper, Switch, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CodeValue, ComponentProp, DeviceDto, UserPermisson } from '../../../interfaces';
@@ -6,6 +6,7 @@ import DeviceService from '../../../Services/DeviceService';
 import SceneService from '../../../Services/SceneService';
 import TuyaPlugService from '../../../Services/TuyaPlugService';
 import DeleteComponent from '../../delete/DeleteComponent';
+import { DeviceImage, MaterialUISwitch, PaperStyle, switchShelly } from '../../StyleElements';
 
 export default function TuyaPlug(props?:ComponentProp) {
 
@@ -135,7 +136,8 @@ export default function TuyaPlug(props?:ComponentProp) {
    }
 
     return (
-        <Card>
+        <Box sx={{ width: 800 }}>    
+        <Paper sx={PaperStyle}>
           {(deviceFetched && !loading) 
             ?
             <Grid container spacing={3}>
@@ -143,13 +145,15 @@ export default function TuyaPlug(props?:ComponentProp) {
                       <Typography  variant="h4" >Device name: {device?.name} </Typography>
                 </Grid>
                 <Grid item justifyContent="center" container >
-                  <Grid item ><img width="300" height="300" src={device?.imagePath}/></Grid>
+                  <Grid item ><img  style ={DeviceImage} width="150" height="150" src={device?.imagePath}/></Grid>
+                  <MaterialUISwitch sx={switchShelly} disabled= {!controlEnabled}  checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
                 </Grid>
                 <Grid item xs={12} md={8} lg={25}>
-                <Switch disabled= {!controlEnabled}  checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
+               
               
                 </Grid>
                 <Grid justifyContent="center" container item xs={12}>
+                  <br></br>
                   <DeleteComponent isSceneComponent={isSceneComponent} device={device} sceneId={props?.sceneId}/>
                 </Grid>
             </Grid>
@@ -158,7 +162,7 @@ export default function TuyaPlug(props?:ComponentProp) {
             <LinearProgress />
           </Box>
           }
-         
-        </Card>
+         </Paper>
+        </Box>
       );
 }

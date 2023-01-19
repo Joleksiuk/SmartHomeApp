@@ -1,4 +1,4 @@
-import { Box, Button, Grid, LinearProgress, Paper, Slider, Switch, Typography } from '@mui/material';
+import { Box, Button, Grid, LinearProgress, Paper, Slider, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CodeValue, ComponentProp, DeviceDto, UserPermisson } from '../../../interfaces';
@@ -6,6 +6,7 @@ import DeviceService from '../../../Services/DeviceService';
 import SceneService from '../../../Services/SceneService';
 import ShellyDuoService, { State } from '../../../Services/ShellyDuoService';
 import DeleteComponent from '../../delete/DeleteComponent';
+import { ButtonShelly, DeviceImage, MaterialUISwitch, PaperStyle, SliderShelly, switchShelly } from '../../StyleElements';
 
 export default function ShellyDuo(props?:ComponentProp) {
 
@@ -183,13 +184,9 @@ export default function ShellyDuo(props?:ComponentProp) {
   const gradient = 'linear-gradient(to right, #e0561f,#ffd54d,#dcf7f7, #7cc1c2, #09c0e0)';
 
     return (
-      
-      <Paper
-        sx={{
-        p: 2,
-        display: 'flex',
-        flexDirection: 'column', 
-      }}>
+      <Grid justifyContent="center" container item xs={12}>
+      <Box sx={{ width: 800 }}>  
+      <Paper sx={PaperStyle}>
         {(deviceFetched && !loading) ?
         <Grid justifyContent="center" container item xs={12}>
             <Grid justifyContent="center" container item xs={12}>
@@ -198,13 +195,16 @@ export default function ShellyDuo(props?:ComponentProp) {
             <Grid container spacing={3}>
 
                 <Grid item xs={12} md={8} lg={25}>
-                <img  height ="200"src={device?.imagePath}/>
-                <Switch disabled= {!controlEnabled}  checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
-                
-                <Slider aria-label="Volume"  disabled= {!controlEnabled}  value={brigthnessValue} onChange={handleBrightnessChange} color="primary"/>
-                {!isSceneComponent && <Button  disabled= {!controlEnabled}  variant="contained" onClick = {changeBrightness}>Change brightness</Button>}
-                
+                <Grid justifyContent="center" container item xs={12}>
+                  <img  style ={DeviceImage} height ="200"src={device?.imagePath}/>
+                  <MaterialUISwitch sx={switchShelly} disabled= {!controlEnabled}  checked={checked} onChange={handleSwitchChange} {...label} defaultChecked />
+                </Grid>
+                <Grid justifyContent="center" container item xs={12}>
+                <Slider sx={SliderShelly} aria-label="Volume"  disabled= {!controlEnabled}  value={brigthnessValue} onChange={handleBrightnessChange} color="primary"/>
+                {!isSceneComponent && <Button sx={ButtonShelly} disabled= {!controlEnabled}  variant="contained" onClick = {changeBrightness}>Change brightness</Button>}
+                <br/>
                 <Slider 
+                  sx={SliderShelly}
                   disabled= {!controlEnabled} 
                   aria-label="Volume" 
                   value={tempValue} 
@@ -213,19 +213,22 @@ export default function ShellyDuo(props?:ComponentProp) {
                   color="secondary"
                   min={2700}
                   max={6500}/>
-                {!isSceneComponent &&  <Button disabled= {!controlEnabled}  variant="contained" onClick = {changeTemp}>Change temperature</Button>}
-                {isSceneComponent &&  <Button disabled= {!controlEnabled}  variant="contained" onClick = {saveScene}>Save scene</Button>}
+                    <br/>
+                {!isSceneComponent &&  <Button sx={ButtonShelly} disabled= {!controlEnabled}  variant="contained" onClick = {changeTemp}>Change temperature</Button>}
+                {isSceneComponent &&  <Button sx={ButtonShelly} disabled= {!controlEnabled}  variant="contained" onClick = {saveScene}>Save scene</Button>}
+                </Grid>
                 </Grid>
                 <Grid justifyContent="center" container item xs={12}>
                   <DeleteComponent isSceneComponent={isSceneComponent} device={device} sceneId={props?.sceneId}/>
                 </Grid>
-            </Grid>
+                </Grid>
           </Grid>
           :
           <Box sx={{ width: '100%' }}>
           <LinearProgress />
           </Box>
-}
-        </Paper>
+        }</Paper>
+        </Box>
+        </Grid>
       );
 }

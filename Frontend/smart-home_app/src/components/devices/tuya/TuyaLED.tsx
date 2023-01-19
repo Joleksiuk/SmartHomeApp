@@ -7,6 +7,7 @@ import DeviceService from '../../../Services/DeviceService';
 import { SketchPicker } from 'react-color';
 import SceneService from '../../../Services/SceneService';
 import DeleteComponent from '../../delete/DeleteComponent';
+import { DeviceImage, MaterialUISwitch, PaperStyle, switchShelly } from '../../StyleElements';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -200,7 +201,8 @@ export default function TuyaLED(props?:ComponentProp) {
   return (
     <Grid justifyContent="center" container item >
       <Box sx={{ width: 800 }}>        
-          <Grid container spacing={3}>
+      <Paper sx={PaperStyle} >
+          <Grid container rowSpacing={5}>
 
               <Grid justifyContent="center" container item >
                   <Typography  variant="h4" >Device name: {device?.name} </Typography>
@@ -208,7 +210,7 @@ export default function TuyaLED(props?:ComponentProp) {
               <Grid justifyContent="center" container item>
                 
                 <Grid item justifyContent="center" container >
-                <Grid item ><img width="300" height="300" src={device?.imagePath}/></Grid>
+                <Grid item ><img style ={DeviceImage} width="300" height="300" src={device?.imagePath}/></Grid>
                   <SketchPicker              
                   color={sketchColor}
                   onChange={(e) => setSketchColor(e.hex)}
@@ -219,7 +221,7 @@ export default function TuyaLED(props?:ComponentProp) {
         
               </Grid>
                 <Grid justifyContent="center" container item>
-                  <Switch  disabled= {!controlEnabled} checked={checked} onChange={handleSwitchChange} {...label} />
+                  <MaterialUISwitch disabled= {!controlEnabled} checked={checked} onChange={handleSwitchChange} {...label} />
                 </Grid>
                 <Grid justifyContent="center" container item  spacing={2}>
                 <Box sx={{ width: 600 }}>
@@ -233,16 +235,18 @@ export default function TuyaLED(props?:ComponentProp) {
                       min={0} max={1000} 
                       defaultValue={1000}/> 
                 </Box>    
-                <Grid container justifyContent="center" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid container justifyContent="center" rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                   <Grid container justifyContent="center" item xs={12}>
                     {!isSceneComponent && <Button  disabled= {!controlEnabled} variant="contained" onClick = {changeIntensity}>Change brightness</Button>}
                     {isSceneComponent  && <Button  disabled= {!controlEnabled} variant="contained" onClick = {saveBrightness}>Save brightness</Button>}
                   </Grid>
-
                 </Grid>                                     
               </Grid>
-          </Grid>  
+          </Grid> 
+          <br></br>
+          <br></br> 
           <DeleteComponent isSceneComponent={isSceneComponent} device={device} sceneId={props?.sceneId}/>
+          </Paper>
       </Box>
     </Grid>
     );
