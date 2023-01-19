@@ -9,8 +9,9 @@ import { Link, useParams } from 'react-router-dom';
 import AuthService from '../authorization/AuthService';
 import AddNewDevice from './AddNewDevice';
 import HomeService from '../Services/HomeService';
-import CurrentScenes from './CurrentScenes';
-import CurrentDevices from './CurrentDevices';
+import CurrentScenes from './current/CurrentScenes';
+import CurrentDevices from './current/CurrentDevices';
+import DeleteHouse from './delete/DeleteHouse';
 
 
 export default function Home() {
@@ -108,6 +109,9 @@ export default function Home() {
 
                 <Grid justifyContent="center" container item xs={12}>
                     <AddNewDevice home ={home} deviceAdded={deviceAdded} components={components}/>
+                    <br></br>
+                    <br></br>
+                    <DeleteHouse houseDto={data}/>
                 </Grid>
             </Grid>
             }

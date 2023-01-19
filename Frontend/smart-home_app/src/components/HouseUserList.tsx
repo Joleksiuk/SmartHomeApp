@@ -1,11 +1,10 @@
 import {Alert,Box,Button,FormControl,FormControlLabel,FormLabel,Grid,LinearProgress,Radio,RadioGroup,Stack,Table,TableBody,TableCell,TableRow,TextField,Typography,} from "@mui/material";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import AuthService from "../authorization/AuthService";
-import { ERROR_GET_HOUSE_USERS } from "../ErrorMessages";
 import { HouseUserDto} from "../interfaces";
-import { houseUser_url } from "../urls";
+import HouseUserService from "../Services/HouseUserService";
+
   
 export default function HouseUserComponent() {
     
@@ -13,48 +12,36 @@ export default function HouseUserComponent() {
     const [showError, setShowError] = useState<Boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [loading,setLoading] =useState<boolean>(true);
-
     const [userList, setUserList] = useState<HouseUserDto[]>();
     const [newUser, setNewUser] = useState<string>();
     const {id} = useParams()
     const [me, setMe] =useState<HouseUserDto>();
 
-    const fetchData=()=>{
-        axios.get<HouseUserDto[]>(houseUser_url+ '/houseId=' + id)
-        .then((response) => {
-            setUserList(response.data);})
-        .catch((error) => console.log(ERROR_GET_HOUSE_USERS));
-    }
-
-    useEffect(() => {    
-        setMe(userList?.filter(user=>(user.userId == AuthService.getLoggedUser().id))[0])
-        if(me!==undefined){
-            setLoading(false)
-        }
-    }, [userList]);
-
     useEffect(() => {
         fetchData();
     }, []);
 
-    const handleAddHomeUser=()=>{
+    useEffect(() => {
+        setMe(userList?.filter(user=>(user.userId == AuthService.getLoggedUser().id))[0]);              
+    }, [loading]);
 
-        axios.post(houseUser_url+ '/houseId='+id+'/username='+newUser,{})
-        .then((response) => {
-            setShowError(true);
-            setErrorMessage(response.data);
-        }).catch((error) => console.log(error));
+    const fetchData=async()=>{
+        if(id!==undefined){
+            let response = await HouseUserService.fetchHouseUsers(id);
+            setUserList(response);
+            setLoading(false)          
+        }
+    }
+    
+
+    const handleAddHomeUser=()=>{
+        if(id!==undefined && newUser!==undefined)
+            HouseUserService.addHouseUser(id,newUser);
     }
 
     const setUserRole = (event:any, value:any, userId:number) => {
-        let msg={
-            'userId':userId,
-            'houseId':id,
-            'role':value
-        }
-        axios.put(houseUser_url,msg)
-        .then((response) => {console.log(response.data)})
-        .catch((error) => console.log(error));
+        if(value!==undefined && userId!==undefined && id !==undefined)
+            HouseUserService.setUserRole(value,userId,id);
       };
 
     const generateRadio=(dto:HouseUserDto)=>{

@@ -69,9 +69,8 @@ export default function AddNewDevice(props?:AddNewDeviceProps) {
                 'specificId':identifier,
                 'name': name
               }       
-            JSON.stringify(device)
             setShowForm(false)  
-            axios.post(device_url,device);                        
+            axios.post(device_url,device).catch(error => {console.log(error)});             
         }
     }
 

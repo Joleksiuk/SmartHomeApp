@@ -6,9 +6,11 @@ import AuthService from '../authorization/AuthService';
 import {Device, DeviceDto, Scene, ComponentProp } from '../interfaces';
 import SceneService from '../Services/SceneService';
 import {scene_url } from '../urls';
-import ShellyDuo from './shelly/ShellyDuo';
-import TuyaLED from './tuya/TuyaLED';
-import TuyaPlug from './tuya/TuyaPlug';
+import ShellyDuo from './devices/shelly/ShellyDuo';
+import TuyaLED from './devices/tuya/TuyaLED';
+import TuyaPlug from './devices/tuya/TuyaPlug';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteScene from './delete/DeleteScene';
 
 export default function SceneComponent() {
 
@@ -88,6 +90,11 @@ export default function SceneComponent() {
     const executeScene=()=>{
         axios.get(scene_url+'/SetScene/'+id+'/'+AuthService.getLoggedUser().id, {}).then((response) => console.log(response.data)).catch(error => {console.log(error);}); 
     }
+
+    const deleteScene=()=>{
+
+    }
+
     return (
         <div>
         {(sceneReady && addReady && devicesReady) ?
@@ -147,6 +154,11 @@ export default function SceneComponent() {
             <Grid justifyContent="center" container item xs={12}>
                 <Button variant="contained" onClick={executeScene}>Execute Scene</Button>           
             </Grid>   
+            <Grid justifyContent="center" container item xs={12}>
+                <br></br>
+                <br></br>
+                <DeleteScene houseId={Number(id)} scene={scene}/>
+            </Grid>  
 
         </Grid>     
         :
