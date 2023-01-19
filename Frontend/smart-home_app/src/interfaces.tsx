@@ -149,7 +149,7 @@ export interface HouseDto{
 export interface UserPermisson{
     userId?:number,
     deviceId?:number,
-    canSee?:Boolean,
-    canControl?:Boolean,
+    canSee?:boolean,
+    canControl?:boolean,
 }
 

@@ -6,9 +6,7 @@ import pl.smarthome.Controllers.shelly.ShellyService;
 import pl.smarthome.Controllers.tuya.TuyaService;
 import pl.smarthome.Controllers.tuya.details.CodeValue;
 import pl.smarthome.Models.*;
-import pl.smarthome.Models.dtos.CommandDto;
 import pl.smarthome.Models.dtos.DeviceDto;
-import pl.smarthome.Models.users.Role;
 import pl.smarthome.Repositories.*;
 
 import java.util.*;
@@ -74,16 +72,9 @@ public class SceneService {
                 component.getBrand(),getDeviceSceneProps(sceneId,device.getId()),rolePermissions);
     }
 
-    public List<DeviceDto> getDevicesBySceneId(Long sceneId){
-        List<Command> commands = commandRepository.getAllBySceneId(sceneId);
-        List<Long> uniqueDeviceIds = commands.stream()
-                .map(Command::getDeviceId).distinct().collect(Collectors.toList());
+    public List<DeviceDto> getDevicesWithPropsBySceneId(Long sceneId){
 
-        List<Device> devices = uniqueDeviceIds.stream()
-                .map(deviceRepository::findById)
-                .map(device -> device.orElse(null))
-                .collect(Collectors.toList());
-
+        List<Device> devices = getSceneUniqueDevices(sceneId);
         List<DeviceDto> result= devices.stream().map(device -> (devicetoDto(device,sceneId))).toList();
         result.forEach(deviceDto -> deviceDto.setProps(getDeviceSceneProps(sceneId,deviceDto.getId())));
         return result;
@@ -92,7 +83,7 @@ public class SceneService {
     public List<DeviceDto> getHouseDevicesToAddBySceneId(Long houseId, Long sceneId){
         List<Device> homeDevices = deviceRepository.getAllByHouseId(houseId);
         List<DeviceDto> houseDevices = new ArrayList<>(homeDevices.stream().map(this::devicetoDto).toList());
-        List<DeviceDto> sceneDevices = getDevicesBySceneId(sceneId);
+        List<DeviceDto> sceneDevices = getDevicesWithPropsBySceneId(sceneId);
 
         for(DeviceDto device: sceneDevices){
             houseDevices.removeIf(d -> Objects.equals(device.getId(), d.getId()));
@@ -113,7 +104,7 @@ public class SceneService {
     }
 
     public void setScene(Long sceneId, Long userId){
-        List<DeviceDto> devices = getDevicesBySceneId(sceneId);
+        List<DeviceDto> devices = getDevicesWithPropsBySceneId(sceneId);
         for(DeviceDto device: devices){
             List<CodeValue> cvs = new LinkedList<>();
             List <Command> list =  commandService.getAllCommandsDtoByIds(sceneId,device.getId());
@@ -141,9 +132,32 @@ public class SceneService {
         return cvs;
     }
 
+    private List<Device> getSceneUniqueDevices(Long sceneId){
+        List<Device> devices = new LinkedList<>();
+        List<Command> commands = commandRepository.getAllBySceneId(sceneId);
+        if(commands.size()==0){
+            return devices;
+        }
+        List<Long> uniqueDeviceIds = commands.stream()
+                .map(Command::getDeviceId).distinct().collect(Collectors.toList());
+
+        devices = uniqueDeviceIds.stream()
+                .map(deviceRepository::findById)
+                .map(device -> device.orElse(null))
+                .collect(Collectors.toList());
+        return devices;
+    }
+
+    private Boolean doesDeviceBelongToScene(Long sceneId, Long deviceId){
+        return getSceneUniqueDevices(sceneId).size()!=0;
+    }
+
     public String deleteDeviceFromScene(Long deviceId, Long sceneId){
+        if(!doesDeviceBelongToScene(sceneId,deviceId)){
+            return "Device with this id is not in the scene";
+        }
         List<Command> commands =  commandRepository.getAllBySceneId(sceneId).stream()
-                .filter(command -> (command.getDeviceId()==deviceId)).toList();
+                .filter(command -> (Objects.equals(command.getDeviceId(), deviceId))).toList();
         commandRepository.deleteAll(commands);
         return "Device has been deleted from scene";
     }

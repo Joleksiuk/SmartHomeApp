@@ -1,7 +1,7 @@
 import axios from "axios";
 import AuthService from "../authorization/AuthService";
 import { UserPermisson } from "../interfaces";
-import { device_url, houseUser_url } from "../urls";
+import { device_url, houseUser_url, house_url } from "../urls";
 
 class DeviceService {
   
@@ -39,15 +39,14 @@ class DeviceService {
     
   }
 
-  deleteDeviceFromHouse(houseId:string, deviceId:string){
+  deleteDeviceFromHouse(houseId:number, deviceId:number){
     return axios
-    .delete(device_url)
+    .delete(house_url+'/'+houseId+'/'+deviceId)
     .then((response) => response.data)
     .then((data) => {
         return data ;
-    }).catch(error => {console.log(error)});
+    }).catch(error => {console.log(error); return;});
   }
-
 
 }
 export default new DeviceService();

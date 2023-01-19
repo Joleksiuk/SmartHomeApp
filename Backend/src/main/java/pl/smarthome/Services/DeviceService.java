@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.smarthome.Models.Device;
 import pl.smarthome.Models.RolePermission;
+import pl.smarthome.Models.Scene;
 import pl.smarthome.Repositories.DeviceRepository;
 import pl.smarthome.Repositories.PermissionRepository;
 
@@ -19,7 +20,6 @@ public class DeviceService {
 
     private final PermissionService permissionService;
     private final PermissionRepository permissionRepository;
-
     public void createDevice(Device device) {
         deviceRepository.save( device);
     }
@@ -29,17 +29,15 @@ public class DeviceService {
     }
 
     public void deleteDeviceById(Long id){
+        permissionRepository.deleteAll(permissionRepository.getAllByDeviceId(id).stream().toList());
         deviceRepository.deleteById(id);
     }
 
-    public void addDeviceToHouse(Long houseId, Long deviceId){
-        Optional <Device> device =  deviceRepository.findById(deviceId);
-        device.ifPresent(value -> value.setHouseId(houseId));
-
+    public void addDeviceToHouse(Device device){
         List<RolePermission> roles = new LinkedList<>();
-        RolePermission rolePermission1=new RolePermission(deviceId,"Guest","true","false");
-        RolePermission rolePermission2=new RolePermission(deviceId,"Resident","true","true");
-        RolePermission rolePermission3=new RolePermission(deviceId,"Admin","true","true");
+        RolePermission rolePermission1=new RolePermission(device.getId(),"Guest","true","false");
+        RolePermission rolePermission2=new RolePermission(device.getId(),"Resident","true","true");
+        RolePermission rolePermission3=new RolePermission(device.getId(),"Admin","true","true");
         roles.add(rolePermission1);
         roles.add(rolePermission2);
         roles.add(rolePermission3);
@@ -49,4 +47,9 @@ public class DeviceService {
     public List<Device> getDevicesByHouseId(Long houseId) {
         return deviceRepository.getAllByHouseId(houseId);
     }
+
+    public void deleteAllDevicesByHouseId(Long houseId){
+        deviceRepository.getAllByHouseId(houseId).forEach(device -> deleteDeviceById(device.getId()));
+    }
+
 }

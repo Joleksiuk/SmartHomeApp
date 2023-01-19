@@ -48,4 +48,8 @@ public class PermissionService {
         deviceIds.forEach(device -> result.addAll(getPermissionByDeviceId(device.getId())));
         return result;
     }
+
+    public void deletePermissionByDeviceId(Long deviceId){
+        permissionRepository.deleteAll(permissionRepository.getAllByDeviceId(deviceId).stream().toList());
+    }
 }

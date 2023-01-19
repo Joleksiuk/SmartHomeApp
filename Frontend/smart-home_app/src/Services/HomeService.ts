@@ -57,5 +57,14 @@ class ShellyService {
             return data ;
         } )   
     } 
+
+    deleteHome(houseId: number){
+        return axios.delete(house_url+'/'+houseId)
+        .then((response) => response.data)
+        .then((data) => {
+            return data ;
+        } )  
+        .catch(error => { console.log(error);   return;}); 
+    }
 }
 export default new ShellyService();

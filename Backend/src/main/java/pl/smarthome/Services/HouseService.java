@@ -4,15 +4,14 @@ package pl.smarthome.Services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import pl.smarthome.Models.Device;
 import pl.smarthome.Models.House;
 import pl.smarthome.Models.RolePermission;
+import pl.smarthome.Models.Scene;
 import pl.smarthome.Models.dtos.DeviceDto;
 import pl.smarthome.Models.dtos.HouseDto;
 import pl.smarthome.Models.ids.HouseUserId;
-import pl.smarthome.Repositories.ComponentRepository;
-import pl.smarthome.Repositories.DeviceRepository;
-import pl.smarthome.Repositories.HouseRepository;
-import pl.smarthome.Repositories.SceneRepository;
+import pl.smarthome.Repositories.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,10 +23,13 @@ public class HouseService {
 
     private final HouseRepository houseRepository;
     private final HouseUserService houseUserService;
+    private final HouseUserRepository houseUserRepository;
     private final DeviceRepository deviceRepository;
     private final SceneRepository sceneRepository;
     private final ComponentRepository componentRepository;
     private final SceneService sceneService;
+    private final PermissionService permissionService;
+    private final DeviceService deviceService;
 
     public void createHouse(House house, Long userId) {
         houseRepository.save( house);
@@ -39,6 +41,15 @@ public class HouseService {
     }
 
     public void deleteHouseById(Long id){
+
+        //delete all house users
+        houseUserRepository.getAllByHouseId(id)
+                .forEach(houseUser -> houseUserService.deleteHouseUserById(new HouseUserId(houseUser.getUserId(),id)));
+        //delete all scenes
+        sceneRepository.getAllByHouseId(id).forEach(scene -> sceneService.deleteScene(id));
+        //delete all devices
+        deviceService.deleteAllDevicesByHouseId(id);
+        //device house
         houseRepository.deleteById(id);
     }
 
@@ -84,6 +95,22 @@ public class HouseService {
             houseDto.setDevices(result);
         }
         return houseDto;
+    }
+
+    public String deleteDeviceFromHouse(Long deviceId, Long houseId){
+
+        House house = houseRepository.findById(houseId).orElse(null);
+        if(house==null){
+            return "There is no house house with id " + houseId.toString();
+        }
+        sceneRepository.getAllByHouseId(houseId).forEach(
+            scene -> {
+                sceneService.deleteDeviceFromScene(scene.getId(),deviceId);
+            }
+        );
+        permissionService.deletePermissionByDeviceId(deviceId);
+        deviceRepository.deleteById(deviceId);
+        return "Device has been deleted.";
     }
 
 }

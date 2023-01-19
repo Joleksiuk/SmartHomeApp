@@ -20,8 +20,9 @@ public class DeviceController {
     private final SceneService sceneService;
 
     @PostMapping
-    public void createDevice(@RequestBody Device house) {
-        deviceService.createDevice(house);
+    public void createDevice(@RequestBody Device device) {
+        deviceService.createDevice(device);
+        deviceService.addDeviceToHouse(device);
     }
 
     @PutMapping
@@ -44,10 +45,4 @@ public class DeviceController {
 
         return deviceService.getDevicesByHouseId(id).stream().map(sceneService::devicetoDto).toList();
     }
-
-    @PostMapping("houseId={houseId}/deviceId={deviceId}")
-    public void addDeviceToHouse(@PathVariable Long houseId,@PathVariable Long deviceId) {
-        deviceService.addDeviceToHouse(houseId,deviceId);
-    }
-
 }

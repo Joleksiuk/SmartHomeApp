@@ -15,6 +15,7 @@ import pl.smarthome.Repositories.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class HouseUserService {
 
     public List<HouseUser> getAllHouseUsersByHouseId(Long houseId){
         List<HouseUser> users = houseUserRepository.findAll();
-        return users.stream().filter(user->(user.getHouseId()==houseId)).collect(Collectors.toList());
+        return users.stream().filter(user->(Objects.equals(user.getHouseId(), houseId))).toList();
     }
 
     public List<HouseUserDto> convertHouseUserToDto(  List<HouseUser> houseUsers){

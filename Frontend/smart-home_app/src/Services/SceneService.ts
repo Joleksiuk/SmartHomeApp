@@ -46,7 +46,7 @@ class SceneService {
         }).catch(error => { console.log(error)});
     }
 
-    deleteDeviceFromScene(sceneId:string, deviceId:string){
+    deleteDeviceFromScene(sceneId:string, deviceId:number){
         return axios
         .delete(scene_url+'/'+sceneId+'/'+deviceId)
         .then((response) => response.data)
@@ -55,7 +55,7 @@ class SceneService {
         }).catch(error => {console.log(error)});
       }
     
-    deleteScene(sceneId:string){
+    deleteScene(sceneId:number){
         return axios
         .delete(scene_url+'/'+sceneId+'/')
         .then((response) => response.data)

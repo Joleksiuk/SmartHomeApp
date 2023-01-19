@@ -52,7 +52,7 @@ public class SceneController {
 
     @GetMapping("devices/{id}")
     public List<DeviceDto> getDevicesBySceneId(@PathVariable Long id) {
-        return sceneService.getDevicesBySceneId(id);
+        return sceneService.getDevicesWithPropsBySceneId(id);
     }
 
     @GetMapping("Add/houseId={houseId}/sceneId={sceneId}")
@@ -88,6 +88,5 @@ public class SceneController {
     public void deleteDeviceFromScene(@PathVariable Long sceneId,@PathVariable Long deviceId){
         sceneService.deleteDeviceFromScene(deviceId,sceneId);
     }
-
 
 }

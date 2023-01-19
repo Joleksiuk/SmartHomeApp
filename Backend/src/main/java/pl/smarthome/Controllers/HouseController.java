@@ -26,9 +26,9 @@ public class HouseController {
         houseService.updateHouse(house);
     }
 
-    @DeleteMapping
-    public void DeleteHouseById(@RequestBody Long id) {
-        houseService.deleteHouseById(id);
+    @DeleteMapping("{houseId}")
+    public void DeleteHouseById(@PathVariable Long houseId) {
+        houseService.deleteHouseById(houseId);
     }
 
     @GetMapping("houseId={id}")
@@ -51,4 +51,8 @@ public class HouseController {
         return houseService.getHouseDataOfUser(houseId,userId);
     }
 
+    @DeleteMapping("{houseId}/{deviceId}")
+    public void deleteDeviceFromHouse(@PathVariable Long houseId, @PathVariable Long deviceId){
+        houseService.deleteDeviceFromHouse(deviceId,houseId);
+    }
 }
