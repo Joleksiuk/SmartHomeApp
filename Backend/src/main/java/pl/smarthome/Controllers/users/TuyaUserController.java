@@ -1,24 +1,28 @@
 package pl.smarthome.Controllers.users;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.smarthome.Models.users.TuyaUser;
+import pl.smarthome.Repositories.TuyaUserRepository;
 import pl.smarthome.Services.TuyaUserService;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("tuya_users")
 public class TuyaUserController {
 
     private final TuyaUserService tuyaUserService;
-
-    @Autowired
-    public TuyaUserController(TuyaUserService tuyaUserService) {
-        this.tuyaUserService = tuyaUserService;
-    }
+    private final TuyaUserRepository tuyaUserRepository;
 
     @PostMapping
-    public void createTuyaUser(@RequestBody TuyaUser tuyaUser) {
-        tuyaUserService.createTuyaUser(tuyaUser);
+    public TuyaUser createTuyaUser(@RequestBody TuyaUser tuyaUser) {
+        return tuyaUserService.createTuyaUser(tuyaUser);
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteTuyaUserById(@PathVariable Long id){
+        tuyaUserRepository.deleteById(id);
     }
 
     @PutMapping

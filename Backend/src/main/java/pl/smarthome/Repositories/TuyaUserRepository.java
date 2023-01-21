@@ -7,5 +7,6 @@ import java.util.Optional;
 
 @Repository
 public interface TuyaUserRepository extends JpaRepository<TuyaUser, Long> {
-    Optional<TuyaUser> findById(Integer id);
+    Optional<TuyaUser> findById(Long id);
+    void deleteById(Long id);
 }

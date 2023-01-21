@@ -117,4 +117,14 @@ public class TuyaService {
         }
         return "User id is not correct";
     }
+
+    public Boolean areTuyaCredentialsValid(TuyaUser user){
+        try{
+            TuyaFunctions.getAccessToken(user);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
 }

@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ShellyUserRepository extends JpaRepository<ShellyUser, Long> {
-    Optional<ShellyUser> findById(Integer id);
+    Optional<ShellyUser> findById(Long id);
+    void deleteById(Long id);
 }

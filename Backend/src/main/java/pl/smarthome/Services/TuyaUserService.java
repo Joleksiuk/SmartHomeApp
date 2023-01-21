@@ -3,6 +3,8 @@ package pl.smarthome.Services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.smarthome.AES.AES;
+import pl.smarthome.Controllers.tuya.TuyaFunctions;
+import pl.smarthome.Controllers.tuya.TuyaService;
 import pl.smarthome.Models.users.TuyaUser;
 import pl.smarthome.Repositories.TuyaUserRepository;
 
@@ -14,9 +16,15 @@ import java.util.Optional;
 public class TuyaUserService {
 
     private final TuyaUserRepository tuyaUserRepository;
+    private final TuyaService tuyaService;
 
-    public void createTuyaUser(TuyaUser tuyaUser) {
-        tuyaUserRepository.save( createEncryptedUser(tuyaUser));
+    public TuyaUser createTuyaUser(TuyaUser tuyaUser) {
+
+        if(tuyaService.areTuyaCredentialsValid(tuyaUser)){
+            tuyaUserRepository.save( createEncryptedUser(tuyaUser));
+            return tuyaUser;
+        }
+        return null;
     }
 
     public void updateTuyaUser(TuyaUser tuyaUser) {
