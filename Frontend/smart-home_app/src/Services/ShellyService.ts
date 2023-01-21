@@ -1,5 +1,6 @@
 import axios from "axios";
 import AuthService from "../authorization/AuthService";
+import { shelly_users_url } from "../urls";
 
 const Shelly_URL = "http://localhost:8080/shelly_users";
 
@@ -41,5 +42,10 @@ class ShellyService {
         return null;
     }
     
+    deleteShellyUser(userId:number){
+        return axios.delete(shelly_users_url+'/'+userId.toString,{})
+        .then((response)=>console.log(response))
+        .catch((error)=>{console.log(error);return;});
+      }
 }
 export default new ShellyService();

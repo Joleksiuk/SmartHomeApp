@@ -1,5 +1,6 @@
 import axios from "axios";
 import AuthService from "../authorization/AuthService";
+import { tuya_users_url } from "../urls";
 
 const Tuya_URL = "http://localhost:8080/tuya_users";
 
@@ -49,6 +50,12 @@ class TuyaService {
       });
     }
     return null;   
+  }
+
+  deleteTuyaUser(userId:number){
+    return axios.delete(tuya_users_url+'/'+userId.toString,{})
+    .then((response)=>console.log(response))
+    .catch((error)=>{console.log(error);return;});
   }
 }
 export default new TuyaService();
