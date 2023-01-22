@@ -127,4 +127,17 @@ public class TuyaService {
             return false;
         }
     }
+
+    public Boolean verifyDeviceId(Long userId, String deviceId){
+        try{
+            TuyaUser user = tuyaUserRepository.findById(userId).orElse(null);
+            String path = "/v1.0/iot-03/devices/"+deviceId+"/status";
+            Object result = TuyaFunctions.execute(TuyaFunctions.getAccessToken(user), path, "GET", "", new HashMap<>(), user);
+            Gson gson = new Gson();
+            return gson.fromJson(gson.toJson(result), TuyaStatusResponse.class).isSuccess();
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
 }

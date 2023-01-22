@@ -18,13 +18,13 @@ public class TuyaUserService {
     private final TuyaUserRepository tuyaUserRepository;
     private final TuyaService tuyaService;
 
-    public TuyaUser createTuyaUser(TuyaUser tuyaUser) {
+    public Boolean createTuyaUser(TuyaUser tuyaUser) {
 
         if(tuyaService.areTuyaCredentialsValid(tuyaUser)){
             tuyaUserRepository.save( createEncryptedUser(tuyaUser));
-            return tuyaUser;
+            return true;
         }
-        return null;
+        return false;
     }
 
     public void updateTuyaUser(TuyaUser tuyaUser) {

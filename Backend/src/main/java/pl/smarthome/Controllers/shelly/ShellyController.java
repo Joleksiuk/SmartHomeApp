@@ -89,5 +89,11 @@ public class ShellyController {
         return shellyService.multiControl(codeValues,device.getSpecificId(),path,ownerId);
     }
 
+    @GetMapping("verify/{userId}/{deviceId}")
+    public Boolean verifyDeviceId(@PathVariable Long userId, @PathVariable String deviceId){
+
+        return shellyService.verifyDeviceId(userId,deviceId);
+    }
+
 
 }

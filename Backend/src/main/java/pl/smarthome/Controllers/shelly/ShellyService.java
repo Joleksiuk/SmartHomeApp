@@ -82,7 +82,7 @@ public class ShellyService {
         return cvs;
     }
     private static final String root = "https://shelly-38-eu.shelly.cloud";
-    public Boolean areShellyCredentialsValid(String authKey,String path){
+    public Boolean areShellyCredentialsValid(String path,String authKey){
         try{
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -94,6 +94,16 @@ public class ShellyService {
 
         }catch (Exception e){
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Boolean verifyDeviceId(Long userId, String deviceId){
+        try{
+            executeShellyCommand("","",deviceId,"/device/status",userId);
+            return true;
+
+        }catch (Exception e){
             return false;
         }
     }

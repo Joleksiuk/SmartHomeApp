@@ -21,7 +21,7 @@ public class ShellyUserController {
     }
 
     @PostMapping
-    public ShellyUser createShellyUser(@RequestBody ShellyUser shellyUser) {
+    public Boolean createShellyUser(@RequestBody ShellyUser shellyUser) {
         return shellyUserService.createShellyUser(shellyUser);
     }
     @PutMapping

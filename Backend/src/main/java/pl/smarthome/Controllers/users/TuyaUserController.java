@@ -16,7 +16,7 @@ public class TuyaUserController {
     private final TuyaUserRepository tuyaUserRepository;
 
     @PostMapping
-    public TuyaUser createTuyaUser(@RequestBody TuyaUser tuyaUser) {
+    public Boolean createTuyaUser(@RequestBody TuyaUser tuyaUser) {
         return tuyaUserService.createTuyaUser(tuyaUser);
     }
 

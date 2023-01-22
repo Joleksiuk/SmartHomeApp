@@ -17,12 +17,12 @@ public class ShellyUserService {
     private final ShellyUserRepository shellyUserRepository;
     private final ShellyService shellyService;
 
-    public ShellyUser createShellyUser(ShellyUser shellyUser) {
+    public Boolean createShellyUser(ShellyUser shellyUser) {
         if(shellyService.areShellyCredentialsValid(shellyUser.getServer(),shellyUser.getAuth_key())){
             shellyUserRepository.save(createEncryptedUser(shellyUser));
-            return shellyUser;
+            return true;
         }
-       return null;
+       return false;
     }
 
     public void updateShellyUser(ShellyUser shellyUser) {
