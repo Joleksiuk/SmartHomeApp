@@ -44,13 +44,20 @@ export default function SignIn() {
 
     if(server!==null && server!==undefined && accessId!=null && accessId!==undefined && authKey!==null && authKey!==undefined ){
       TuyaService.createTuyaUser(accessId,server,authKey)
-      .then(() =>setSubmitSuccessful(true))
+      .then((response) =>  {
+        if(Boolean(response)){
+          setSubmitSuccessful(true)
+          window.location.reload();
+        }
+        else{
+          setShowError(true);
+          setErrorMessage("Wrong Tuya credentials!");
+        }   
+      })
       .catch(error => {
         setShowError(true);
       });  
     }
-    window.location.reload()
-
   };
 
   return (

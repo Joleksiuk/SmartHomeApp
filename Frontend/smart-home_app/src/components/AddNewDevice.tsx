@@ -8,6 +8,8 @@ import { Alert, Box, Button, CardActionArea, Grid, LinearProgress, Stack, TextFi
 import axios from 'axios';
 import { Component, Device, House } from '../interfaces';
 import { device_url } from '../urls';
+import TuyaService from '../Services/TuyaService';
+import ShellyService from '../Services/ShellyService';
 
 
 export interface AddNewDeviceProps{
@@ -16,7 +18,7 @@ export interface AddNewDeviceProps{
     home?: House
 }
 
-export default function AddNewDevice(props?:AddNewDeviceProps) {
+export default function AddNewDevice( props?:AddNewDeviceProps) {
 
     const [components, setComponents]=useState<Array<Component>>([])
     const [newDevice, setNewDevice]=useState<Device>();
@@ -24,6 +26,7 @@ export default function AddNewDevice(props?:AddNewDeviceProps) {
     const [showError, setShowError] = useState<Boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [loading, setLoading]=useState<boolean>(true);
+    const [currentComponent, setCurrentComponent]=useState<Component>();
 
     useEffect(() => {  
         if(props!=undefined && props.components!=undefined){
@@ -40,12 +43,13 @@ export default function AddNewDevice(props?:AddNewDeviceProps) {
             'specificId':'',
             'name': component.name
           }
-
+        
         setNewDevice(device)
         setShowForm(true)
+        setCurrentComponent(component);
     }
 
-    const handleSubmit=(event: React.FormEvent<HTMLFormElement>)=>{
+    const handleSubmit=async (event: React.FormEvent<HTMLFormElement>)=>{
 
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -62,7 +66,24 @@ export default function AddNewDevice(props?:AddNewDeviceProps) {
             return;
         }
         if(name!==null && name!==undefined && identifier!=null && identifier!==undefined){
-           
+            
+            switch(currentComponent?.brand){
+                case "TUYA":
+                    if(await TuyaService.verifyTuyaDeviceId(identifier)==false){     
+                        setShowError(true);
+                        setErrorMessage("Given device id is incorrect or you don't have permission for this device!");
+                        return;
+                    }                 
+                    break;
+                case "Shelly":
+                    if( await ShellyService.verifyShellyDeviceId(identifier) ==false){
+                        setShowError(true);
+                        setErrorMessage("Given device id is incorrect or you don't have permission for this device!");
+                        return;
+                    }
+                    break;
+            }
+            setLoading(false);
             let device = {
                 'componentId': newDevice?.componentId,
                 'houseId': props?.home?.id,
@@ -72,6 +93,7 @@ export default function AddNewDevice(props?:AddNewDeviceProps) {
             setShowForm(false)  
             axios.post(device_url,device).catch(error => {console.log(error)});             
         }
+       
     }
 
     return (

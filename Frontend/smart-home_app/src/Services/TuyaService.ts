@@ -1,9 +1,6 @@
 import axios from "axios";
 import AuthService from "../authorization/AuthService";
-import { tuya_users_url } from "../urls";
-
-const Tuya_URL = "http://localhost:8080/tuya_users";
-
+import { tuya_url, tuya_users_url } from "../urls";
 
 export interface TuyaUser{
   id:number,
@@ -18,12 +15,16 @@ class TuyaService {
 
     return axios
     
-      .post(Tuya_URL, {
+      .post(tuya_users_url, {
         id:AuthService.getLoggedUser().id,
         accessId: accessId,
         server: server,
         secretKey: secretKey
       })
+      .then((response) => response.data)
+      .then((data) => {
+          return data ;
+      } ) 
       .catch(error => {
         console.log(error)
       });
@@ -40,7 +41,7 @@ class TuyaService {
 
     if(AuthService.getLoggedUser() !== null){
       
-      axios.get(Tuya_URL+'/'+AuthService.getLoggedUser().id.toString(), {})
+      axios.get(tuya_users_url+'/'+AuthService.getLoggedUser().id.toString(), {})
       .then(response => { 
         if (response.data) { 
           return response.data as TuyaUser}})
@@ -53,9 +54,19 @@ class TuyaService {
   }
 
   deleteTuyaUser(userId:number){
-    return axios.delete(tuya_users_url+'/'+userId.toString,{})
+    console.log(userId);
+    return axios.delete(tuya_users_url+'/'+userId.toString(),{})
     .then((response)=>console.log(response))
     .catch((error)=>{console.log(error);return;});
+  }
+
+  verifyTuyaDeviceId(deviceSpecificId: string){
+    console.log('dupa')
+    return axios.get(tuya_url+'/'+AuthService.getLoggedUser().id.toString()+'/'+deviceSpecificId,{})
+    .then((response) => response.data)
+    .then((data) => {
+            return data as boolean;
+    }).catch(error => {console.log(error)});
   }
 }
 export default new TuyaService();

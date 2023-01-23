@@ -14,6 +14,7 @@ import { Alert, Stack } from '@mui/material';
 import { Link,useNavigate } from 'react-router-dom';
 import ShellyService from '../../Services/ShellyService';
 import AuthService from '../../authorization/AuthService';
+import { verify } from 'crypto';
 
 const theme = createTheme();
 
@@ -39,14 +40,22 @@ export default function SignIn() {
       return;
     }
     if(authKey!==null && authKey!==undefined && server!=null && server!==undefined){
-       ShellyService.createShellyUser(server,authKey)
+       ShellyService.createShellyUser(authKey,server)
+       .then((response) =>  {
+          if(Boolean(response)){
+            setSubmitSuccessful(true)
+            window.location.reload();
+          }
+          else{
+            setShowError(true);
+            setErrorMessage("Wrong Shelly credentials!");
+          }   
+        })
        .then(() =>setSubmitSuccessful(true))
        .catch(error => {
-         setShowError(true);
-         setErrorMessage("Wrong login credentials!");
+        console.log(error)
        });  
     }
-    window.location.reload()
     
   };
 

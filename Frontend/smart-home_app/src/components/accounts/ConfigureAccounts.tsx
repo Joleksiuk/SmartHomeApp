@@ -45,18 +45,19 @@ export default function ConfigureAccounts() {
             }
             </Box>
         </Grid>
-        <Grid xs={6}>
+        <Grid xs={6} container justifyContent="center">
         <Box
              display="flex"
              justifyContent="center"
              alignItems="center"
            >
           {tuyaUserExists ?
-            <div>
+            
+            <Grid container direction="column" justifyContent="center">
+              <img width="200" height="100"  src='https://i.postimg.cc/htBp072g/tuya-logo.png'/>
               <Typography>Tuya user already configured</Typography>
-              <CheckIcon/>
               <DeleteTuyaUser userId={AuthService.getLoggedUser().id}/>
-            </div>
+            </Grid> 
             :
             <TuyaForm/>
           }

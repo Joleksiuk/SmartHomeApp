@@ -21,8 +21,11 @@ export default function DeleteHouse(props:DeleteUserProps) {
     }
 
     const deleteTuyaUser=()=>{
-        if(props.userId!=undefined)
+        if(props.userId!=undefined){
             TuyaService.deleteTuyaUser(props.userId);
+            window.location.reload()
+        }
+           
     }
 
     useEffect(() => {  

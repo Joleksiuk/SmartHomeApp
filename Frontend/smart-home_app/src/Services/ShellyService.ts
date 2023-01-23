@@ -1,8 +1,6 @@
 import axios from "axios";
 import AuthService from "../authorization/AuthService";
-import { shelly_users_url } from "../urls";
-
-const Shelly_URL = "http://localhost:8080/shelly_users";
+import { shelly_url, shelly_users_url } from "../urls";
 
 export interface ShellyUser{
     id:number,
@@ -15,11 +13,16 @@ class ShellyService {
 
         return axios
         
-        .post(Shelly_URL, {
+        .post(shelly_users_url, {
             id:AuthService.getLoggedUser().id,
-            auth_key: authKey,
-            server: server
+            server: server,
+            auth_key: authKey
+           
         })
+        .then((response) => response.data)
+        .then((data) => {
+            return data ;
+        } ) 
         .catch(error => {
             console.log(error)
         });  
@@ -27,7 +30,7 @@ class ShellyService {
 
     initShellyUser() {
         if(AuthService.getLoggedUser() !== null){
-            axios.get(Shelly_URL+'/'+AuthService.getLoggedUser().id, {})
+            axios.get(shelly_users_url+'/'+AuthService.getLoggedUser().id, {})
             .then(
                 response => { 
                 return response.data as ShellyUser;});
@@ -43,9 +46,18 @@ class ShellyService {
     }
     
     deleteShellyUser(userId:number){
-        return axios.delete(shelly_users_url+'/'+userId.toString,{})
+        return axios.delete(shelly_users_url+'/'+userId.toString(),{})
         .then((response)=>console.log(response))
         .catch((error)=>{console.log(error);return;});
       }
+
+    verifyShellyDeviceId(deviceSpecificId: string){
+    console.log('dupa')
+    return axios.get(shelly_url+'/verify/'+AuthService.getLoggedUser().id.toString()+'/'+deviceSpecificId,{})
+    .then((response) => response.data)
+    .then((data) => {
+            return data as boolean;
+    }).catch(error => {console.log(error)});
+    }
 }
 export default new ShellyService();

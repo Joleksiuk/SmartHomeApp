@@ -26,8 +26,10 @@ export default function DeleteHouse(props:DeleteUserProps) {
     }
 
     const deleteShellyUser=()=>{
-        if(props.userId!=undefined)
+        if(props.userId!=undefined){
             ShellyService.deleteShellyUser(props.userId);
+            window.location.reload()
+        }
     }
 
     useEffect(() => {  
